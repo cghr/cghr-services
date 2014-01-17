@@ -45,6 +45,6 @@ class DataStoreSpec extends Specification {
 
 
 		then:
-		gSql.firstRow("select * from country where id=?",[1])==dataSet[1]
+		gSql.firstRow("select * from country where id=?",[1])==dataSet[0]
 	}
 }
