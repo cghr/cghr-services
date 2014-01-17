@@ -17,9 +17,9 @@ class DataStore {
 
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
-	String getDataAsJson(@RequestBody Map data) {
+	String saveData(@RequestBody Map data) {
 
-		def dataStore=data.remove("dataStore")
+		def dataStore=data.remove("datastore")
 		dbStore.saveOrUpdate(data,dataStore)
 	}
 }
