@@ -115,7 +115,7 @@ class AuthSpec extends Specification {
 		def jsonResp=auth.authenticate(invalidUser,response)
 
 		then:
-		response.status==HttpStatus.UNAUTHORIZED.value
+		response.status==HttpStatus.FORBIDDEN.value
 		jsonResp=="{}"
 		response.getCookie("username")==null
 		response.getCookie("userid")==null
@@ -133,7 +133,7 @@ class AuthSpec extends Specification {
 
 
 		then:
-		response.status==200
+		response.status==HttpStatus.OK.value
 		jsonResp=='{"id":4,"username":"user4","password":"secret4","role":"manager","status":"active"}'
 		response.getCookie("username").getValue()=='user4'
 		response.getCookie("userid").getValue()=='4'

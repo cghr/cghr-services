@@ -27,7 +27,7 @@ class Auth {
 
 
 		def isValidUser=userService.isValid(user)
-		def httpStatus=isValidUser?HttpStatus.OK.value:HttpStatus.UNAUTHORIZED.value
+		def httpStatus=isValidUser?HttpStatus.OK.value:HttpStatus.FORBIDDEN.value
 
 		response.setStatus(httpStatus)
 
