@@ -68,9 +68,7 @@
 	</bean>
 
 	<bean id="dt" class="org.cghr.test.db.DbTester">
-		<constructor-arg>
-			<ref bean="dataSource" />
-		</constructor-arg>
+		<constructor-arg ref="dataSource" />
 	</bean>
 
 	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">

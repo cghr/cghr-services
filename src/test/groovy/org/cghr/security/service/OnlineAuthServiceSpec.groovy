@@ -27,10 +27,11 @@ class OnlineAuthServiceSpec extends Specification {
 	def setup(){
 
 		mockServerAuthUrl="http://dummyServer:8080/hc/api/security/auth"
-		mockRestTemplate=Mock()
+		mockRestTemplate=Stub(){
+			postForObject(mockServerAuthUrl,validUser, User.class) >>  new User(id:1,username:'user1',password:'secret1',role:'user',status:'active')
+			getMessageConverters() >> [] //Mock list for adding message convertors
+		}
 
-		mockRestTemplate.postForObject(mockServerAuthUrl,validUser, User.class) >>  new User(id:1,username:'user1',password:'secret1',role:'user',status:'active')
-		mockRestTemplate.getMessageConverters() >> [] //Mock list for adding message convertors
 		onlineAuthService=new OnlineAuthService(mockServerAuthUrl, mockRestTemplate)
 	}
 

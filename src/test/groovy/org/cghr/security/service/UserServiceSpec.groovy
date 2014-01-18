@@ -40,13 +40,13 @@ class UserServiceSpec extends Specification{
 
 	def setup() {
 
-		mockDbAccess=Mock()
-		mockDbAccess.getRowAsMap("select * from user where username=?", [validUser.username]) >> [id:1,username:'user1',password:'secret1',role:'user',status:'active']
-		mockDbAccess.getRowAsMap("select * from user where username=?", [invalidUser.username]) >> [:]
-		mockDbAccess.getRowAsJson("select * from user where username=?", [validUser.username]) >> '{"id":1,"username":"user1","password":"secret1","role":"user","status":"active"}'
-		mockDbAccess.getRowAsJson("select * from user where username=?", [invalidUser.username]) >> '{}'
-		mockDbAccess.hasRows("select * from authtoken where token=?", [authtoken]) >> true
-
+		mockDbAccess=Stub(){
+			getRowAsMap("select * from user where username=?", [validUser.username]) >> [id:1,username:'user1',password:'secret1',role:'user',status:'active']
+			getRowAsMap("select * from user where username=?", [invalidUser.username]) >> [:]
+			getRowAsJson("select * from user where username=?", [validUser.username]) >> '{"id":1,"username":"user1","password":"secret1","role":"user","status":"active"}'
+			getRowAsJson("select * from user where username=?", [invalidUser.username]) >> '{}'
+			hasRows("select * from authtoken where token=?", [authtoken]) >> true
+		}
 
 		mockDbStore=Mock()
 		def userMap=[id:1,username:'user1',password:'secret1',role:'user',status:'active']
@@ -83,9 +83,11 @@ class UserServiceSpec extends Specification{
 		}
 
 
-		OnlineAuthService mockOnlineAuthService=Mock()
-		mockOnlineAuthService.authenticate(validUser) >> new User(id:1,username:'user1',password:'secret1',role:'user',status:'active')
-		mockOnlineAuthService.authenticate(invalidUser) >> new User()
+		OnlineAuthService mockOnlineAuthService=Stub(){
+
+			authenticate(validUser) >> new User(id:1,username:'user1',password:'secret1',role:'user',status:'active')
+			authenticate(invalidUser) >> new User()
+		}
 
 
 

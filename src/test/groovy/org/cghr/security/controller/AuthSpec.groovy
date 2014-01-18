@@ -38,48 +38,48 @@ class AuthSpec extends Specification {
 
 	def setup() {
 
-		//Mocking User Service
-		UserService mockUserService=Mock()
 		def authtoken="ABCDEDGH-12345"
+		//Mocking User Service
+		UserService mockUserService=Stub(){
+			isValid(validUser) >> true
+			isValid(invalidUser) >> false
+			isValid(manager) >> true
 
-		mockUserService.isValid(validUser) >> true
-		mockUserService.isValid(invalidUser) >> false
-		mockUserService.isValid(manager) >> true
+			getUserCookieJson(validUser) >> '{"username":"user1","role":{"title":"user","bitMask":2}}'
+			getUserCookieJson(invalidUser) >> '{}'
+			getUserCookieJson(manager) >> '{"username":"user4","role":{"title":"manager","bitMask":3}}'
+
+			getId(validUser) >> "1"
+			getId(validUser) >> null
+			getId(manager) >> "4"
 
 
-		mockUserService.getUserCookieJson(validUser) >> '{"username":"user1","role":{"title":"user","bitMask":2}}'
-		mockUserService.getUserCookieJson(invalidUser) >> '{}'
-		mockUserService.getUserCookieJson(manager) >> '{"username":"user4","role":{"title":"manager","bitMask":3}}'
+			logUserAuthStatus(validUser,"success") >> {
+				gSql.executeInsert("insert into userlog(username,status) values(?,?)",[
+					validUser.username,
+					"success"
+				]) }
+			logUserAuthStatus(invalidUser,"fail") >> { gSql.executeInsert("insert into userlog(username,status) values(?,?)",[invalidUser.username, "fail"]) }
+			logUserAuthStatus(manager,"success") >> { gSql.executeInsert("insert into userlog(username,status) values(?,?)",[manager.username, "success"]) }
 
-		mockUserService.getId(validUser) >> "1"
-		mockUserService.getId(validUser) >> null
-		mockUserService.getId(manager) >> "4"
+			getUserJson(validUser) >> '{"id":1,"username":"user1","password":"secret1","role":"user","status":"active"}'
+			getUserJson(invalidUser) >> '{}'
+			getUserJson(manager) >> '{"id":4,"username":"user4","password":"secret4","role":"manager","status":"active"}'
 
-		mockUserService.logUserAuthStatus(validUser,"success") >> {
-			gSql.executeInsert("insert into userlog(username,status) values(?,?)",[
-				validUser.username,
-				"success"
-			]) }
-		mockUserService.logUserAuthStatus(invalidUser,"fail") >> { gSql.executeInsert("insert into userlog(username,status) values(?,?)",[invalidUser.username, "fail"]) }
-		mockUserService.logUserAuthStatus(manager,"success") >> { gSql.executeInsert("insert into userlog(username,status) values(?,?)",[manager.username, "success"]) }
+			saveAuthToken(_, validUser) >> {
+				gSql.executeInsert("insert into authtoken(token,username,role) values(?,?,?)",[
+					authtoken,
+					validUser.username,
+					'user'
+				]) }
 
-		mockUserService.getUserJson(validUser) >> '{"id":1,"username":"user1","password":"secret1","role":"user","status":"active"}'
-		mockUserService.getUserJson(invalidUser) >> '{}'
-		mockUserService.getUserJson(manager) >> '{"id":4,"username":"user4","password":"secret4","role":"manager","status":"active"}'
-		mockUserService.saveAuthToken(_, validUser) >> {
-			gSql.executeInsert("insert into authtoken(token,username,role) values(?,?,?)",[
-				authtoken,
-				validUser.username,
-				'user'
-			]) }
-
-		mockUserService.saveAuthToken(_, manager) >> {
-			gSql.executeInsert("insert into authtoken(username,token,role) values(?,?,?)",[
-				authtoken,
-				manager.username,
-				'manager'
-			]) }
-
+			saveAuthToken(_, manager) >> {
+				gSql.executeInsert("insert into authtoken(username,token,role) values(?,?,?)",[
+					authtoken,
+					manager.username,
+					'manager'
+				]) }
+		}
 		auth=new Auth(mockUserService)
 
 

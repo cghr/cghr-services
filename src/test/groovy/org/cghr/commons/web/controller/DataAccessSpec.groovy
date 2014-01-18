@@ -30,9 +30,10 @@ class DataAccessSpec extends Specification {
 
 		dataSet=new MockData().sampleData.get("country")
 		dataAccess=new DataAccess()
-		DbAccess mockDbAccess=Mock()
-		mockDbAccess.getRowAsJson("country", "id", "1") >> new Gson().toJson(dataSet[0]).toString()
-		mockDbAccess.getRowAsJson("country", "id", "999") >> "{}"
+		DbAccess mockDbAccess=Stub(){
+			getRowAsJson("country", "id", "1") >> new Gson().toJson(dataSet[0]).toString()
+			getRowAsJson("country", "id", "999") >> "{}"
+		}
 		dataAccess.dbAccess=mockDbAccess
 		dt.cleanInsert("country")
 	}

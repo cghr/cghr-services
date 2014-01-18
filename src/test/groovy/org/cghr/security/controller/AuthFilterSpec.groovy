@@ -33,12 +33,13 @@ class AuthFilterSpec extends Specification {
 	}
 	def setup() {
 
-		RequestParser mockParser=Mock()
-		mockParser.getAuthTokenFromCookies(request) >>> [authtoken, null]
-		UserService mockUserService=Mock()
-		mockUserService.isValidToken(authtoken) >>> [true, false]
+		RequestParser mockParser=Stub(){
+			getAuthTokenFromCookies(request) >>> [authtoken, null]
+		}
 
-
+		UserService mockUserService=Stub(){
+			isValidToken(authtoken) >>> [true, false]
+		}
 		filter=new AuthFilter(mockUserService,mockParser)
 		dt.clean("authtoken")
 	}

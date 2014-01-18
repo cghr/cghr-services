@@ -35,13 +35,14 @@ class DataModelUtilSpec extends Specification {
 	}
 
 	def setup() {
-		DhtmlxGridModelTransformer mockTransformer=Mock()
-		DbAccess mockDbAccess=Mock()
-		mockTransformer.getModel(multipleRowSql,validParamsMultipleRow) >> '{"rows":[{"id":1,"data":[1,"india","asia"]},{"id":2,"data":[2,"pakistan","asia"]},{"id":3,"data":[3,"srilanka","asia"]}]}'
-		mockTransformer.getModel(multipleRowSql,invalidParamsMultipleRow) >> '{"rows":[]}'
-		mockDbAccess.getColumnLabels(multipleRowSql,_) >> 'id,name,continent'
+		DhtmlxGridModelTransformer mockTransformer=Stub(){
+			getModel(multipleRowSql,validParamsMultipleRow) >> '{"rows":[{"id":1,"data":[1,"india","asia"]},{"id":2,"data":[2,"pakistan","asia"]},{"id":3,"data":[3,"srilanka","asia"]}]}'
+			getModel(multipleRowSql,invalidParamsMultipleRow) >> '{"rows":[]}'
+		}
 
-
+		DbAccess mockDbAccess=Stub(){
+			getColumnLabels(multipleRowSql,_) >> 'id,name,continent'
+		}
 		dataModelUtil=new DataModelUtil(mockTransformer,mockDbAccess)
 
 		dt.cleanInsert("country")

@@ -28,10 +28,11 @@ class DataStoreSpec extends Specification {
 	def setup() {
 
 		dataSet=new MockData().sampleData.get("country")
-		DbStore mockDbStore=Mock()
+		DbStore mockDbStore=Stub(){
+			saveOrUpdate(dataSet[0], "country") >> {gSql.executeInsert("insert into country(id,name,continent) values(?,?,?)",[1, "india", "asia"])}
+		}
 		dataStore=new DataStore()
 		dataStore.dbStore=mockDbStore
-		mockDbStore.saveOrUpdate(dataSet[0], "country") >> {gSql.executeInsert("insert into country(id,name,continent) values(?,?,?)",[1, "india", "asia"])}
 
 		dt.clean("country")
 	}

@@ -32,10 +32,11 @@ class LogoutSpec extends Specification {
 	}
 	def setup() {
 
-		DbAccess mockDbAccess=Mock()
-		mockDbAccess.removeData("authtoken", "token", authtoken) >> {
-			def sql="delete from authtoken where token=?".toString()
-			gSql.executeUpdate(sql,[authtoken])
+		DbAccess mockDbAccess=Stub(){
+			removeData("authtoken", "token", authtoken) >> {
+				def sql="delete from authtoken where token=?".toString()
+				gSql.executeUpdate(sql,[authtoken])
+			}
 		}
 
 		logout=new Logout(mockDbAccess)
