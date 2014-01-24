@@ -19,8 +19,7 @@ import spock.lang.Specification
 class DhtmlxGridModelTransformerSpec  extends Specification{
 
 	//specific
-	@Autowired
-	DhtmlxGridModelTransformer transformer
+	@Autowired DhtmlxGridModelTransformer transformer
 
 	@Shared def dataSet
 	def dataStore='country'
@@ -32,22 +31,16 @@ class DhtmlxGridModelTransformerSpec  extends Specification{
 	//General
 	@Shared Sql gSql
 	@Shared DbTester dt
-
-
-
-
 	def setupSpec() {
 
 		dt=new ClassPathXmlApplicationContext("spring-context.xml").getBean("dt")
 		dataSet=new MockData().sampleData.get("country")
 
 	}
-
 	def setup() {
 
 		dt.cleanInsert("country")
 	}
-
 	def "verify dhtmlxGrid transformer"() {
 
 		expect:
