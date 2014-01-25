@@ -1,7 +1,6 @@
 /build
 /bin
 /.gradle
-/.idea
-cghr-services.iml
-/out
+.project
+.classpath
 
