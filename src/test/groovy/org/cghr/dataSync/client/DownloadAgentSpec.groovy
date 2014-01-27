@@ -1,4 +1,5 @@
 package org.cghr.dataSync.client
+
 import groovy.sql.Sql
 import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
@@ -8,6 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 27/1/14.
  */
@@ -40,11 +42,11 @@ class DownloadAgentSpec extends Specification {
 
     }
 
-   @Ignore
+    @Ignore
     def "should download the inbox files from server  whose download status is null"() {
         given:
-        File dir=new File(fileBasePath)
-        List files=[]
+        File dir = new File(fileBasePath)
+        List files = []
 
         when:
         downloadAgent.run()
@@ -52,10 +54,7 @@ class DownloadAgentSpec extends Specification {
 
         then:
         dir.eachFile { files << it }
-        files.size()==2
-
-
-
+        files.size() == 2
 
 
     }

@@ -9,16 +9,17 @@ class DownloadAgent implements Agent {
     DbAccess dbAccess
     AwakeFileSession awakeFileSession
     String fileBasePath
-    DownloadAgent(DbAccess dbAccess,AwakeFileSession awakeFileSession,String fileBasePath) {
 
-        this.dbAccess=dbAccess
-        this.awakeFileSession=awakeFileSession
-        this.fileBasePath=fileBasePath
+    DownloadAgent(DbAccess dbAccess, AwakeFileSession awakeFileSession, String fileBasePath) {
+
+        this.dbAccess = dbAccess
+        this.awakeFileSession = awakeFileSession
+        this.fileBasePath = fileBasePath
     }
 
     public void run() {
 
 
-	}
+    }
 
 }

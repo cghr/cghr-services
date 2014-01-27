@@ -10,8 +10,8 @@ class DownloadOrganizerAgent implements Agent {
     DbStore dbStore
 
     DownloadOrganizerAgent(DataSyncService dataSyncService, DbStore dbStore) {
-        this.dataSyncService=dataSyncService
-        this.dbStore=dbStore
+        this.dataSyncService = dataSyncService
+        this.dbStore = dbStore
 
 
     }
@@ -19,12 +19,12 @@ class DownloadOrganizerAgent implements Agent {
 
     void run() {
 
-       saveDownloadInfoToInbox(dataSyncService.getDownloadInfo())
+        saveDownloadInfoToInbox(dataSyncService.getDownloadInfo())
     }
 
-    void saveDownloadInfoToInbox(List<Map> downloadInfo ) {
+    void saveDownloadInfoToInbox(List<Map> downloadInfo) {
 
-        dbStore.saveOrUpdateFromMapList(downloadInfo,'inbox')
+        dbStore.saveOrUpdateFromMapList(downloadInfo, 'inbox')
 
     }
 }

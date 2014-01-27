@@ -33,18 +33,26 @@ class MsgDistAgentSpec extends Specification {
         dt.cleanInsert("inbox")
         dt.clean("outbox")
 
-        DbAccess dbAccess=Stub(){
-            getRowsAsListOfMaps('select id,message,distList from inbox where distStatus is null',null) >> gSql.rows('select id,message,distList from inbox where distStatus is null')
+        DbAccess dbAccess = Stub() {
+            getRowsAsListOfMaps('select id,message,distList from inbox where distStatus is null', null) >> gSql.rows('select id,message,distList from inbox where distStatus is null')
 
         }
-        DbStore dbStore=Stub(){
-            saveOrUpdate([message:'file1.json',recepient:'1'],'outbox') >> {gSql.executeInsert('insert into outbox(message,recepient) values(?,?)',['file1','1']) }
-            saveOrUpdate([message:'file1.json',recepient:'2'],'outbox') >> {gSql.executeInsert('insert into outbox(message,recepient) values(?,?)',['file1','2']) }
-            saveOrUpdate([message:'file2.json',recepient:'3'],'outbox') >> {gSql.executeInsert('insert into outbox(message,recepient) values(?,?)',['file2','3']) }
-            saveOrUpdate([message:'file2.json',recepient:'4'],'outbox') >> {gSql.executeInsert('insert into outbox(message,recepient) values(?,?)',['file2','4']) }
+        DbStore dbStore = Stub() {
+            saveOrUpdate([message: 'file1.json', recepient: '1'], 'outbox') >> {
+                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file1', '1'])
+            }
+            saveOrUpdate([message: 'file1.json', recepient: '2'], 'outbox') >> {
+                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file1', '2'])
+            }
+            saveOrUpdate([message: 'file2.json', recepient: '3'], 'outbox') >> {
+                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file2', '3'])
+            }
+            saveOrUpdate([message: 'file2.json', recepient: '4'], 'outbox') >> {
+                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file2', '4'])
+            }
         }
 
-        msgDistAgent = new MsgDistAgent(dbAccess,dbStore)
+        msgDistAgent = new MsgDistAgent(dbAccess, dbStore)
 
     }
 
@@ -54,7 +62,7 @@ class MsgDistAgentSpec extends Specification {
         msgDistAgent.run()
 
         then:
-        gSql.rows("select * from outbox").size()==4
+        gSql.rows("select * from outbox").size() == 4
     }
 
     @Ignore

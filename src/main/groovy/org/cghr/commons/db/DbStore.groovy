@@ -6,37 +6,38 @@ import groovy.sql.Sql
 class DbStore {
 
 
-	Map dataStoreFactory
-	Sql gSql
+    Map dataStoreFactory
+    Sql gSql
 
-	DbStore(Sql gSql,Map dataStoreFactory) {
-		this.gSql=gSql
-		this.dataStoreFactory=dataStoreFactory
-	}
+    DbStore(Sql gSql, Map dataStoreFactory) {
+        this.gSql = gSql
+        this.dataStoreFactory = dataStoreFactory
+    }
 
-	void saveOrUpdate(Map data,String dataStore) {
+    void saveOrUpdate(Map data, String dataStore) {
 
-		String keyField=dataStoreFactory.get(dataStore)
-		String keyFieldValue=data.get(keyField)
+        String keyField = dataStoreFactory.get(dataStore)
+        String keyFieldValue = data.get(keyField)
 
-		def keysAndValues=data.collect(){ key,value -> "$key=?" }.join(",")
+        def keysAndValues = data.collect() { key, value -> "$key=?" }.join(",")
 
-		def sql=isNewData(dataStore,keyField,keyFieldValue)?
-				"insert into $dataStore set $keysAndValues"
-				:
-				"update $dataStore set $keysAndValues where $keyField=$keyFieldValue"
+        def sql = isNewData(dataStore, keyField, keyFieldValue) ?
+                "insert into $dataStore set $keysAndValues"
+                :
+                "update $dataStore set $keysAndValues where $keyField=$keyFieldValue"
 
-		gSql.execute(sql, data.values() as List)
-	}
-	void saveOrUpdateFromMapList(List list,String dataStore){
+        gSql.execute(sql, data.values() as List)
+    }
 
-		for(Map data:list)
-			saveOrUpdate(data, dataStore)
-	}
+    void saveOrUpdateFromMapList(List list, String dataStore) {
 
-	boolean isNewData(String dataStore,String keyField,String keyFieldValue) {
+        for (Map data : list)
+            saveOrUpdate(data, dataStore)
+    }
 
-		List rows=gSql.rows("select * from $dataStore where $keyField=?",[keyFieldValue])
-		rows.isEmpty()
-	}
+    boolean isNewData(String dataStore, String keyField, String keyFieldValue) {
+
+        List rows = gSql.rows("select * from $dataStore where $keyField=?", [keyFieldValue])
+        rows.isEmpty()
+    }
 }

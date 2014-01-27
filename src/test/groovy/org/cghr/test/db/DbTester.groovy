@@ -5,66 +5,67 @@ import groovy.sql.Sql
 import javax.sql.DataSource
 
 
-
 class DbTester {
 
-	Sql gSql
-	MockData dataSet=new MockData()
+    Sql gSql
+    MockData dataSet = new MockData()
 
-	def dataStore
+    def dataStore
 
-	DbTester(DataSource ds) {
-		this.gSql=new Sql(ds.connection)
-	}
-	DbTester(Sql sql) {
-		this.gSql=sql
-	}
+    DbTester(DataSource ds) {
+        this.gSql = new Sql(ds.connection)
+    }
 
-
-
-	def cleanInsert(String tablesCommaSeparated) {
-		def tables=tablesCommaSeparated.split(",")
+    DbTester(Sql sql) {
+        this.gSql = sql
+    }
 
 
-		for(table in tables) {
-			clean(table)
-			insert(table)
-		}
-	}
-
-	def clean(String table) {
+    def cleanInsert(String tablesCommaSeparated) {
+        def tables = tablesCommaSeparated.split(",")
 
 
-		gSql.execute("drop table $table if exists".toString())
-		createTable(table)
-	}
-	def insert(String table) {
+        for (table in tables) {
+            clean(table)
+            insert(table)
+        }
+    }
 
-		insertSampleData(table,dataSet.sampleData.get(table))
-	}
+    def clean(String table) {
 
-	def createTable(String table) {
 
-		def map=dataSet.structure.get(table)
-		def cols=map.collect(){ key,value ->
-			key+' '+value
-		}
-		def sql="create table $table(${cols.join(',')})".toString()
-		gSql.execute(sql)
-	}
-	def insertSampleData(String table,List sampleData) {
+        gSql.execute("drop table $table if exists".toString())
+        createTable(table)
+    }
 
-		Set columnsSet=(dataSet.structure.get(table)).keySet()
-		def columns=(columnsSet as String[]).join(',')
-		StringBuffer placeHolders=new StringBuffer()
-		for(i in 1..columnsSet.size())
-			placeHolders.append('?,')
+    def insert(String table) {
 
-		placeHolders.deleteCharAt(placeHolders.length()-1)
+        insertSampleData(table, dataSet.sampleData.get(table))
+    }
 
-		for(Map row:sampleData){
-			def sql="insert into $table($columns) values($placeHolders)".toString()
-			gSql.execute(sql,row.values().toList())
-		}
-	}
+    def createTable(String table) {
+
+        def map = dataSet.structure.get(table)
+        def cols = map.collect() { key, value ->
+            key + ' ' + value
+        }
+        def sql = "create table $table(${cols.join(',')})".toString()
+        gSql.execute(sql)
+    }
+
+    def insertSampleData(String table, List sampleData) {
+
+        Set columnsSet = (dataSet.structure.get(table)).keySet()
+        def columns = (columnsSet as String[]).join(',')
+        StringBuffer placeHolders = new StringBuffer()
+        for (i in 1..columnsSet.size())
+            placeHolders.append('?,')
+
+        placeHolders.deleteCharAt(placeHolders.length() - 1)
+
+        for (Map row : sampleData) {
+            def sql = "insert into $table($columns) values($placeHolders)".toString()
+            gSql.execute(sql, row.values().toList())
+        }
+    }
 }

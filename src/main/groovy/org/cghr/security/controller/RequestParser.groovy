@@ -4,17 +4,15 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 
 
-
-
 class RequestParser {
 
-	String getAuthTokenFromCookies(HttpServletRequest request) {
+    String getAuthTokenFromCookies(HttpServletRequest request) {
 
 
-		for(Cookie cookie in request.getCookies()) {
-			if("authtoken"==cookie.getName())
-				return cookie.getValue()
-		}
-		return null
-	}
+        for (Cookie cookie in request.getCookies()) {
+            if ("authtoken" == cookie.getName())
+                return cookie.getValue()
+        }
+        return null
+    }
 }

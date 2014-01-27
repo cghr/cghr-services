@@ -8,7 +8,7 @@ class MockData {
             user: [id: 'int', username: 'varchar(20)', password: 'varchar(20)', role: 'varchar(20)', status: 'varchar(20)'],
             authtoken: [id: 'int', token: 'varchar(255)', time: 'varchar(20)', expires: 'varchar(255)', username: 'varchar(20)', role: 'varchar(20)'],
             userlog: [id: 'int', username: 'varchar(20)', status: 'varchar(20)', time: 'varchar(20)', ipaddress: 'varchar(20)'],
-            inbox: [id: 'int', message: 'varchar(100)', sender: 'varchar(20)',dwnStatus:'varchar(20)', distList: 'varchar(20)',distStatus:'varchar(20)'],
+            inbox: [id: 'int', message: 'varchar(100)', sender: 'varchar(20)', dwnStatus: 'varchar(20)', distList: 'varchar(20)', distStatus: 'varchar(20)'],
             outbox: [id: 'int', message: 'varchar(100)', recepient: 'varchar(20)']
     ]
 
@@ -27,9 +27,9 @@ class MockData {
             ],
             authtoken: [],
             userlog: [],
-            inbox:[
-                    [id:1,message:'file1.json',sender:'admin',dwnStatus: null,distList: '1,2',distStatus: null],
-                    [id:2,message:'file2.json',sender:'admin',dwnStatus: null,distList: '3,4',distStatus: null]
+            inbox: [
+                    [id: 1, message: 'file1.json', sender: 'admin', dwnStatus: null, distList: '1,2', distStatus: null],
+                    [id: 2, message: 'file2.json', sender: 'admin', dwnStatus: null, distList: '3,4', distStatus: null]
             ],
             outbox: []
     ]

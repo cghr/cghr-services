@@ -1,6 +1,6 @@
 package org.cghr.contextstartup
 
-interface AppStartupTask  {
+interface AppStartupTask {
 
-	void doTask()
+    void doTask()
 }

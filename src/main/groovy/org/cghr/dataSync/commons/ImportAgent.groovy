@@ -2,11 +2,11 @@ package org.cghr.dataSync.commons
 
 class ImportAgent implements Agent {
 
-	public void run() {
+    public void run() {
 
-		importInboxFiles();
-	}
+        importInboxFiles();
+    }
 
-	void importInboxFiles() {
-	}
+    void importInboxFiles() {
+    }
 }

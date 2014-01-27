@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.ResponseBody
 @RequestMapping("/data/dataStoreService")
 class DataStore {
 
-	@Autowired
-	DbStore dbStore
+    @Autowired
+    DbStore dbStore
 
-	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	@ResponseBody
-	String saveData(@RequestBody Map data) {
+    @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @ResponseBody
+    String saveData(@RequestBody Map data) {
 
-		def dataStore=data.remove("datastore")
-		dbStore.saveOrUpdate(data,dataStore)
-	}
+        def dataStore = data.remove("datastore")
+        dbStore.saveOrUpdate(data, dataStore)
+    }
 }

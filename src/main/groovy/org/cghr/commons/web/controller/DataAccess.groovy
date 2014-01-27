@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody
 @RequestMapping("/data/dataAccessService")
 class DataAccess {
 
-	@Autowired
-	DbAccess dbAccess
+    @Autowired
+    DbAccess dbAccess
 
-	@RequestMapping(value = "/{dataStore}/{keyField}/{keyFieldValue}", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	@ResponseBody
-	String getDataAsJson(@PathVariable String dataStore,@PathVariable String keyField,@PathVariable String keyFieldValue) {
+    @RequestMapping(value = "/{dataStore}/{keyField}/{keyFieldValue}", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @ResponseBody
+    String getDataAsJson(
+            @PathVariable String dataStore, @PathVariable String keyField, @PathVariable String keyFieldValue) {
 
-		dbAccess.getRowAsJson(dataStore, keyField, keyFieldValue)
-	}
+        dbAccess.getRowAsJson(dataStore, keyField, keyFieldValue)
+    }
 }
