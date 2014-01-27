@@ -30,7 +30,7 @@ class MsgDistAgent implements Agent {
 
                     recepient ->
 
-                        println row.message +' '+recepient
+
                         dbStore.saveOrUpdate([message: row.message, recepient: recepient], 'outbox')
 
                 }

@@ -35,8 +35,8 @@ class DownloadOrganizerAgentSpec extends Specification {
         DataSyncService mockService = Stub() { getDownloadInfo() >> dataSet }
         DbStore mockDbStore = Stub() {
             saveOrUpdateFromMapList(dataSet, 'inbox') >> {
-                gSql.executeInsert("insert into inbox(id,message,sender,distList) values(?,?,?,?)".toString(), dataSet[0].values() as List)
-                gSql.executeInsert("insert into inbox(id,message,sender,distList) values(?,?,?,?)".toString(), dataSet[1].values() as List)
+                gSql.executeInsert("insert into inbox values(?,?,?,?,?,?)".toString(), dataSet[0].values() as List)
+                gSql.executeInsert("insert into inbox values(?,?,?,?,?,?)".toString(), dataSet[1].values() as List)
             }
         }
 
@@ -50,7 +50,7 @@ class DownloadOrganizerAgentSpec extends Specification {
         downloadOrganizerAgent.run()
 
         then:
-        gSql.rows("select id,message,sender,distList from inbox") == dataSet
+        gSql.rows("select * from inbox") == dataSet
     }
 }
 
