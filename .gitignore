@@ -4,4 +4,7 @@
 .classpath
 .settings
 .gradle
+.idea/
+cghr-services.iml
+out/
 

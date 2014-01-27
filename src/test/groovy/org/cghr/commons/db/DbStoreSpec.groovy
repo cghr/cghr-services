@@ -35,7 +35,8 @@ class DbStoreSpec extends Specification{
 		dataSetUpdate=new MockData().sampleDataUpdate.get("country")
 
 	}
-	def setup()
+
+    def setup()
 	{
 		dt.clean("country")
 	}
