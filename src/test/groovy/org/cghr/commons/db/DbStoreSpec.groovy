@@ -49,6 +49,14 @@ class DbStoreSpec extends Specification{
 		then:
 		gSql.firstRow("SELECT * FROM country WHERE id=?",[1])==dataSet[0]
 	}
+	def "verify data insert from a map List to database"()
+	{
+		when:
+		dbStore.saveOrUpdateFromMapList(dataSet, dataStore)
+
+		then:
+		gSql.rows("select * from country")==dataSet
+	}
 
 	def "verify data update from a map to database"(){
 		when:
@@ -57,6 +65,15 @@ class DbStoreSpec extends Specification{
 
 		then:
 		gSql.firstRow("SELECT * FROM country WHERE id=?",[1])==dataSetUpdate[0]
+	}
+	def "verify data update from a map List to database"()
+	{
+		when:
+		dbStore.saveOrUpdateFromMapList(dataSet, dataStore)
+		dbStore.saveOrUpdateFromMapList(dataSetUpdate, dataStore)
+
+		then:
+		gSql.rows("select * from country")==dataSetUpdate
 	}
 }
 
