@@ -1,42 +1,43 @@
 package org.cghr.commons.web.controller
-
 import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
-import org.springframework.context.ApplicationContext
-import org.springframework.context.support.ClassPathXmlApplicationContext
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
+@ContextConfiguration(locations = "classpath:spring-context.xml")
 class DataAccessSpec extends Specification {
 
     DataAccess dataAccess
 
 
-    @Shared
+    @Autowired
     Sql gSql
-    @Shared
+
+    @Autowired
     DbTester dt
+
+    @Shared
     def dataSet
 
     def setupSpec() {
-        ApplicationContext appContext = new ClassPathXmlApplicationContext("spring-context.xml")
-        gSql = appContext.getBean("gSql")
-        dt = appContext.getBean("dt")
+        dataSet = new MockData().sampleData.get("country")
     }
 
     def setup() {
 
-        dataSet = new MockData().sampleData.get("country")
+        dt.cleanInsert("country")
         dataAccess = new DataAccess()
         DbAccess mockDbAccess = Stub() {
             getRowAsJson("country", "id", "1") >> new Gson().toJson(dataSet[0]).toString()
             getRowAsJson("country", "id", "999") >> "{}"
         }
         dataAccess.dbAccess = mockDbAccess
-        dt.cleanInsert("country")
+
     }
 
     def "should get requested data as json"() {

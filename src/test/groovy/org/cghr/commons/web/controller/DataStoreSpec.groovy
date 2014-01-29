@@ -1,35 +1,34 @@
 package org.cghr.commons.web.controller
-
 import groovy.sql.Sql
 import org.cghr.commons.db.DbStore
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
-import org.springframework.context.ApplicationContext
-import org.springframework.context.support.ClassPathXmlApplicationContext
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
+@ContextConfiguration(locations = "classpath:spring-context.xml")
 class DataStoreSpec extends Specification {
 
     DataStore dataStore
     def data = [id: 1, name: 'india', continent: 'asia']
 
 
+    @Shared
     def dataSet
-    @Shared
+    @Autowired
     Sql gSql
-    @Shared
+    @Autowired
     DbTester dt
 
     def setupSpec() {
-        ApplicationContext appContext = new ClassPathXmlApplicationContext("spring-context.xml")
-        gSql = appContext.getBean("gSql")
-        dt = appContext.getBean("dt")
+        dataSet = new MockData().sampleData.get("country")
     }
 
     def setup() {
 
-        dataSet = new MockData().sampleData.get("country")
+
         DbStore mockDbStore = Stub() {
             saveOrUpdate(dataSet[0], "country") >> {
                 gSql.executeInsert("insert into country(id,name,continent) values(?,?,?)", [1, "india", "asia"])

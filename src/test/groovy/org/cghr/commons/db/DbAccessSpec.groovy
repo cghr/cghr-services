@@ -24,7 +24,7 @@ class DbAccessSpec extends Specification {
 
     @Shared
     def dataSet
-    //@Shared
+
     @Autowired
     def gSql
     def dataStore = 'country'

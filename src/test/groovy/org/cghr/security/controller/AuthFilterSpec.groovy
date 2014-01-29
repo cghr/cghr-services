@@ -1,18 +1,17 @@
 package org.cghr.security.controller
-
 import groovy.sql.Sql
 import org.cghr.security.service.UserService
 import org.cghr.test.db.DbTester
-import org.springframework.context.ApplicationContext
-import org.springframework.context.support.ClassPathXmlApplicationContext
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
-import spock.lang.Shared
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 import javax.servlet.FilterChain
 
+@ContextConfiguration(locations = "classpath:spring-context.xml")
 class AuthFilterSpec extends Specification {
 
     AuthFilter filter
@@ -21,17 +20,13 @@ class AuthFilterSpec extends Specification {
     FilterChain chain = Mock()
 
 
-    @Shared
+    @Autowired
     Sql gSql
-    @Shared
+    @Autowired
     DbTester dt
     def authtoken = "ABCDEFG-12345"
 
-    def setupSpec() {
-        ApplicationContext appContext = new ClassPathXmlApplicationContext("spring-context.xml")
-        gSql = appContext.getBean("gSql")
-        dt = appContext.getBean("dt")
-    }
+
 
     def setup() {
 

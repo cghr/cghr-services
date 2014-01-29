@@ -1,20 +1,20 @@
 package org.cghr.dataSync.client
-
 import groovy.sql.Sql
 import org.cghr.commons.db.DbStore
 import org.cghr.dataSync.service.DataSyncService
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
-import org.springframework.context.ApplicationContext
-import org.springframework.context.support.ClassPathXmlApplicationContext
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
+@ContextConfiguration(locations = "classpath:spring-context.xml")
 class DownloadOrganizerAgentSpec extends Specification {
 
-    @Shared
+    @Autowired
     Sql gSql
-    @Shared
+    @Autowired
     DbTester dt
 
     DownloadOrganizerAgent downloadOrganizerAgent
@@ -22,9 +22,6 @@ class DownloadOrganizerAgentSpec extends Specification {
     List dataSet
 
     def setupSpec() {
-        ApplicationContext appContext = new ClassPathXmlApplicationContext("spring-context.xml")
-        gSql = appContext.getBean("gSql")
-        dt = appContext.getBean("dt")
         dataSet = new MockData().sampleData.get("inbox")
 
 

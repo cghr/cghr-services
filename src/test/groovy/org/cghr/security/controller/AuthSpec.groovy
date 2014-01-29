@@ -1,24 +1,23 @@
 package org.cghr.security.controller
-
 import groovy.sql.Sql
 import org.cghr.security.model.User
 import org.cghr.security.service.UserService
 import org.cghr.test.db.DbTester
-import org.springframework.context.ApplicationContext
-import org.springframework.context.support.ClassPathXmlApplicationContext
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletResponse
-import spock.lang.Shared
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 import javax.servlet.http.HttpServletResponse
 
+@ContextConfiguration(locations = "classpath:spring-context.xml")
 class AuthSpec extends Specification {
 
 
-    @Shared
+    @Autowired
     Sql gSql
-    @Shared
+    @Autowired
     DbTester dt
     Auth auth
     User validUser = new User(username: 'user1', password: 'secret1')
@@ -26,13 +25,7 @@ class AuthSpec extends Specification {
     User manager = new User(username: 'user4', password: 'secret4')
 
 
-    def setupSpec() {
 
-        ApplicationContext appContext = new ClassPathXmlApplicationContext("spring-context.xml")
-        gSql = appContext.getBean("gSql")
-        dt = appContext.getBean("dt")
-
-    }
 
     def setup() {
         def authtoken = "ABCDEDGH-12345"
