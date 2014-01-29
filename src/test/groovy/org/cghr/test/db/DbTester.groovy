@@ -34,7 +34,7 @@ class DbTester {
     def clean(String table) {
 
 
-        gSql.execute("truncate table $table ".toString())
+        gSql.execute("drop table $table if exists".toString())
         createTable(table)
     }
 
