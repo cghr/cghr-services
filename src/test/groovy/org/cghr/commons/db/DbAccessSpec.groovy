@@ -1,11 +1,8 @@
 package org.cghr.commons.db
-
 import com.google.gson.Gson
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationContext
-import org.springframework.context.support.ClassPathXmlApplicationContext
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
@@ -27,21 +24,23 @@ class DbAccessSpec extends Specification {
 
     @Shared
     def dataSet
-    @Shared
+    //@Shared
+    @Autowired
     def gSql
     def dataStore = 'country'
 
     //General
-    @Shared
+    @Autowired
     DbTester dt
 
     def setupSpec() {
 
-        ApplicationContext appContext = new ClassPathXmlApplicationContext("spring-context.xml")
-        dt = appContext.getBean("dt")
-        gSql = appContext.getBean("gSql")
         dataSet = new MockData().sampleData.get("country")
 
+
+    }
+    def setup()
+    {
         dt.cleanInsert("country")
     }
 
