@@ -34,7 +34,7 @@ class DbTester {
     def clean(String table) {
 
 
-        gSql.execute("drop table $table if exists".toString())
+        gSql.execute("truncate table $table ".toString())
         createTable(table)
     }
 
@@ -49,7 +49,7 @@ class DbTester {
         def cols = map.collect() { key, value ->
             key + ' ' + value
         }
-        def sql = "create table $table(${cols.join(',')})".toString()
+        def sql = "create table if not exists $table(${cols.join(',')})".toString()
         gSql.execute(sql)
     }
 

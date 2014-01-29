@@ -31,10 +31,10 @@ class AuthSpec extends Specification {
         ApplicationContext appContext = new ClassPathXmlApplicationContext("spring-context.xml")
         gSql = appContext.getBean("gSql")
         dt = appContext.getBean("dt")
+
     }
 
     def setup() {
-
         def authtoken = "ABCDEDGH-12345"
         //Mocking User Service
         UserService mockUserService = Stub() {
