@@ -1,8 +1,10 @@
 package org.cghr.commons.db
+
 import groovy.sql.Sql
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.support.ClassPathXmlApplicationContext
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
@@ -22,14 +24,14 @@ class DbStoreSpec extends Specification {
 
     @Autowired
     Sql gSql
-    @Autowired
+    @Shared
     DbTester dt
 
 
     def setupSpec() {
 
 
-
+        dt = new ClassPathXmlApplicationContext("spring-context.xml").getBean("dt")
         dataSet = new MockData().sampleData.get("country")
         dataSetUpdate = new MockData().sampleDataUpdate.get("country")
 
