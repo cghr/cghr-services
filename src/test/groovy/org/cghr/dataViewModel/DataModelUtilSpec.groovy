@@ -1,4 +1,5 @@
 package org.cghr.dataViewModel
+
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.test.db.DbTester
@@ -16,8 +17,11 @@ class DataModelUtilSpec extends Specification {
     @Shared
     def dataSet
     def dataStore = 'country'
+    @Shared
     def multipleRowSql = 'select * from country where continent=?'
+    @Shared
     def validParamsMultipleRow = ['asia'];
+    @Shared
     def invalidParamsMultipleRow = ['dummyContinent'];
 
     //General
@@ -51,17 +55,20 @@ class DataModelUtilSpec extends Specification {
     def "should construct Json Response in required format"() {
 
         expect:
-        json == dataModelUtil.constructJsonResponse(multipleRowSql, validParamsMultipleRow, "#text_filter,#text_filter,#text_filter", "int,str,str")
-        emptyDataJson == dataModelUtil.constructJsonResponse(multipleRowSql, invalidParamsMultipleRow, "#text_filter,#text_filter,#text_filter", "int,str,str")
+        dataModelUtil.constructJsonResponse(sql, params, filters, sortings) == result
 
         where:
-        json = '{"headings":"id,name,continent",' +
+
+        sql            | params                   | filters                                  | sortings      || result
+        multipleRowSql | validParamsMultipleRow   | "#text_filter,#text_filter,#text_filter" | "int,str,str" || '{"headings":"id,name,continent",' +
                 '"filters":"#text_filter,#text_filter,#text_filter",' +
                 '"sortings":"int,str,str",' +
                 '"data":{"rows":[{"id":1,"data":[1,"india","asia"]},{"id":2,"data":[2,"pakistan","asia"]},{"id":3,"data":[3,"srilanka","asia"]}]}}'
-        emptyDataJson = '{"headings":"id,name,continent",' +
+
+        multipleRowSql | invalidParamsMultipleRow | "#text_filter,#text_filter,#text_filter" | "int,str,str" || '{"headings":"id,name,continent",' +
                 '"filters":"#text_filter,#text_filter,#text_filter",' +
                 '"sortings":"int,str,str",' +
                 '"data":{"rows":[]}}'
+
     }
 }

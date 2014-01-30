@@ -1,4 +1,5 @@
 package org.cghr.dataViewModel
+
 import groovy.sql.Sql
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
@@ -16,9 +17,13 @@ class DhtmlxGridModelTransformerSpec extends Specification {
 
     @Shared
     def dataSet
+    @Shared
     def dataStore = 'country'
+    @Shared
     def multipleRowSql = 'select * from country where continent=?'
+    @Shared
     def validParamsMultipleRow = ['asia'];
+    @Shared
     def invalidParamsMultipleRow = ['dummyContinent'];
 
     //General
@@ -42,11 +47,11 @@ class DhtmlxGridModelTransformerSpec extends Specification {
     def "verify dhtmlxGrid transformer"() {
 
         expect:
-        model == transformer.getModel(multipleRowSql, validParamsMultipleRow)
-        emptyModel == transformer.getModel(multipleRowSql, invalidParamsMultipleRow)
+        transformer.getModel(sql,params) == result
 
         where:
-        model = '{"rows":[{"id":1,"data":[1,"india","asia"]},{"id":2,"data":[2,"pakistan","asia"]},{"id":3,"data":[3,"srilanka","asia"]}]}'
-        emptyModel = '{"rows":[]}'
+        sql            | params                   || result
+        multipleRowSql | validParamsMultipleRow   || '{"rows":[{"id":1,"data":[1,"india","asia"]},{"id":2,"data":[2,"pakistan","asia"]},{"id":3,"data":[3,"srilanka","asia"]}]}'
+        multipleRowSql | invalidParamsMultipleRow || '{"rows":[]}'
     }
 }

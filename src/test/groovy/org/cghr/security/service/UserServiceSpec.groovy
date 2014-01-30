@@ -25,8 +25,12 @@ class UserServiceSpec extends Specification {
     DbStore mockDbStore
 
 
+    @Shared
     User validUser = new User(username: 'user1', password: 'secret1')
+    @Shared
     User invalidUser = new User(username: 'invalidUser', password: 'secret1')
+    @Shared
+    User validUserWithBadPassword = new User(username: 'user1', password: 'badpassword')
 
 
     def setupSpec() {
@@ -96,27 +100,19 @@ class UserServiceSpec extends Specification {
         dt.cleanInsert("user,authtoken,userlog")
     }
 
-    def "should be true for valid user"() {
+    def "should validate a given user"() {
 
         expect:
-        userService.isValid(validUser) == true
+        userService.isValid(user) == result
+
+        where:
+        user                     || result
+        validUser                || true
+        invalidUser              || false
+        validUserWithBadPassword || false
+
     }
 
-    def "should be false for an invalid user"() {
-
-
-        expect:
-        userService.isValid(invalidUser) == false
-    }
-
-    def "should be false for valid username and invalid password"() {
-
-        given:
-        User invalidUser = new User(username: 'user1', password: 'badpassword')
-
-        expect:
-        userService.isValid(invalidUser) == false
-    }
 
     def "should authenticate a valid user locally when server not found"() {
 
@@ -133,22 +129,27 @@ class UserServiceSpec extends Specification {
 
     }
 
-    def "should get a valid user as a json"() {
+    def "should get an User as Json"() {
 
         expect:
-        userService.getUserJson(validUser) == '{"id":1,"username":"user1","password":"secret1","role":"user","status":"active"}'
+        userService.getUserJson(user) == json
+
+        where:
+        user        || json
+        validUser   || '{"id":1,"username":"user1","password":"secret1","role":"user","status":"active"}'
+        invalidUser || '{}'
     }
 
-    def "should get an invalid user as empty json"() {
-
-        expect:
-        userService.getUserJson(invalidUser) == '{}'
-    }
 
     def "should get a valid user cookie  json"() {
 
         expect:
-        userService.getUserCookieJson(validUser) == '{"username":"user1","role":{"title":"user","bitMask":2}}'
+        userService.getUserCookieJson(user) == result
+
+        where:
+        user      || result
+        validUser || '{"username":"user1","role":{"title":"user","bitMask":2}}'
+
     }
 
     def "should get user id from an User object"() {
@@ -190,14 +191,14 @@ class UserServiceSpec extends Specification {
     def "should be true for a valid local(database) user"() {
 
         expect:
-        userService.isValidLocalUser(validUser) == true
+        userService.isValidLocalUser(user) == result
+
+        where:
+        user        || result
+        validUser   || true
+        invalidUser || false
     }
 
-    def "should be false for a invalid local(database) user"() {
-
-        expect:
-        userService.isValidLocalUser(invalidUser) == false
-    }
 
     def "should cache(save to database) a userJson got from a http response as String"() {
         given:
@@ -213,8 +214,12 @@ class UserServiceSpec extends Specification {
 
     def "should get a valid user as Map"() {
         expect:
-        userService.getUserAsMap(validUser) == [id: 1, username: "user1", password: "secret1", role: "user", status: "active"]
-        userService.getUserAsMap(invalidUser) == [:]
+        userService.getUserAsMap(user) == result
+
+        where:
+        user        || result
+        validUser   || [id: 1, username: "user1", password: "secret1", role: "user", status: "active"]
+        invalidUser || [:]
     }
 
     def "should be true for a valid token"() {

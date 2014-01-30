@@ -55,5 +55,8 @@ class AuthFilterSpec extends Specification {
         response2.status == HttpStatus.UNAUTHORIZED.value
         1 * chain.doFilter(request, response1)
 
+
+
+
     }
 }

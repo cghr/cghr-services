@@ -45,7 +45,6 @@ class DbAccessSpec extends Specification {
 
         dataSet = new MockData().sampleData.get("country")
 
-
     }
 
     def setup() {
@@ -156,8 +155,14 @@ class DbAccessSpec extends Specification {
         when:
         dbAccess.removeData("country", "continent", "asia")
 
+
         then:
-        gSql.rows("select * from country where continent=?", ['asia']).size() == 0
+        gSql.rows(sql, params).size() == result
+
+        where:
+        sql                                       | params   || result
+        'select * from country where continent=?' | ['asia'] || 0
+
 
     }
 }
