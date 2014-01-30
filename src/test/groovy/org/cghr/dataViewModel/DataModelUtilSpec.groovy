@@ -1,10 +1,7 @@
 package org.cghr.dataViewModel
 
-import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
-import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
@@ -25,12 +22,7 @@ class DataModelUtilSpec extends Specification {
     def invalidParamsMultipleRow = ['dummyContinent'];
 
     //General
-    @Autowired
-    Sql gSql
-    @Autowired
-    DbTester dt
-
-    def setupSpec() {
+     def setupSpec() {
 
 
         dataSet = new MockData().sampleData.get("country")
@@ -48,7 +40,6 @@ class DataModelUtilSpec extends Specification {
         }
         dataModelUtil = new DataModelUtil(mockTransformer, mockDbAccess)
 
-        dt.cleanInsert("country")
     }
 
 

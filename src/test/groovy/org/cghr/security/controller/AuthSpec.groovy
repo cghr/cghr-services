@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
+import spock.lang.Shared
 import spock.lang.Specification
 
 import javax.servlet.http.HttpServletResponse
@@ -20,9 +21,9 @@ class AuthSpec extends Specification {
     @Autowired
     DbTester dt
     Auth auth
-    User validUser = new User(username: 'user1', password: 'secret1')
-    User invalidUser = new User(username: 'invaliduser', password: 'invalidpassword')
-    User manager = new User(username: 'user4', password: 'secret4')
+    @Shared  User validUser = new User(username: 'user1', password: 'secret1')
+    @Shared User invalidUser = new User(username: 'invaliduser', password: 'invalidpassword')
+    @Shared User manager = new User(username: 'user4', password: 'secret4')
 
 
 

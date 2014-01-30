@@ -17,6 +17,7 @@ class OnlineAuthServiceSpec extends Specification {
     RestTemplate mockRestTemplate
     String mockServerAuthUrl
 
+
     @Shared User validUser = new User(username: 'user1', password: 'secret1')
     @Shared User invalidUser = new User(username: 'invaliduser', password: 'secret1')
 

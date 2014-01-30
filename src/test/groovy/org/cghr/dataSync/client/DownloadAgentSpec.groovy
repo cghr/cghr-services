@@ -28,7 +28,7 @@ class DownloadAgentSpec extends Specification {
 
         downloadAgent = new DownloadAgent(dbAccess, awakeFileSession, fileBasePath)
 
-        dt.cleanInsert("inbox")
+        dt.clean("inbox")
 
     }
 
