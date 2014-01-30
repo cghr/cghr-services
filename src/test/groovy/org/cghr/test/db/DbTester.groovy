@@ -35,6 +35,7 @@ class DbTester {
 
 
         gSql.execute("drop table $table if exists".toString())
+
         createTable(table)
     }
 

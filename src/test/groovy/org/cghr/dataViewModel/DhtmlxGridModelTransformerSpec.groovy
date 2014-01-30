@@ -12,7 +12,6 @@ import spock.lang.Specification
 class DhtmlxGridModelTransformerSpec extends Specification {
 
     //specific
-    @Autowired
     DhtmlxGridModelTransformer transformer
 
     @Shared
@@ -40,14 +39,14 @@ class DhtmlxGridModelTransformerSpec extends Specification {
     }
 
     def setup() {
-
+        transformer = new DhtmlxGridModelTransformer(gSql)
         dt.cleanInsert("country")
     }
 
     def "verify dhtmlxGrid transformer"() {
 
         expect:
-        transformer.getModel(sql,params) == result
+        transformer.getModel(sql, params) == result
 
         where:
         sql            | params                   || result

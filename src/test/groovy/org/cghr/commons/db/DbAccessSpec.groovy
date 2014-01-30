@@ -41,14 +41,14 @@ class DbAccessSpec extends Specification {
     @Autowired
     DbTester dt
 
+    def setup() {
+        dt.cleanInsert("country")
+    }
+
     def setupSpec() {
 
         dataSet = new MockData().sampleData.get("country")
 
-    }
-
-    def setup() {
-        dt.cleanInsert("country")
     }
 
 
