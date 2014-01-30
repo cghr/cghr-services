@@ -1,6 +1,7 @@
 package org.cghr.security.controller
 
 import org.springframework.mock.web.MockHttpServletRequest
+import spock.lang.Shared
 import spock.lang.Specification
 
 import javax.servlet.http.Cookie
@@ -8,8 +9,17 @@ import javax.servlet.http.Cookie
 class RequestParserSpec extends Specification {
 
     RequestParser parser
+    @Shared def validRequest
+    @Shared def invalidRequest
 
     def setupSpec() {
+        validRequest = new MockHttpServletRequest()
+        def token = "ABCDEFG-12345"
+        Cookie authtokenCookie = new Cookie("authtoken", token)
+        def cookies = [authtokenCookie] as Cookie[]
+        validRequest.setCookies(cookies)
+        invalidRequest=new MockHttpServletRequest()
+
     }
 
     def setup() {
@@ -19,14 +29,13 @@ class RequestParserSpec extends Specification {
 
     def "should get authtoken from request cookies"() {
 
-        given:
-        def request = new MockHttpServletRequest()
-        def authtoken = "ABCDEFG-12345"
-        Cookie authtokenCookie = new Cookie("authtoken", authtoken)
-        def cookies = [authtokenCookie] as Cookie[]
-        request.setCookies(cookies)
 
         expect:
         parser.getAuthTokenFromCookies(request) == authtoken
+
+        where:
+        request        || authtoken
+        validRequest   || "ABCDEFG-12345"
+        invalidRequest || null
     }
 }

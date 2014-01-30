@@ -22,8 +22,7 @@ class DbAccess {
 
     Map<String, String> getRowAsMap(String sql, List params) {
 
-        def row = gSql.firstRow(sql, params)
-        hasRows(sql, params) ? row : [:] //empty map
+        hasRows(sql, params) ? gSql.firstRow(sql, params) : [:] //empty map
 
     }
 

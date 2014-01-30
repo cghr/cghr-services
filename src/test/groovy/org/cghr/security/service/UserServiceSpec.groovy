@@ -6,20 +6,22 @@ import org.cghr.commons.db.DbStore
 import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
-import org.springframework.context.ApplicationContext
-import org.springframework.context.support.ClassPathXmlApplicationContext
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
+@ContextConfiguration(locations = "classpath:spring-context.xml")
 class UserServiceSpec extends Specification {
 
 
     UserService userService
+    @Shared
     def authtoken = "ABCDEFG-12345"
 
-    @Shared
+    @Autowired
     Sql gSql
-    @Shared
+    @Autowired
     DbTester dt
     DbAccess mockDbAccess
     DbStore mockDbStore
@@ -32,13 +34,6 @@ class UserServiceSpec extends Specification {
     @Shared
     User validUserWithBadPassword = new User(username: 'user1', password: 'badpassword')
 
-
-    def setupSpec() {
-
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-context.xml")
-        gSql = context.getBean("gSql")
-        dt = context.getBean("dt")
-    }
 
     def setup() {
 
@@ -173,19 +168,15 @@ class UserServiceSpec extends Specification {
     def "should log user authentication with success status"() {
 
         when:
-        userService.logUserAuthStatus(validUser, "success")
+        userService.logUserAuthStatus(user, loginStatus)
 
         then:
-        gSql.firstRow("select username,status from userlog") == [username: 'user1', status: 'success']
-    }
+        gSql.firstRow("select username,status from userlog") == result
 
-    def "should log user authentication with fail status"() {
-
-        when:
-        userService.logUserAuthStatus(invalidUser, "fail")
-
-        then:
-        gSql.firstRow("select username,status from userlog") == [username: 'invalidUser', status: 'fail']
+        where:
+        user        | loginStatus || result
+        validUser   | "success"   || [username: 'user1', status: 'success']
+        invalidUser | "fail"      || [username: 'invalidUser', status: 'fail']
     }
 
     def "should be true for a valid local(database) user"() {

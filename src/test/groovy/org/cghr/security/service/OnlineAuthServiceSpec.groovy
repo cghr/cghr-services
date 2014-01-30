@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import org.unitils.reflectionassert.ReflectionAssert
+import spock.lang.Shared
 import spock.lang.Specification
 
 class OnlineAuthServiceSpec extends Specification {
@@ -16,8 +17,8 @@ class OnlineAuthServiceSpec extends Specification {
     RestTemplate mockRestTemplate
     String mockServerAuthUrl
 
-    User validUser = new User(username: 'user1', password: 'secret1')
-    User invalidUser = new User(username: 'invaliduser', password: 'secret1')
+    @Shared User validUser = new User(username: 'user1', password: 'secret1')
+    @Shared User invalidUser = new User(username: 'invaliduser', password: 'secret1')
 
     def setupSpec() {
     }
@@ -40,10 +41,11 @@ class OnlineAuthServiceSpec extends Specification {
 
         expect:
         ReflectionAssert.assertReflectionEquals(expected, actual)
+
     }
 
 
-    def "should return empty user object for invalid user"() {
+    def "should throw exception for invalid user"() {
 
         given:
         RestTemplate fakeRestTemplate = Mock()

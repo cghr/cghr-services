@@ -17,6 +17,7 @@ class DbStoreSpec extends Specification {
     def dataSet
     @Shared
     def dataSetUpdate
+    @Shared
     def dataStore = 'country'
 
 

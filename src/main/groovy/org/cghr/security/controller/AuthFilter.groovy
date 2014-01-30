@@ -29,7 +29,6 @@ class AuthFilter implements Filter {
         def token = requestParser.getAuthTokenFromCookies(request)
         boolean isValidToken = (token == null) ? false : (userService.isValidToken(token))
 
-
         if (!isValidToken)
             response.setStatus(HttpStatus.UNAUTHORIZED.value)
         else
