@@ -1,46 +1,32 @@
 package org.cghr.dataSync.commons
 
-import org.cghr.commons.db.DbAccess
-import org.cghr.commons.db.DbStore
+import org.cghr.dataSync.service.AgentService
 
 class MsgDistAgent implements Agent {
 
-    DbAccess dbAccess
-    DbStore dbStore
+    AgentService agentService
 
-    MsgDistAgent(DbAccess dbAccess, DbStore dbStore) {
-        this.dbAccess = dbAccess
-        this.dbStore = dbStore
+    MsgDistAgent(AgentService agentService) {
+        this.agentService = agentService
     }
 
     public void run() {
 
-        List distFiles = getDistInfo()
+        List distFiles =agentService.getFilesToDistribute()
         distributeMessages(distFiles)
 
     }
 
-    void distributeMessages(List list) {
+    void distributeMessages(List files) {
 
-
-        list.each {
-            row ->
-                List recepients = row.distList.split(",") as List
+        files.each {
+            fileInfo ->
+                List recepients = fileInfo.distList.split(",") as List
                 recepients.each {
-
-                    recepient ->
-
-
-                        dbStore.saveOrUpdate([message: row.message, recepient: recepient], 'outbox')
-
+                    recepient -> agentService.distributeMessage(fileInfo.message,recepient)
                 }
-
-
         }
 
     }
 
-    List getDistInfo() {
-        return dbAccess.getRowsAsListOfMaps('select id,message,distList from inbox where distStatus is null', null)
-    }
 }

@@ -1,25 +1,38 @@
 package org.cghr.dataSync.client
 
 import org.awakefw.file.api.client.AwakeFileSession
-import org.cghr.commons.db.DbAccess
 import org.cghr.dataSync.commons.Agent
+import org.cghr.dataSync.service.AgentService
 
 class DownloadAgent implements Agent {
 
-    DbAccess dbAccess
+    AgentService agentService
     AwakeFileSession awakeFileSession
-    String fileBasePath
+    String remoteFileBasePath
+    String localFileBasePath
 
-    DownloadAgent(DbAccess dbAccess, AwakeFileSession awakeFileSession, String fileBasePath) {
+    DownloadAgent(AgentService agentService, AwakeFileSession awakeFileSession, String remoteFileBasePath, String localFileBasePath) {
 
-        this.dbAccess = dbAccess
+        this.agentService = agentService
         this.awakeFileSession = awakeFileSession
-        this.fileBasePath = fileBasePath
+        this.remoteFileBasePath = remoteFileBasePath
+        this.localFileBasePath = localFileBasePath
     }
 
     public void run() {
 
+        List<Map> files = agentService.getInboxFilesToDownload()
+        downloadFiles(files)
 
     }
 
+    void downloadFiles(List<Map> files) {
+        files.each {
+            fileInfo ->
+                String remoteFile = remoteFileBasePath + fileInfo.message
+                File localFile = new File(localFileBasePath + fileInfo.message)
+                awakeFileSession.download (remoteFile, localFile)
+
+        }
+    }
 }

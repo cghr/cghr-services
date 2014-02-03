@@ -1,12 +1,46 @@
 package org.cghr.dataSync.commons
+import com.google.gson.Gson
+import org.cghr.dataSync.service.AgentService
 
 class ImportAgent implements Agent {
 
+    AgentService agentService
+    Gson gson=new Gson()
+
+
+    ImportAgent(AgentService agentService) {
+        this.agentService = agentService
+
+
+    }
+
+
     public void run() {
 
-        importInboxFiles();
+        List<Map> files = agentService.getFilesToImport()
+        importFiles(files)
+
     }
 
-    void importInboxFiles() {
+    void importFiles(List<Map> files) {
+
+        files.each {
+            fileInfo ->
+                importFile(fileInfo.message)
+        }
+
     }
+
+    void importFile(String file) {
+        String fileContent = agentService.getInboxFileContents(file)
+
+        List<Map> items = gson.fromJson(fileContent, List.class)
+        items.each {
+            item ->
+                agentService.saveLogInfToDatabase(item)
+        }
+
+    }
+
+
 }

@@ -1,6 +1,6 @@
 package org.cghr.dataSync.client
 import groovy.sql.Sql
-import org.cghr.commons.db.DbStore
+import org.cghr.dataSync.service.AgentService
 import org.cghr.dataSync.service.DataSyncService
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
@@ -29,15 +29,16 @@ class DownloadOrganizerAgentSpec extends Specification {
 
     def setup() {
 
-        DataSyncService mockService = Stub() { getDownloadInfo() >> dataSet }
-        DbStore mockDbStore = Stub() {
-            saveOrUpdateFromMapList(dataSet, 'inbox') >> {
-                gSql.executeInsert("insert into inbox values(?,?,?,?,?,?)".toString(), dataSet[0].values() as List)
-                gSql.executeInsert("insert into inbox values(?,?,?,?,?,?)".toString(), dataSet[1].values() as List)
+        DataSyncService dataSyncService = Stub() { getDownloadInfo() >> dataSet }
+        AgentService agentService=Stub(){
+            saveDownloadInfo(dataSet) >> {
+                gSql.executeInsert("insert into inbox values(?,?,?,?,?,?,?)".toString(), dataSet[0].values() as List)
+                gSql.executeInsert("insert into inbox values(?,?,?,?,?,?,?)".toString(), dataSet[1].values() as List)
+
             }
         }
 
-        downloadOrganizerAgent = new DownloadOrganizerAgent(mockService, mockDbStore)
+        downloadOrganizerAgent = new DownloadOrganizerAgent(dataSyncService, agentService)
         dt.clean("inbox")
     }
 
@@ -48,6 +49,7 @@ class DownloadOrganizerAgentSpec extends Specification {
 
         then:
         gSql.rows("select * from inbox") == dataSet
+
     }
 }
 

@@ -1,12 +1,12 @@
 package org.cghr.dataSync.commons
+
 import groovy.sql.Sql
-import org.cghr.commons.db.DbAccess
-import org.cghr.commons.db.DbStore
+import org.cghr.dataSync.service.AgentService
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
-import spock.lang.Ignore
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 27/1/14.
  */
@@ -21,32 +21,34 @@ class MsgDistAgentSpec extends Specification {
     MsgDistAgent msgDistAgent
 
 
-
     def setup() {
 
         dt.cleanInsert("inbox")
         dt.clean("outbox")
 
-        DbAccess dbAccess = Stub() {
-            getRowsAsListOfMaps('select id,message,distList from inbox where distStatus is null', null) >> gSql.rows('select id,message,distList from inbox where distStatus is null')
+        AgentService agentService = Stub() {
 
-        }
-        DbStore dbStore = Stub() {
-            saveOrUpdate([message: 'file1.json', recepient: '1'], 'outbox') >> {
+            getFilesToDistribute() >> {
+                gSql.rows('select id,message,distList from inbox where distStatus is null')
+            }
+
+            distributeMessage('file1.json','1') >> {
                 gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file1', '1'])
             }
-            saveOrUpdate([message: 'file1.json', recepient: '2'], 'outbox') >> {
+            distributeMessage('file1.json','2') >> {
                 gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file1', '2'])
             }
-            saveOrUpdate([message: 'file2.json', recepient: '3'], 'outbox') >> {
+            distributeMessage('file2.json','3') >> {
                 gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file2', '3'])
             }
-            saveOrUpdate([message: 'file2.json', recepient: '4'], 'outbox') >> {
+            distributeMessage('file2.json','4') >> {
                 gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file2', '4'])
             }
+
+
         }
 
-        msgDistAgent = new MsgDistAgent(dbAccess, dbStore)
+        msgDistAgent = new MsgDistAgent(agentService)
 
     }
 
@@ -59,9 +61,5 @@ class MsgDistAgentSpec extends Specification {
         gSql.rows("select * from outbox").size() == 4
     }
 
-    @Ignore
-    def "should do 2"() {
-
-    }
 
 }

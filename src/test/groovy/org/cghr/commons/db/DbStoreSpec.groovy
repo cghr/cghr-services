@@ -29,11 +29,8 @@ class DbStoreSpec extends Specification {
 
 
     def setupSpec() {
-
-
         dataSet = new MockData().sampleData.get("country")
         dataSetUpdate = new MockData().sampleDataUpdate.get("country")
-
     }
 
     def setup() {
