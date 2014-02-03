@@ -1,5 +1,4 @@
 package org.cghr.dataSync.service
-
 /**
  * Created by ravitej on 3/2/14.
  */
@@ -30,5 +29,17 @@ class AgentService {
     String getInboxFileContents(String s) {
 
         null
+    }
+
+    String getAllLogs() {}
+
+    String createAFileName() {}
+
+    def createOutboxFile(String fileName, String fileContents) {
+
+    }
+
+    void saveFileToOutbox(String fileName) {
+
     }
 }
