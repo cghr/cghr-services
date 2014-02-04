@@ -21,13 +21,15 @@ class DownloadAgentSpec extends Specification {
 
     DownloadAgent downloadAgent
     @Shared
-    String inboxPath = System.getProperty("user.home") + "/bhss/inbox/"
+    String inboxPath = File.createTempDir().absolutePath+'/'
     @Shared
     String file1 = 'file1.json'
     @Shared
     String file2 = 'file2.json'
 
+
     def setup() {
+
 
         AgentService agentService = Stub() {
 

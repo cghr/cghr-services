@@ -29,7 +29,7 @@ class UploadAgentSpec extends Specification {
     @Shared
     String file2 = 'file2.json'
     @Shared
-    String outboxPath = System.getProperty("user.home") + "/bhss/outbox/"
+    String outboxPath = File.createTempDir().absolutePath+'/'
     @Shared
     File localFile = new File(outboxPath + file1)
 
