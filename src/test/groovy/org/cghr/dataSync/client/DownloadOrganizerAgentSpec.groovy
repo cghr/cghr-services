@@ -1,7 +1,6 @@
 package org.cghr.dataSync.client
 import groovy.sql.Sql
 import org.cghr.dataSync.service.AgentService
-import org.cghr.dataSync.service.DataSyncService
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,9 +27,9 @@ class DownloadOrganizerAgentSpec extends Specification {
     }
 
     def setup() {
-
-        DataSyncService dataSyncService = Stub() { getDownloadInfo() >> dataSet }
         AgentService agentService=Stub(){
+            getDownloadInfo() >> dataSet
+
             saveDownloadInfo(dataSet) >> {
                 gSql.executeInsert("insert into inbox values(?,?,?,?,?,?,?)".toString(), dataSet[0].values() as List)
                 gSql.executeInsert("insert into inbox values(?,?,?,?,?,?,?)".toString(), dataSet[1].values() as List)
@@ -38,7 +37,7 @@ class DownloadOrganizerAgentSpec extends Specification {
             }
         }
 
-        downloadOrganizerAgent = new DownloadOrganizerAgent(dataSyncService, agentService)
+        downloadOrganizerAgent = new DownloadOrganizerAgent(agentService)
         dt.clean("inbox")
     }
 

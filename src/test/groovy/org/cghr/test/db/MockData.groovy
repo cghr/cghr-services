@@ -32,7 +32,10 @@ class MockData {
                     [id: 1, message: 'file1.json', sender: 'admin', dwnStatus: null, distList: '1,2', distStatus: null,impStatus:null],
                     [id: 2, message: 'file2.json', sender: 'admin', dwnStatus: null, distList: '3,4', distStatus: null,impStatus:null]
             ],
-            outbox: [],
+            outbox: [
+                    [id: 1, message: 'file1.json',recepient: 'admin',upldStatus: null],
+                    [id: 2, message: 'file2.json',recepient: 'admin',upldStatus:null ]
+            ],
             datachangelog: [
                     [id:1,data:'{"id":1,"name":"india","continent":"asia"}',status:null],
                     [id:1,data:'{"id":2,"name":"pakistan","continent":"asia"}',status:null],

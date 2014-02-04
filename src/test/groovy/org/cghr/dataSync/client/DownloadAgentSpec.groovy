@@ -1,12 +1,13 @@
 package org.cghr.dataSync.client
+
 import groovy.sql.Sql
-import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.dataSync.service.AgentService
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
-import spock.lang.Ignore
+import spock.lang.Shared
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 27/1/14.
  */
@@ -19,38 +20,44 @@ class DownloadAgentSpec extends Specification {
     DbTester dt
 
     DownloadAgent downloadAgent
-    String remoteFileBasePath = ''
-    String localFileBasePath = ''
+    @Shared
+    String inboxPath = System.getProperty("user.home") + "/bhss/inbox/"
+    @Shared
+    String file1 = 'file1.json'
+    @Shared
+    String file2 = 'file2.json'
 
     def setup() {
 
-
-        AwakeFileSession awakeFileSession = Stub()
-                {
-                    download(remoteFileBasePath + 'file1.json', localFileBasePath + 'file1.json') >> {
-                        new File(localFileBasePath + 'file1.json')
-                    }
-                    download(remoteFileBasePath + 'file2.json', localFileBasePath + 'file2.json') >> {
-                        new File(localFileBasePath + 'file2.json')
-                    }
-
-                }
-
-
         AgentService agentService = Stub() {
+
             getInboxFilesToDownload() >> { gSql.rows("select id,message from inbox where dwnStatus is null") }
+
+            download(file1) >> {
+                new File(inboxPath + file1).createNewFile()
+            }
+            download(file2) >> {
+                new File(inboxPath + file2).createNewFile()
+            }
+            downloadSuccessful(file1) >> {
+                gSql.executeUpdate('update inbox set dwnStatus=1 where message=?',[file1])
+            }
+            downloadSuccessful(file2) >> {
+                gSql.executeUpdate('update inbox set dwnStatus=1 where message=?',[file2])
+            }
+
+
         }
-        downloadAgent = new DownloadAgent(agentService, awakeFileSession, remoteFileBasePath, localFileBasePath)
+        downloadAgent = new DownloadAgent(agentService)
 
         dt.cleanInsert("inbox")
 
     }
 
 
-    @Ignore
     def "should download the inbox files from server  whose download status is null"() {
         given:
-        File dir = new File(localFileBasePath)
+        File dir = new File(inboxPath)
         List files = []
 
         when:
@@ -60,6 +67,7 @@ class DownloadAgentSpec extends Specification {
         then:
         dir.eachFile { files << it }
         files.size() == 2
+        gSql.rows("select * from inbox where dwnStatus=1").size()==2
     }
 
 }

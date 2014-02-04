@@ -42,4 +42,32 @@ class AgentService {
     void saveFileToOutbox(String fileName) {
 
     }
+
+    File getOutboxFile(String filename) {
+        null
+    }
+
+    List<Map> getOutboxFilesToUpload() {
+        null
+    }
+
+    def uploadSuccessful(String filename) {
+
+    }
+
+    List getDownloadInfo() {
+        null
+    }
+
+    def download(String filename) {
+
+    }
+    def upload(File localFile)
+    {
+
+    }
+
+   def downloadSuccessful(String filename) {
+
+    }
 }
