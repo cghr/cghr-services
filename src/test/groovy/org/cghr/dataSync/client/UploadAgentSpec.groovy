@@ -21,7 +21,7 @@ class UploadAgentSpec extends Specification {
     @Autowired
     DbTester dt
 
-    UploadAgent uploadAgent
+    @Shared UploadAgent uploadAgent
     @Shared
     List<Map> dataSet
     @Shared

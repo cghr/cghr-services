@@ -16,7 +16,7 @@ class DownloadOrganizerAgentSpec extends Specification {
     @Autowired
     DbTester dt
 
-    DownloadOrganizerAgent downloadOrganizerAgent
+    @Shared  DownloadOrganizerAgent downloadOrganizerAgent
     @Shared
     List dataSet
 

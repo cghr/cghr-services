@@ -11,7 +11,7 @@ import spock.lang.Specification
 @ContextConfiguration(locations = "classpath:spring-context.xml")
 class DataStoreSpec extends Specification {
 
-    DataStore dataStore
+    @Shared DataStore dataStore
     def data = [id: 1, name: 'india', continent: 'asia']
 
 

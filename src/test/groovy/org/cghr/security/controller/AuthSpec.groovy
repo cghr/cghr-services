@@ -1,16 +1,16 @@
 package org.cghr.security.controller
+import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.security.model.User
 import org.cghr.security.service.UserService
 import org.cghr.test.db.DbTester
+import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
-
-import javax.servlet.http.HttpServletResponse
 
 @ContextConfiguration(locations = "classpath:spring-context.xml")
 class AuthSpec extends Specification {
@@ -21,12 +21,19 @@ class AuthSpec extends Specification {
     @Autowired
     DbTester dt
     Auth auth
-    @Shared  User validUser = new User(username: 'user1', password: 'secret1')
-    @Shared User invalidUser = new User(username: 'invaliduser', password: 'invalidpassword')
-    @Shared User manager = new User(username: 'user4', password: 'secret4')
+    @Shared
+    User validUser = new User(username: 'user1', password: 'secret1')
+    @Shared
+    User invalidUser = new User(username: 'invaliduser', password: 'invalidpassword')
+    @Shared
+    User manager = new User(username: 'user4', password: 'secret4')
+    @Shared
+    List dataSet
 
+    def setupSpec() {
 
-
+        dataSet = new MockData().sampleData.get("user")
+    }
 
     def setup() {
         def authtoken = "ABCDEDGH-12345"
@@ -87,62 +94,68 @@ class AuthSpec extends Specification {
 
     }
 
+    def "should verify http responses for valid and invalid users"() {
 
-    def "should authenticate a valid user"() {
         given:
-        HttpServletResponse response = new MockHttpServletResponse()
+        MockHttpServletResponse response = new MockHttpServletResponse()
 
         when:
-        def jsonResp = auth.authenticate(validUser, response)
+        def actualJsonResp = auth.authenticate(user, response)
 
         then:
-        response.status == HttpStatus.OK.value
-        jsonResp == '{"id":1,"username":"user1","password":"secret1","role":"user","status":"active"}'
-        response.getCookie("authtoken") != null
-        response.getCookie("username").getValue() == 'user1'
-        response.getCookie("userid").getValue() == '1'
-        response.getCookie("user").getValue() == '{"username":"user1","role":{"title":"user","bitMask":2}}'
-        gSql.rows("select * from authtoken").size() == 1//check whether authtoken created in database
-        gSql.firstRow("select username,status from userlog") == [username: 'user1', status: 'success']
-        //check for userlog
+        response.status == httpStatus
+        actualJsonResp == expectedJsonResp
+
+        where:
+        user        | httpStatus                   | expectedJsonResp
+        validUser   | HttpStatus.OK.value()        | new Gson().toJson(dataSet[0])
+        invalidUser | HttpStatus.FORBIDDEN.value() | "{}"
+        manager     | HttpStatus.OK.value()        | new Gson().toJson(dataSet[3])
+
+
     }
 
-    def "should reject an invalid user"() {
+    def "should verify  response cookies for valid and invalid users"() {
         given:
-        HttpServletResponse response = new MockHttpServletResponse()
+        MockHttpServletResponse response = new MockHttpServletResponse()
 
         when:
-        def jsonResp = auth.authenticate(invalidUser, response)
+        auth.authenticate(user, response)
 
         then:
-        response.status == HttpStatus.FORBIDDEN.value
-        jsonResp == "{}"
-        response.getCookie("username") == null
-        response.getCookie("userid") == null
-        response.getCookie("user") == null
-        gSql.rows("select * from authtoken").size() == 0
-        gSql.firstRow("select username,status from userlog") == [username: 'invaliduser', status: 'fail']
-        //check for userlog
+        response.getCookie("username")?.getValue() == usernameCookie
+        response.getCookie("userid")?.getValue() == useridCookie
+        response.getCookie("user")?.getValue() == userCookie
+
+
+        where:
+        user        | usernameCookie | useridCookie | userCookie
+        validUser   | "user1"        | '1'          | '{"username":"user1","role":{"title":"user","bitMask":2}}'
+        invalidUser | null           | null         | null
+        manager     | "user4"        | '4'          | '{"username":"user4","role":{"title":"manager","bitMask":3}}'
+
+
     }
 
-    def "should authenticate a valid user with role manager"() {
+    def "should verify database changes on successful and failure authentications"() {
         given:
-        HttpServletResponse response = new MockHttpServletResponse()
+        MockHttpServletResponse response = new MockHttpServletResponse()
 
         when:
-        def jsonResp = auth.authenticate(manager, response)
-
-
+        auth.authenticate(user, response)
 
         then:
-        response.status == HttpStatus.OK.value
-        jsonResp == '{"id":4,"username":"user4","password":"secret4","role":"manager","status":"active"}'
-        response.getCookie("username").getValue() == 'user4'
-        response.getCookie("userid").getValue() == '4'
-        response.getCookie("user").getValue() == '{"username":"user4","role":{"title":"manager","bitMask":3}}'
-        gSql.rows("select * from authtoken").size() == 1//check whether authtoken created in database
-        gSql.firstRow("select username,status from userlog") == [username: 'user4', status: 'success']
-        //check for userlog
+        gSql.rows("select * from authtoken").size() == authTokenEntries
+        gSql.firstRow("select username,status from userlog") == userlogEntry
+
+        where:
+        user        | authTokenEntries | userlogEntry
+        validUser   | 1                | [username: 'user1', status: 'success']
+        invalidUser | 0                | [username: 'invaliduser', status: 'fail']
+        manager     | 1                | [username: 'user4', status: 'success']
+
     }
+
+
 
 }

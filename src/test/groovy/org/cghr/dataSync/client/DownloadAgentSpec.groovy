@@ -19,7 +19,7 @@ class DownloadAgentSpec extends Specification {
     @Autowired
     DbTester dt
 
-    DownloadAgent downloadAgent
+    @Shared DownloadAgent downloadAgent
     @Shared
     String inboxPath = File.createTempDir().absolutePath+'/'
     @Shared

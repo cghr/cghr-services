@@ -30,14 +30,6 @@
         <constructor-arg name="dataStoreFactory" ref="dataStoreFactory"/>
     </bean>
 
-    <!--<bean id="transformer" class="org.cghr.dataViewModel.DhtmlxGridModelTransformer">-->
-        <!--<constructor-arg ref="gSql"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="dataModelUtil" class="org.cghr.dataViewModel.DataModelUtil">-->
-        <!--<constructor-arg name="dataModelTransformer" ref="transformer"/>-->
-        <!--<constructor-arg name="dbAccess" ref="dbAccess"/>-->
-    <!--</bean>-->
 
     <bean id="dataStoreFactory" class="java.util.HashMap">
         <constructor-arg>
@@ -47,27 +39,38 @@
         </constructor-arg>
     </bean>
 
-
-    <!--<bean id="userService" class="org.cghr.security.service.UserService">-->
-        <!--<constructor-arg name="dbAccess" ref="dbAccess"/>-->
-        <!--<constructor-arg name="dbStore" ref="dbStore"/>-->
-        <!--<constructor-arg name="onlineAuthService" ref="onlineAuthService"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="auth" class="org.cghr.security.controller.Auth">-->
-    <!--</bean>-->
-
     <bean id="dt" class="org.cghr.test.db.DbTester">
         <constructor-arg ref="dataSource"/>
     </bean>
 
-    <!--<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">-->
-    <!--</bean>-->
+    <!--Integration Testing Beans -->
+    <bean id="transformer" class="org.cghr.dataViewModel.DhtmlxGridModelTransformer">
+    <constructor-arg ref="gSql"/>
+    </bean>
 
-    <!--<bean id="onlineAuthService" class="org.cghr.security.service.OnlineAuthService">-->
-        <!--<constructor-arg name="serverAuthUrl" value=""/>-->
-        <!--<constructor-arg name="restTemplate" ref="restTemplate"/>-->
-    <!--</bean>-->
+    <bean id="dataModelUtil" class="org.cghr.dataViewModel.DataModelUtil">
+    <constructor-arg name="dataModelTransformer" ref="transformer"/>
+    <constructor-arg name="dbAccess" ref="dbAccess"/>
+    </bean>
 
+
+    <bean id="userService" class="org.cghr.security.service.UserService">
+        <constructor-arg name="dbAccess" ref="dbAccess"/>
+        <constructor-arg name="dbStore" ref="dbStore"/>
+        <constructor-arg name="onlineAuthService" ref="onlineAuthService"/>
+    </bean>
+
+    <bean id="auth" class="org.cghr.security.controller.Auth">
+    </bean>
+
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+    </bean>
+
+    <bean id="onlineAuthService" class="org.cghr.security.service.OnlineAuthService">
+        <constructor-arg name="serverAuthUrl" value=""/>
+        <constructor-arg name="restTemplate" ref="restTemplate"/>
+    </bean>
+    <!--Integration Testing Beans Ends-->
 
 </beans>

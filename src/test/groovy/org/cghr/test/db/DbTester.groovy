@@ -31,12 +31,14 @@ class DbTester {
         }
     }
 
-    def clean(String table) {
+    def clean(String tablesCommaSeparated) {
 
+        def tables = tablesCommaSeparated.split(",")
+        for (table in tables) {
+            gSql.execute("drop table $table if exists".toString())
+            createTable(table)
 
-        gSql.execute("drop table $table if exists".toString())
-
-        createTable(table)
+        }
     }
 
     def insert(String table) {

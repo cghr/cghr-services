@@ -22,7 +22,7 @@ class UploadOrganizerAgentSpec extends Specification {
 
     @Shared
     List<Map> dataSet
-    UploadOrganizerAgent uploadOrganizerAgent
+    @Shared UploadOrganizerAgent uploadOrganizerAgent
     @Shared def outboxPath =File.createTempDir().absolutePath+'/'
     @Shared def fileName = '15-2014-01-01-01-01-01.json'
     @Shared String fileContents
