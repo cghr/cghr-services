@@ -41,14 +41,14 @@ dependencies {
 
 test {
     systemProperties 'property': 'value'
-
 }
+
 
 sourceSets {
     integrationTest {
 
         compileClasspath = sourceSets.main.output + sourceSets.test.output + configurations.testRuntime
-        runtimeClasspath = output + sourceSets.main.output + configurations.testRuntime
+        runtimeClasspath = output + sourceSets.main.output +sourceSets.test.output +configurations.testRuntime
 
         groovy {
             srcDir 'src/integrationTest/groovy'
@@ -61,7 +61,7 @@ task integrationTest(type: Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
 
 }
-
+check.dependsOn integrationTest
 uploadArchives {
     repositories {
         flatDir {
@@ -69,3 +69,4 @@ uploadArchives {
         }
     }
 }
+

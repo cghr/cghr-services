@@ -1,4 +1,5 @@
 package org.cghr.security.controller
+
 import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.security.model.User
@@ -10,6 +11,7 @@ import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 27/1/14.
  */
