@@ -1,6 +1,7 @@
 package org.cghr.security.service
 
 import com.google.gson.Gson
+import org.apache.http.conn.HttpHostConnectException
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.security.exception.NoSuchUserFound
@@ -26,12 +27,20 @@ class UserService {
             User userRespFromServer = onlineAuthService.authenticate(user)
             cacheUserLocally(userRespFromServer)
         }
-        catch (ServerNotFoundException ex) {
-            println "server not found exception caught"
+        catch (ServerNotFoundException ex)
+        {
+            println 'Server Not Found'
         }
         catch (NoSuchUserFound ex) {
+            println 'No Such User Found on Server'
             return false
         }
+        catch (Exception ex)
+        {
+            println "Unexpected Exception"
+            println ex
+        }
+
         finally {
             return isValidLocalUser(user)
         }

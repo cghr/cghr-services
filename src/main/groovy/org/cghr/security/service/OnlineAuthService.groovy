@@ -1,15 +1,21 @@
 package org.cghr.security.service
 
+
 import com.google.gson.Gson
 import org.cghr.security.exception.NoSuchUserFound
 import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
+import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.converter.StringHttpMessageConverter
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
 import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
+
+
+
 
 class OnlineAuthService {
 
@@ -28,31 +34,43 @@ class OnlineAuthService {
         Gson gson = new Gson()
         User serverRespUser
 
+
         restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter())
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 
 
 
         HttpHeaders headers = new HttpHeaders()
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON))
+        headers.setContentType(MediaType.APPLICATION_JSON)
+
+
+
+        HttpEntity<String> request=new HttpEntity<String>(gson.toJson(user),headers)
 
 
         try {
 
-            println restTemplate.postForObject(serverAuthUrl, user, User.class)
-            serverRespUser = restTemplate.postForObject(serverAuthUrl, user, User.class)
+            serverRespUser = restTemplate.postForObject(serverAuthUrl, request, User.class);
+            println 'Online Server Available'
             return serverRespUser
         }
         catch (HttpClientErrorException ex) {
 
-
             def status = ex.statusCode
-
             if (status == ex.statusCode.NOT_FOUND)
                 throw new ServerNotFoundException()
 
-            else if (status == ex.statusCode.UNAUTHORIZED)
+            else if (status == ex.statusCode.FORBIDDEN)
                 throw new NoSuchUserFound()
+        }
+        catch (ResourceAccessException ex) {
+            throw new ServerNotFoundException()
+        }
+        catch (Exception ex) {
+
+            println 'Unexpected Exception'
+            println ex
+            throw ex
         }
     }
 }

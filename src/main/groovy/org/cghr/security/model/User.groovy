@@ -2,7 +2,7 @@ package org.cghr.security.model
 
 class User {
 
-    int id
+    String id
     String username
     String password
     String role

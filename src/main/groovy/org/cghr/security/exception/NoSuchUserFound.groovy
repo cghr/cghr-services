@@ -6,6 +6,6 @@ class NoSuchUserFound extends Exception {
     }
 
     NoSuchUserFound(String msg) {
-        supser(msg)
+        super(msg)
     }
 }

@@ -68,7 +68,7 @@
     </bean>
 
     <bean id="onlineAuthService" class="org.cghr.security.service.OnlineAuthService">
-        <constructor-arg name="serverAuthUrl" value=""/>
+        <constructor-arg name="serverAuthUrl" value="http://localhost:8089/app/api/security/auth"/>
         <constructor-arg name="restTemplate" ref="restTemplate"/>
     </bean>
     <!--Integration Testing Beans Ends-->
