@@ -1,9 +1,13 @@
 package org.cghr.security.service
 
+import com.google.gson.Gson
 import org.cghr.security.exception.NoSuchUserFound
 import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import org.unitils.reflectionassert.ReflectionAssert
@@ -26,9 +30,15 @@ class OnlineAuthServiceSpec extends Specification {
 
     def setup() {
 
-        mockServerAuthUrl = "http://dummyServer:8080/hc/api/security/auth"
+        HttpHeaders headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+
+        HttpEntity<String> request=new HttpEntity<String>(new Gson().toJson(validUser),headers)
+
+        mockServerAuthUrl = "http://dummyServer:8080/app/api/security/auth"
         mockRestTemplate = Stub() {
-            postForObject(mockServerAuthUrl, validUser, User.class) >> new User(id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active')
+            postForObject(mockServerAuthUrl,request, User.class) >> {
+                new User(id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active')}
             getMessageConverters() >> [] //Mock list for adding message convertors
         }
 
@@ -49,11 +59,17 @@ class OnlineAuthServiceSpec extends Specification {
     def "should throw exception for invalid user"() {
 
         given:
-        RestTemplate fakeRestTemplate = Mock()
-        fakeRestTemplate.postForObject(mockServerAuthUrl, invalidUser, User.class) >> {
-            throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED)
+        HttpHeaders headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+
+        HttpEntity<String> request=new HttpEntity<String>(new Gson().toJson(invalidUser),headers)
+
+        RestTemplate fakeRestTemplate = Stub(){
+        postForObject(mockServerAuthUrl, request, User.class) >> {
+            throw new HttpClientErrorException(HttpStatus.FORBIDDEN)
         }
-        fakeRestTemplate.getMessageConverters() >> []
+        getMessageConverters() >> []
+        }
         OnlineAuthService fakeService = new OnlineAuthService(mockServerAuthUrl, fakeRestTemplate)
 
         when:
@@ -67,8 +83,14 @@ class OnlineAuthServiceSpec extends Specification {
     def "should throw an exception when server not found"() {
 
         given:
+
+        HttpHeaders headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+
+        HttpEntity<String> request=new HttpEntity<String>(new Gson().toJson(validUser),headers)
+
         RestTemplate fakeRestTemplate = Mock()
-        fakeRestTemplate.postForObject(mockServerAuthUrl, validUser, User.class) >> {
+        fakeRestTemplate.postForObject(mockServerAuthUrl, request, User.class) >> {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND)
         }
         fakeRestTemplate.getMessageConverters() >> []

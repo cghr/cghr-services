@@ -14,6 +14,23 @@ repositories {
 }
 
 String springVersion = '3.2.5.RELEASE'
+
+test {
+    systemProperties 'property': 'value'
+
+}
+
+sourceSets {
+    integrationTest
+}
+
+task intTest(type:Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+
+}
+
+check.dependsOn intTest
 dependencies {
     compile "org.springframework:spring-context:$springVersion"
     compile "org.springframework:spring-webmvc:$springVersion"
@@ -38,31 +55,32 @@ dependencies {
     testCompile 'com.github.tomakehurst:wiremock:1.36'
     testCompile 'org.slf4j:slf4j-api:1.7.5'
 
-}
-
-test {
-    systemProperties 'property': 'value'
-}
-
-
-sourceSets {
-    integrationTest {
-
-        compileClasspath = sourceSets.main.output + sourceSets.test.output + configurations.testRuntime
-        runtimeClasspath = output + sourceSets.main.output + sourceSets.test.output + configurations.testRuntime
-
-        groovy {
-            srcDir 'src/integrationTest/groovy'
-        }
-    }
-}
-
-task integrationTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
-    classpath = sourceSets.integrationTest.runtimeClasspath
+    integrationTestCompile configurations.testCompile+sourceSets.main.output+sourceSets.test.output
+    integrationTestRuntime configurations.testRuntime
 
 }
-check.dependsOn integrationTest
+
+//sourceSets {
+//    integrationTest {
+//
+//        compileClasspath = sourceSets.main.output + sourceSets.test.output + configurations.testRuntime
+//        runtimeClasspath = output + sourceSets.main.output + sourceSets.test.output + configurations.testRuntime
+//
+//        groovy {
+//            //srcDir 'src/integrationTest/groovy'
+//            srcDir 'src/test/integration'
+//        }
+//    }
+//}
+//
+//task integrationTest(type: Test) {
+//    include  "tests/**/integration/**"
+//    testClassesDir = sourceSets.integrationTest.output.classesDir
+//    classpath = sourceSets.integrationTest.runtimeClasspath
+//
+//}
+
+//check.dependsOn integrationTest
 uploadArchives {
     repositories {
         flatDir {

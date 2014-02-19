@@ -3,6 +3,7 @@ package org.cghr.security.service
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
+import org.cghr.security.exception.NoSuchUserFound
 import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
@@ -83,7 +84,7 @@ class UserServiceSpec extends Specification {
         OnlineAuthService mockOnlineAuthService = Stub() {
 
             authenticate(validUser) >> new User(id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active')
-            authenticate(invalidUser) >> new User()
+            authenticate(invalidUser) >> {throw new NoSuchUserFound()}
         }
 
 
@@ -114,7 +115,7 @@ class UserServiceSpec extends Specification {
         given:
         OnlineAuthService onlineAuthServiceOffline = Mock()
         onlineAuthServiceOffline.authenticate(validUser) >> {
-            new ServerNotFoundException("connection to server failed")
+            throw new ServerNotFoundException("connection to server failed")
         } //Offline Mode No server available
 
         UserService userServiceOffline = new UserService(mockDbAccess, mockDbStore, onlineAuthServiceOffline)

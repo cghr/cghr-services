@@ -1,9 +1,9 @@
 package org.cghr.security.controller
 
-import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.google.gson.Gson
 import groovy.sql.Sql
+import org.cghr.security.controller.Auth
 import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
-import spock.lang.Ignore
-import spock.lang.IgnoreRest
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -40,8 +38,8 @@ class AuthIntegrationSpec extends Specification {
     @Shared
     Gson gson = new Gson()
 
-    //@Rule
-   // public WireMockRule wireMockRule = new WireMockRule(8089);
+    @Rule
+   public WireMockRule wireMockRule = new WireMockRule(8089);
 
 
     def setupSpec() {
@@ -131,7 +129,7 @@ class AuthIntegrationSpec extends Specification {
     Online Mode
      */
 
-    @Ignore
+
     def "should verify http responses for valid and invalid users in Online Mode"() {
 
         setup:
