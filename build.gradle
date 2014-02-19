@@ -29,7 +29,7 @@ task intTest(type:Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
 
 }
-
+assemble.dependsOn clean
 check.dependsOn intTest
 dependencies {
     compile "org.springframework:spring-context:$springVersion"
@@ -60,27 +60,9 @@ dependencies {
 
 }
 
-//sourceSets {
-//    integrationTest {
-//
-//        compileClasspath = sourceSets.main.output + sourceSets.test.output + configurations.testRuntime
-//        runtimeClasspath = output + sourceSets.main.output + sourceSets.test.output + configurations.testRuntime
-//
-//        groovy {
-//            //srcDir 'src/integrationTest/groovy'
-//            srcDir 'src/test/integration'
-//        }
-//    }
-//}
-//
-//task integrationTest(type: Test) {
-//    include  "tests/**/integration/**"
-//    testClassesDir = sourceSets.integrationTest.output.classesDir
-//    classpath = sourceSets.integrationTest.runtimeClasspath
-//
-//}
 
-//check.dependsOn integrationTest
+
+
 uploadArchives {
     repositories {
         flatDir {
