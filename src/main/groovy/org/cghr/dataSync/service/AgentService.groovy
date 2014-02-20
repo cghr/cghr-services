@@ -45,9 +45,13 @@ class AgentService {
 
     void saveLogInfToDatabase(Map map) {
 
+        dbStore.saveOrUpdate(map.data,map.datastore)
     }
 
-    List<Map> getFilesToImport() {}
+    List<Map> getFilesToImport() {
+
+        dbAccess.getRowsAsListOfMaps("select id,message from inbox where impStatus is null",[])
+    }
 
     String getInboxFileContents(String s) {
 

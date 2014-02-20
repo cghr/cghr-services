@@ -25,6 +25,8 @@ class AgentServiceSpec extends Specification {
     def gSql
     @Shared
     List inboxFiles
+    @Shared
+    def changelog=[datastore:'country',data:[id:1,name:'india',continent:'asia']]
 
 
     def setupSpec() {
@@ -40,6 +42,9 @@ class AgentServiceSpec extends Specification {
             }
             getRowsAsListOfMaps("select id,message from inbox where distStatus is null", []) >> {
                 gSql.rows("select id,message,distList from inbox where dwnStatus is null")
+            }
+            getRowsAsListOfMaps("select id,message from inbox where impStatus is null",[]) >> {
+                gSql.rows("select id,message from inbox where impStatus is null")
             }
         }
         DbStore dbStore = Stub() {
@@ -59,6 +64,10 @@ class AgentServiceSpec extends Specification {
             }
             saveOrUpdate(message:  'file2.json',recepient:'4',"outbox") >> {
                 gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file1.json', '4'])
+            }
+
+            saveOrUpdate(changelog.data,changelog.datastore) >> {
+                gSql.executeInsert('insert into country(id,name,continent) values(?,?,?)', [1,'india','asia'])
             }
         }
         AwakeFileSession awakeFileSession = Stub() {}
@@ -109,7 +118,29 @@ class AgentServiceSpec extends Specification {
 
         then:
         gSql.rows("select * from outbox where upldStatus is NULL").size()==4
+    }
 
+    def "should save data changelog to respective datastore"() {
+
+        given:
+        dt.clean("country")
+
+
+        when:
+        agentService.saveLogInfToDatabase(changelog)
+
+        then:
+        gSql.rows("select * from country").size()==1
+
+    }
+
+    def "should get files to be imported"() {
+
+        given:
+        dt.cleanInsert("inbox")
+
+        expect:
+        agentService.getFilesToImport()==[[id: 1, message: 'file1.json'], [id: 2, message: 'file2.json']]
 
 
     }
