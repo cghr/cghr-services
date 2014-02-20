@@ -17,6 +17,7 @@ String springVersion = '3.2.5.RELEASE'
 
 test {
     systemProperties 'property': 'value'
+    include 'src/integrationTest'
 
 }
 

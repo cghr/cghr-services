@@ -21,10 +21,10 @@ class UserService {
     }
 
 
-    def boolean isValid(User user) {
+    def boolean isValid(User user,String hostname) {
 
         try {
-            User userRespFromServer = onlineAuthService.authenticate(user)
+            User userRespFromServer = onlineAuthService.authenticate(user,hostname)
             cacheUserLocally(userRespFromServer)
         }
         catch (ServerNotFoundException ex)

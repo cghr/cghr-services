@@ -7,6 +7,7 @@ import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
@@ -29,6 +30,7 @@ class AuthSpec extends Specification {
     User manager = new User(username: 'user4', password: 'secret4')
     @Shared
     List dataSet
+    @Shared String hostname="localhost"
 
     def setupSpec() {
 
@@ -39,9 +41,9 @@ class AuthSpec extends Specification {
         def authtoken = "ABCDEDGH-12345"
         //Mocking User Service
         UserService mockUserService = Stub() {
-            isValid(validUser) >> true
-            isValid(invalidUser) >> false
-            isValid(manager) >> true
+            isValid(validUser,hostname) >> true
+            isValid(invalidUser,hostname) >> false
+            isValid(manager,hostname) >> true
 
             getUserCookieJson(validUser) >> '{"username":"user1","role":{"title":"user","bitMask":2}}'
             getUserCookieJson(invalidUser) >> '{}'
@@ -98,9 +100,10 @@ class AuthSpec extends Specification {
 
         given:
         MockHttpServletResponse response = new MockHttpServletResponse()
+        MockHttpServletRequest request=new MockHttpServletRequest()
 
         when:
-        def actualJsonResp = auth.authenticate(user, response)
+        def actualJsonResp = auth.authenticate(user, response,request)
 
         then:
         response.status == httpStatus
@@ -118,9 +121,10 @@ class AuthSpec extends Specification {
     def "should verify  response cookies for valid and invalid users"() {
         given:
         MockHttpServletResponse response = new MockHttpServletResponse()
+        MockHttpServletRequest request=new MockHttpServletRequest()
 
         when:
-        auth.authenticate(user, response)
+        auth.authenticate(user, response,request)
 
         then:
         response.getCookie("username")?.getValue() == usernameCookie
@@ -140,9 +144,10 @@ class AuthSpec extends Specification {
     def "should verify database changes on successful and failure authentications"() {
         given:
         MockHttpServletResponse response = new MockHttpServletResponse()
+        MockHttpServletRequest request=new MockHttpServletRequest()
 
         when:
-        auth.authenticate(user, response)
+        auth.authenticate(user, response,request)
 
         then:
         gSql.rows("select * from authtoken").size() == authTokenEntries

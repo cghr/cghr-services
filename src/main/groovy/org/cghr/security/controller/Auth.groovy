@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 
 import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Controller
@@ -28,11 +29,13 @@ class Auth {
     }
 
     @RequestMapping(value="",method = RequestMethod.POST)
-    String authenticate(@RequestBody User user, HttpServletResponse response) {
+    String authenticate(@RequestBody User user, HttpServletResponse response,HttpServletRequest request) {
 
 
 
-        def isValidUser = userService.isValid(user)
+        String hostname=request.getRequestURL().toURL().getHost()
+
+        def isValidUser = userService.isValid(user,hostname)
         def httpStatus = isValidUser ? HttpStatus.OK.value : HttpStatus.FORBIDDEN.value
 
         response.setStatus(httpStatus)

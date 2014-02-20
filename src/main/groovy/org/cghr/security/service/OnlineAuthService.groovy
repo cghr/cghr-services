@@ -28,11 +28,17 @@ class OnlineAuthService {
     }
 
 
-    public User authenticate(User user) {
+    public User authenticate(User user,String hostname) {
 
 
         Gson gson = new Gson()
         User serverRespUser
+
+
+        String onlinAuthHostname=serverAuthUrl.toURL().getHost()
+
+        if(hostname==onlinAuthHostname)
+            throw new ServerNotFoundException()
 
 
         restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter())

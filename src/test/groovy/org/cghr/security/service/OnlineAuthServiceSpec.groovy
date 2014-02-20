@@ -47,7 +47,7 @@ class OnlineAuthServiceSpec extends Specification {
 
     def "should return User information for a valid User"() {
         given:
-        User actual = onlineAuthService.authenticate(validUser)
+        User actual = onlineAuthService.authenticate(validUser,"localhost")
         User expected = new User(id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active')
 
         expect:
@@ -73,7 +73,7 @@ class OnlineAuthServiceSpec extends Specification {
         OnlineAuthService fakeService = new OnlineAuthService(mockServerAuthUrl, fakeRestTemplate)
 
         when:
-        fakeService.authenticate(invalidUser)
+        fakeService.authenticate(invalidUser,"localhost")
 
         then:
         thrown(NoSuchUserFound)
@@ -97,9 +97,29 @@ class OnlineAuthServiceSpec extends Specification {
         OnlineAuthService fakeService = new OnlineAuthService(mockServerAuthUrl, fakeRestTemplate)
 
         when:
-        fakeService.authenticate(validUser)
+        fakeService.authenticate(validUser,"localhost")
 
         then:
         thrown(ServerNotFoundException)
     }
+
+    def "should throw an ServerNotFound exception when hostname and ServerAuth Hostname are same"() {
+
+        given:
+        HttpHeaders headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+
+        HttpEntity<String> request=new HttpEntity<String>(new Gson().toJson(validUser),headers)
+
+        RestTemplate fakeRestTemplate = Mock()
+        OnlineAuthService fakeService = new OnlineAuthService(mockServerAuthUrl, fakeRestTemplate)
+
+        when:
+        fakeService.authenticate(validUser,"dummyServer")
+
+        then:
+        thrown(ServerNotFoundException)
+
+    }
+
 }

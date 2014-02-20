@@ -10,6 +10,7 @@ import org.cghr.test.db.MockData
 import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
@@ -37,6 +38,7 @@ class AuthIntegrationSpec extends Specification {
     User invalidUser = new User(username: 'invaliduser', password: 'secret1')
     @Shared
     Gson gson = new Gson()
+
 
     @Rule
    public WireMockRule wireMockRule = new WireMockRule(8089);
@@ -67,9 +69,10 @@ class AuthIntegrationSpec extends Specification {
 
         given:
         MockHttpServletResponse response = new MockHttpServletResponse()
+        MockHttpServletRequest request=new MockHttpServletRequest()
 
         when:
-        def actualJsonResp = auth.authenticate(user, response)
+        def actualJsonResp = auth.authenticate(user, response,request)
 
         then:
         response.status == httpStatus
@@ -88,9 +91,10 @@ class AuthIntegrationSpec extends Specification {
     def "should verify  response cookies for valid and invalid users"() {
         given:
         MockHttpServletResponse response = new MockHttpServletResponse()
+        MockHttpServletRequest request=new MockHttpServletRequest()
 
         when:
-        auth.authenticate(user, response)
+        auth.authenticate(user, response,request)
 
         then:
         response.getCookie("username")?.getValue() == usernameCookie
@@ -111,9 +115,10 @@ class AuthIntegrationSpec extends Specification {
     def "should verify database changes on successful and failure authentications"() {
         given:
         MockHttpServletResponse response = new MockHttpServletResponse()
+        MockHttpServletRequest request=new MockHttpServletRequest()
 
         when:
-        auth.authenticate(user, response)
+        auth.authenticate(user, response,request)
 
         then:
         gSql.rows("select * from authtoken").size() == authTokenEntries
@@ -135,6 +140,7 @@ class AuthIntegrationSpec extends Specification {
         setup:
 
         MockHttpServletResponse response = new MockHttpServletResponse()
+        MockHttpServletRequest request=new MockHttpServletRequest()
 
         stubFor(post(urlEqualTo("/app/api/security/auth"))
                 .withHeader("Content-Type", equalTo("application/json"))
@@ -156,7 +162,7 @@ class AuthIntegrationSpec extends Specification {
 
         when:
 
-        def actualJsonResp = auth.authenticate(user, response)
+        def actualJsonResp = auth.authenticate(user, response,request)
 
         then:
         response.status == httpStatus

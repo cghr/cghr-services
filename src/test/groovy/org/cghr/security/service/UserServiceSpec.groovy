@@ -34,6 +34,7 @@ class UserServiceSpec extends Specification {
     User invalidUser = new User(username: 'invalidUser', password: 'secret1')
     @Shared
     User validUserWithBadPassword = new User(username: 'user1', password: 'badpassword')
+    @Shared String hostname="localhost"
 
 
     def setup() {
@@ -83,8 +84,8 @@ class UserServiceSpec extends Specification {
 
         OnlineAuthService mockOnlineAuthService = Stub() {
 
-            authenticate(validUser) >> new User(id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active')
-            authenticate(invalidUser) >> {throw new NoSuchUserFound()}
+            authenticate(validUser,hostname) >> new User(id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active')
+            authenticate(invalidUser,hostname) >> {throw new NoSuchUserFound()}
         }
 
 
@@ -99,7 +100,7 @@ class UserServiceSpec extends Specification {
     def "should validate a given user"() {
 
         expect:
-        userService.isValid(user) == result
+        userService.isValid(user,hostname) == result
 
         where:
         user                     || result
@@ -121,7 +122,7 @@ class UserServiceSpec extends Specification {
         UserService userServiceOffline = new UserService(mockDbAccess, mockDbStore, onlineAuthServiceOffline)
 
         expect:
-        userServiceOffline.isValid(validUser) == true
+        userServiceOffline.isValid(validUser,hostname) == true
 
     }
 
