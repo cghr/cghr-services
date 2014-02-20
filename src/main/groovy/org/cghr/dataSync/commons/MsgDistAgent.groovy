@@ -12,7 +12,7 @@ class MsgDistAgent implements Agent {
 
     public void run() {
 
-        List distFiles =agentService.getFilesToDistribute()
+        List distFiles =agentService.getInboxFilesToDistribute()
         distributeMessages(distFiles)
 
     }

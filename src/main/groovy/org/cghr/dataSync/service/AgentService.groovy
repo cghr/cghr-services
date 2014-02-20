@@ -1,22 +1,45 @@
 package org.cghr.dataSync.service
+
+import org.awakefw.file.api.client.AwakeFileSession
+import org.cghr.commons.db.DbAccess
+import org.cghr.commons.db.DbStore
+
 /**
  * Created by ravitej on 3/2/14.
  */
 class AgentService {
 
+    DbAccess dbAccess
+    DbStore dbStore
+    AwakeFileSession awakeFileSession
+
+    AgentService(DbAccess dbAccess, DbStore dbStore, AwakeFileSession awakeFileSession) {
+        this.dbAccess = dbAccess
+        this.dbStore = dbStore
+        this.awakeFileSession = awakeFileSession
+    }
+
     void saveDownloadInfo(List<Map> list) {
 
+        dbStore.saveOrUpdateFromMapList(list,"inbox")
     }
 
     List<Map> getInboxFilesToDownload() {
-        null
+
+        dbAccess.getRowsAsListOfMaps("select id,message from inbox where dwnStatus is null",[])
     }
 
-    List getFilesToDistribute() {
-        null
+    List getInboxFilesToDistribute() {
+        dbAccess.getRowsAsListOfMaps("select id,message from inbox where distStatus is null",[])
     }
 
-    void distributeMessage(String message, String recepient) {
+    void distributeMessage(String message, String recepients) {
+
+        def recepientsArray=recepients.split(",")
+        recepientsArray.each {
+            recepient ->
+            dbStore.saveOrUpdate([message:message,recepient:recepient],"outbox")
+        }
 
     }
 

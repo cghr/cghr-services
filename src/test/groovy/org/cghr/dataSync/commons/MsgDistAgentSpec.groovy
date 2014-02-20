@@ -28,21 +28,21 @@ class MsgDistAgentSpec extends Specification {
 
         AgentService agentService = Stub() {
 
-            getFilesToDistribute() >> {
+            getInboxFilesToDistribute() >> {
                 gSql.rows('select id,message,distList from inbox where distStatus is null')
             }
 
             distributeMessage('file1.json','1') >> {
-                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file1', '1'])
+                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file1.json', '1'])
             }
             distributeMessage('file1.json','2') >> {
-                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file1', '2'])
+                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file1.json', '2'])
             }
             distributeMessage('file2.json','3') >> {
-                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file2', '3'])
+                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file2.json', '3'])
             }
             distributeMessage('file2.json','4') >> {
-                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file2', '4'])
+                gSql.executeInsert('insert into outbox(message,recepient) values(?,?)', ['file2.json', '4'])
             }
 
 
