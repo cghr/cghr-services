@@ -1,18 +1,20 @@
 package org.cghr.security.controller
 
+import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.google.gson.Gson
 import groovy.sql.Sql
-import org.cghr.security.controller.Auth
 import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -41,7 +43,7 @@ class AuthIntegrationSpec extends Specification {
 
 
     @Rule
-   public WireMockRule wireMockRule = new WireMockRule(8089);
+    public WireMockRule wireMockRule = new WireMockRule(8089);
 
 
     def setupSpec() {
@@ -64,15 +66,15 @@ class AuthIntegrationSpec extends Specification {
      */
 
 
-
     def "should verify http responses for valid and invalid users"() {
 
         given:
+
         MockHttpServletResponse response = new MockHttpServletResponse()
-        MockHttpServletRequest request=new MockHttpServletRequest()
+        MockHttpServletRequest request = new MockHttpServletRequest()
 
         when:
-        def actualJsonResp = auth.authenticate(user, response,request)
+        def actualJsonResp = auth.authenticate(user, response, request)
 
         then:
         response.status == httpStatus
@@ -86,15 +88,18 @@ class AuthIntegrationSpec extends Specification {
 
     }
 
+    /*
+      Offline Mode
+       */
 
 
     def "should verify  response cookies for valid and invalid users"() {
         given:
         MockHttpServletResponse response = new MockHttpServletResponse()
-        MockHttpServletRequest request=new MockHttpServletRequest()
+        MockHttpServletRequest request = new MockHttpServletRequest()
 
         when:
-        auth.authenticate(user, response,request)
+        auth.authenticate(user, response, request)
 
         then:
         response.getCookie("username")?.getValue() == usernameCookie
@@ -110,15 +115,18 @@ class AuthIntegrationSpec extends Specification {
 
     }
 
+    /*
+      Offline Mode
+       */
 
 
     def "should verify database changes on successful and failure authentications"() {
         given:
         MockHttpServletResponse response = new MockHttpServletResponse()
-        MockHttpServletRequest request=new MockHttpServletRequest()
+        MockHttpServletRequest request = new MockHttpServletRequest()
 
         when:
-        auth.authenticate(user, response,request)
+        auth.authenticate(user, response, request)
 
         then:
         gSql.rows("select * from authtoken").size() == authTokenEntries
@@ -138,9 +146,10 @@ class AuthIntegrationSpec extends Specification {
     def "should verify http responses for valid and invalid users in Online Mode"() {
 
         setup:
-
+        dt.clean("user") //Local database will be empty initially
         MockHttpServletResponse response = new MockHttpServletResponse()
-        MockHttpServletRequest request=new MockHttpServletRequest()
+        MockHttpServletRequest request = new MockHttpServletRequest()
+        request.remoteHost='dummyServer'
 
         stubFor(post(urlEqualTo("/app/api/security/auth"))
                 .withHeader("Content-Type", equalTo("application/json"))
@@ -160,13 +169,17 @@ class AuthIntegrationSpec extends Specification {
 
 
 
-        when:
 
-        def actualJsonResp = auth.authenticate(user, response,request)
+        when:
+        def actualJsonResp = auth.authenticate(user, response, request)
+        String responseEntity=new RestTemplate().getForObject('http://localhost:8089/__admin',String.class) //Holds all the stub mappings
+
 
         then:
+        responseEntity.length()!=0 //check whether the stub server is running
         response.status == httpStatus
         actualJsonResp == expectedJsonResp
+
 
 
         where:

@@ -97,7 +97,10 @@ class UserServiceSpec extends Specification {
         dt.cleanInsert("user,authtoken,userlog")
     }
 
-    def "should validate a given user"() {
+    def "should validate a given user in online mode"() {
+
+        given:
+        dt.clean('user')
 
         expect:
         userService.isValid(user,hostname) == result
@@ -114,6 +117,7 @@ class UserServiceSpec extends Specification {
     def "should authenticate a valid user locally when server not found"() {
 
         given:
+
         OnlineAuthService onlineAuthServiceOffline = Mock()
         onlineAuthServiceOffline.authenticate(validUser) >> {
             throw new ServerNotFoundException("connection to server failed")

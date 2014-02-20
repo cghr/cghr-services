@@ -35,6 +35,7 @@ class Auth {
 
         String hostname=request.getRequestURL().toURL().getHost()
 
+
         def isValidUser = userService.isValid(user,hostname)
         def httpStatus = isValidUser ? HttpStatus.OK.value : HttpStatus.FORBIDDEN.value
 

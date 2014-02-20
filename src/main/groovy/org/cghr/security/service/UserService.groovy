@@ -25,6 +25,7 @@ class UserService {
 
         try {
             User userRespFromServer = onlineAuthService.authenticate(user,hostname)
+            println 'user Resp from Server '+userRespFromServer
             cacheUserLocally(userRespFromServer)
         }
         catch (ServerNotFoundException ex)

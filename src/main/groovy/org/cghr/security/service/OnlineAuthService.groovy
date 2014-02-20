@@ -37,7 +37,10 @@ class OnlineAuthService {
 
         String onlinAuthHostname=serverAuthUrl.toURL().getHost()
 
-        if(hostname==onlinAuthHostname)
+        println "hostname $hostname"
+        println "Server auth host $onlinAuthHostname"
+
+        if(hostname==onlinAuthHostname && onlinAuthHostname!='localhost')
             throw new ServerNotFoundException()
 
 
