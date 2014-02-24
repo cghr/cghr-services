@@ -29,10 +29,12 @@ class FileManager {
     void createInboxFile(String filename,String fileContents)
     {
 
+        new File(inboxPath+filename).setText(fileContents)
     }
     void createOutboxFile(String filename,String fileContents)
     {
 
+        new File(outboxPath+filename).setText(fileContents)
 
     }
 
