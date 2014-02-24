@@ -72,4 +72,12 @@ class DbAccess {
 
 	}
 
+    List eachRow(String sql,List params,List result,Closure closure){
+
+
+        gSql.eachRow(sql,params,closure)
+        return result
+
+    }
+
 }

@@ -49,12 +49,14 @@ class UploadAgentSpec extends Specification {
                 println localFile.name+'File upload successful'
             }
 
-            uploadSuccessful(file1) >> {
-                gSql.executeUpdate('update outbox set upldStatus=1 where message=?', [file1])
+            uploadSuccessful('1') >> {
+
+                gSql.executeUpdate('update outbox set upldStatus=1 where id=?', ['1'])
 
             }
-            uploadSuccessful(file2) >> {
-                gSql.executeUpdate('update outbox set upldStatus=1 where message=?', [file2])
+            uploadSuccessful('2') >> {
+
+                gSql.executeUpdate('update outbox set upldStatus=1 where id=?', ['2'])
 
             }
         }

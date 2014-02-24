@@ -165,4 +165,23 @@ class DbAccessSpec extends Specification {
 
 
     }
+
+    def "should process the closure for each row"() {
+
+        given:
+        List result=[]
+        Closure closure={
+            row ->
+                result << row.name
+        }
+
+
+        when:
+        dbAccess.eachRow(multipleRowSql,validParamsMultipleRow,result,closure)
+
+        then:
+        result==['india','pakistan','srilanka']
+
+
+    }
 }

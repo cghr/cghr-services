@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
-
 @ContextConfiguration(locations = "classpath:spring-context.xml")
 class UserServiceSpec extends Specification {
 

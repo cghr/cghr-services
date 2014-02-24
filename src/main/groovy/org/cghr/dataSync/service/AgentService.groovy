@@ -1,8 +1,15 @@
 package org.cghr.dataSync.service
 
+import com.google.gson.Gson
 import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
+import org.cghr.dataSync.util.FileManager
+import org.springframework.http.converter.StringHttpMessageConverter
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
+import org.springframework.web.client.RestTemplate
+
+import java.text.SimpleDateFormat
 
 /**
  * Created by ravitej on 3/2/14.
@@ -12,89 +19,136 @@ class AgentService {
     DbAccess dbAccess
     DbStore dbStore
     AwakeFileSession awakeFileSession
+    FileManager fileManager
+    RestTemplate restTemplate
+    String syncServerDownloadInfoUrl
+    String serverUploadDir
 
-    AgentService(DbAccess dbAccess, DbStore dbStore, AwakeFileSession awakeFileSession) {
+
+    Gson gson = new Gson()
+
+    AgentService(DbAccess dbAccess, DbStore dbStore, AwakeFileSession awakeFileSession, FileManager fileManager, RestTemplate restTemplate, String syncServerDownloadInfoUrl,String serverUploadDir) {
         this.dbAccess = dbAccess
         this.dbStore = dbStore
         this.awakeFileSession = awakeFileSession
+        this.fileManager = fileManager
+        this.restTemplate = restTemplate
+        this.syncServerDownloadInfoUrl = syncServerDownloadInfoUrl
     }
 
     void saveDownloadInfo(List<Map> list) {
 
-        dbStore.saveOrUpdateFromMapList(list,"inbox")
+        dbStore.saveOrUpdateFromMapList(list, "inbox")
     }
 
     List<Map> getInboxFilesToDownload() {
 
-        dbAccess.getRowsAsListOfMaps("select id,message from inbox where dwnStatus is null",[])
+        dbAccess.getRowsAsListOfMaps("select id,message from inbox where dwnStatus is null", [])
     }
 
     List getInboxFilesToDistribute() {
-        dbAccess.getRowsAsListOfMaps("select id,message from inbox where distStatus is null",[])
+        dbAccess.getRowsAsListOfMaps("select id,message from inbox where distStatus is null", [])
     }
 
     void distributeMessage(String message, String recepients) {
 
-        def recepientsArray=recepients.split(",")
+        def recepientsArray = recepients.split(",")
         recepientsArray.each {
             recepient ->
-            dbStore.saveOrUpdate([message:message,recepient:recepient],"outbox")
+                dbStore.saveOrUpdate([message: message, recepient: recepient], "outbox")
         }
 
     }
 
     void saveLogInfToDatabase(Map map) {
 
-        dbStore.saveOrUpdate(map.data,map.datastore)
+        dbStore.saveOrUpdate(map.data, map.datastore)
     }
 
     List<Map> getFilesToImport() {
 
-        dbAccess.getRowsAsListOfMaps("select id,message from inbox where impStatus is null",[])
+        dbAccess.getRowsAsListOfMaps("select id,message from inbox where impStatus is null", [])
     }
 
-    String getInboxFileContents(String s) {
+    String getInboxFileContents(String filename) {
 
-        null
+        fileManager.getInboxFile(filename).text
     }
 
-    String getAllLogs() {}
+    String getAllLogs() {
 
-    String createAFileName() {}
+        List result = []
+
+        result = dbAccess.eachRow('select log from datachangelog where status is null', [], result, {
+
+            result << it.log.getAsciiStream.getText()
+        })
+
+        gson.toJson(result)
+
+    }
+
+    String createAFileName() {
+
+        new SimpleDateFormat("dd-mm-yy-HH:MM:ss").format(new Date()) + ".json"
+    }
 
     def createOutboxFile(String fileName, String fileContents) {
+
+        fileManager.createOutboxFile(fileName, fileContents)
 
     }
 
     void saveFileToOutbox(String fileName) {
 
+        dbStore.saveOrUpdate([message: fileName], 'outbox')
+
     }
 
     File getOutboxFile(String filename) {
-        null
+
+        fileManager.getOutboxFile(filename)
     }
 
     List<Map> getOutboxFilesToUpload() {
-        null
+
+        dbAccess.getRowsAsListOfMaps("select id,message from outbox where upldStatus is null", [])
     }
 
-    def uploadSuccessful(String filename) {
+    def uploadSuccessful(String fileId) {
 
+        dbStore.saveOrUpdate([id: fileId, upldStatus: 1], "outbox")
     }
 
     List getDownloadInfo() {
-        null
+
+
+        restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter())
+        restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+
+
+        String jsonResponse = restTemplate.getForObject(syncServerDownloadInfoUrl, String.class)
+        gson.fromJson(jsonResponse, List.class)
+
     }
 
     def download(String filename) {
 
-    }
-    def upload(File localFile)
-    {
+        File file = fileManager.createInboxFile(filename, "")
+        awakeFileSession.download(filename, file)
 
     }
 
-   def downloadSuccessful(String filename) {
+    def upload(File localFile) {
+
+        String remoteFile=serverUploadDir+localFile.getName()
+        awakeFileSession.upload(localFile,remoteFile)
+
+    }
+
+    def downloadSuccessful(String filename) {
+
+        dbStore.saveOrUpdate([dwnStatus:'1',message: filename],"inbox")
 
     }
 }

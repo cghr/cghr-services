@@ -1,7 +1,5 @@
 package org.cghr.security.service
-
 import com.google.gson.Gson
-import org.apache.http.conn.HttpHostConnectException
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.security.exception.NoSuchUserFound
@@ -24,8 +22,7 @@ class UserService {
     def boolean isValid(User user,String hostname) {
 
         try {
-            User userRespFromServer = onlineAuthService.authenticate(user,hostname)
-            println 'user Resp from Server '+userRespFromServer
+            User userRespFromServer = onlineAuthService.authenticate(user,hostname);
             cacheUserLocally(userRespFromServer)
         }
         catch (ServerNotFoundException ex)

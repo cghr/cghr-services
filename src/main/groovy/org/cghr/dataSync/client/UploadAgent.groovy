@@ -28,7 +28,7 @@ class UploadAgent implements Agent {
         files.each {
             fileInfo ->
                 uploadFile(fileInfo)
-                agentService.uploadSuccessful(fileInfo.message)
+                agentService.uploadSuccessful(fileInfo.id.toString())
         }
     }
 
