@@ -29,7 +29,7 @@ class MockData {
             authtoken: [],
             userlog: [],
             inbox: [
-                    [id: 1, message: 'file1.json', sender: 'admin', dwnStatus: null, distList: '1,2', distStatus: null, impStatus: null],
+                    [id: 1, message: 'file1.json', sender: 'admin', dwnStatus: null, distList: '1,21    ', distStatus: null, impStatus: null],
                     [id: 2, message: 'file2.json', sender: 'admin', dwnStatus: null, distList: '3,4', distStatus: null, impStatus: null]
             ],
             outbox: [

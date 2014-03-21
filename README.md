@@ -1,5 +1,6 @@
-CGHR-Services  [![Build Status](https://travis-ci.org/ravitez/cghr-services.png?branch=master)](https://travis-ci.org/ravitez/cghr-services)
+CGHR-Services  [![Build Status](https://travis-ci.org/cghr/cghr-services.png?branch=master)](https://travis-ci.org/cghr/cghr-services)
 =============
+
 
 cghr-services is a common services module used as a base to create applications.  
 
