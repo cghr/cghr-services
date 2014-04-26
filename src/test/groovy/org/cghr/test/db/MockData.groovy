@@ -8,8 +8,8 @@ class MockData {
             user: [id: 'int', username: 'varchar(20)', password: 'varchar(20)', role: 'varchar(20)', status: 'varchar(20)'],
             authtoken: [id: 'int', token: 'varchar(255)', time: 'varchar(20)', expires: 'varchar(255)', username: 'varchar(20)', role: 'varchar(20)'],
             userlog: [id: 'int', username: 'varchar(20)', status: 'varchar(20)', time: 'varchar(20)', ipaddress: 'varchar(20)'],
-            inbox: [id: 'int', message: 'varchar(100)', sender: 'varchar(20)', dwnStatus: 'varchar(20)', distList: 'varchar(20)', distStatus: 'varchar(20)', impStatus: 'varchar(20)'],
-            outbox: [id: 'int', message: 'varchar(100)', recepient: 'varchar(20)', upldStatus: 'varchar(20)'],
+            inbox: [id: 'int', datastore: 'varchar(100)', ref: 'varchar(20)', refId: 'varchar(20)', distList: 'varchar(20)', distStatus: 'varchar(20)', impStatus: 'varchar(20)'],
+            outbox: [id: 'int', datastore: 'varchar(100)',ref: 'varchar(20)', refId: 'varchar(20)',recepient: 'varchar(20)', dwnStatus: 'varchar(20)'],
             datachangelog: [id: 'int', log: 'text', status: 'varchar(20)'],
             memberImage: [memberId: 'int', consent: 'varchar(100)', photoId: 'varchar(100)', photo: 'varchar(100)']
     ]
@@ -36,12 +36,12 @@ class MockData {
             authtoken: [],
             userlog: [],
             inbox: [
-                    [id: 1, message: 'file1.json', sender: 'admin', dwnStatus: null, distList: '1,2', distStatus: null, impStatus: null],
-                    [id: 2, message: 'file2.json', sender: 'admin', dwnStatus: null, distList: '3,4', distStatus: null, impStatus: null]
+                    [id: 1,datastore: 'country',ref: 'id',refId: '1', distList: '1,2', distStatus: null, impStatus: null],
+                    [id: 2,datastore: 'country',ref: 'id',refId: '2' , distList: '3,4', distStatus: null, impStatus: null]
             ],
             outbox: [
-                    [id: 1, message: 'file1.json', recepient: 'admin', upldStatus: null],
-                    [id: 2, message: 'file2.json', recepient: 'admin', upldStatus: null]
+                    [id: 1, datastore: 'country',ref: 'id',refId: '1', recepient: '15', dwnStatus: null],
+                    [id: 2, datastore: 'country',ref: 'id',refId: '2', recepient: '16', dwnStatus: null]
             ],
             datachangelog: [
                     [id: 1, log: '{"datastore":"country","data":{"id":1,"name":"india","continent":"asia"}}', status: null],

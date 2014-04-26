@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
-import org.cghr.dataSync1.util.FileManager
 import org.springframework.http.converter.StringHttpMessageConverter
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
 import org.springframework.web.client.RestTemplate
@@ -19,7 +18,6 @@ class AgentService {
     DbAccess dbAccess
     DbStore dbStore
     AwakeFileSession awakeFileSession
-    FileManager fileManager
     RestTemplate restTemplate
     String syncServerDownloadInfoUrl
     String serverUploadDir
@@ -27,11 +25,10 @@ class AgentService {
 
     Gson gson = new Gson()
 
-    AgentService(DbAccess dbAccess, DbStore dbStore, AwakeFileSession awakeFileSession, FileManager fileManager, RestTemplate restTemplate, String syncServerDownloadInfoUrl,String serverUploadDir) {
+    AgentService(DbAccess dbAccess, DbStore dbStore, AwakeFileSession awakeFileSession, RestTemplate restTemplate, String syncServerDownloadInfoUrl,String serverUploadDir) {
         this.dbAccess = dbAccess
         this.dbStore = dbStore
         this.awakeFileSession = awakeFileSession
-        this.fileManager = fileManager
         this.restTemplate = restTemplate
         this.syncServerDownloadInfoUrl = syncServerDownloadInfoUrl
     }
@@ -70,10 +67,7 @@ class AgentService {
         dbAccess.getRowsAsListOfMaps("select id,message from inbox where impStatus is null", [])
     }
 
-    String getInboxFileContents(String filename) {
 
-        fileManager.getInboxFile(filename).text
-    }
 
     String getAllLogs() {
 
@@ -93,11 +87,6 @@ class AgentService {
         new SimpleDateFormat("dd-mm-yy-HH:MM:ss").format(new Date()) + ".json"
     }
 
-    def createOutboxFile(String fileName, String fileContents) {
-
-        fileManager.createOutboxFile(fileName, fileContents)
-
-    }
 
     void saveFileToOutbox(String fileName) {
 
@@ -105,10 +94,6 @@ class AgentService {
 
     }
 
-    File getOutboxFile(String filename) {
-
-        fileManager.getOutboxFile(filename)
-    }
 
     List<Map> getOutboxFilesToUpload() {
 
@@ -132,12 +117,7 @@ class AgentService {
 
     }
 
-    def download(String filename) {
 
-        File file = fileManager.createInboxFile(filename, "")
-        awakeFileSession.download(filename, file)
-
-    }
 
     def upload(File localFile) {
 

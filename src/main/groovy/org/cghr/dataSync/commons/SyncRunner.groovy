@@ -1,4 +1,4 @@
-package org.cghr.dataSync1.commons
+package org.cghr.dataSync.commons
 
 class SyncRunner {
 
@@ -8,7 +8,7 @@ class SyncRunner {
     void run() {
 
         for (agentId in agents) {
-            Agent agent = AgentProvider.provide(agentId)
+          Agent agent = AgentProvider.provide(agentId)
             agent.run();
         }
     }

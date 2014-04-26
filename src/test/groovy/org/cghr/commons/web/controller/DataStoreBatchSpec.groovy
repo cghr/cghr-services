@@ -1,6 +1,5 @@
 package org.cghr.commons.web.controller
 
-import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.commons.db.DbStore
 import org.cghr.test.db.DbTester
@@ -41,17 +40,20 @@ class DataStoreBatchSpec extends Specification {
 
         dataStoreBatch = new DataStoreBatch(dbStore)
         dt.clean("country")
+        dt.clean('datachangelog')
     }
 
     def "should save a map to database"() {
         setup:
-        String changelogs = new Gson().toJson(countryBatchData)
+        //String changelogs = new Gson().toJson(countryBatchData)
+        Map[] array=[countryBatchData[0],countryBatchData[1],countryBatchData[2]]
 
         when:
-        dataStoreBatch.saveData(changelogs)
+        dataStoreBatch.saveData(array)
 
 
         then:
         gSql.rows("select * from country").size() == 3
+        gSql.rows("select * from datachangelog").size()==3
     }
 }

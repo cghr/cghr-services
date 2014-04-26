@@ -1,6 +1,7 @@
-package org.cghr.dataSync1.client
+package org.cghr.dataSync.client
+
 import groovy.sql.Sql
-import org.cghr.dataSync1.service.AgentService
+import org.cghr.dataSync.service.AgentService
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +17,7 @@ class DownloadOrganizerAgentSpec extends Specification {
     @Autowired
     DbTester dt
 
-    @Shared  DownloadOrganizerAgent downloadOrganizerAgent
+    DownloadOrganizerAgent downloadOrganizerAgent
     @Shared
     List dataSet
 
@@ -27,7 +28,7 @@ class DownloadOrganizerAgentSpec extends Specification {
     }
 
     def setup() {
-        AgentService agentService=Stub(){
+        AgentService agentService = Stub() {
             getDownloadInfo() >> dataSet
 
             saveDownloadInfo(dataSet) >> {

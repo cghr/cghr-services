@@ -1,154 +1,112 @@
 package org.cghr.dataSync.service
 
 import com.google.gson.Gson
-import org.awakefw.file.api.client.AwakeFileSession
+import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
-import org.cghr.dataSync1.util.FileManager
-import org.springframework.http.converter.StringHttpMessageConverter
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
 import org.springframework.web.client.RestTemplate
-
-import java.text.SimpleDateFormat
 
 /**
  * Created by ravitej on 3/2/14.
  */
 class AgentService {
 
+    Sql gSql
     DbAccess dbAccess
     DbStore dbStore
-    AwakeFileSession awakeFileSession
-    FileManager fileManager
-    RestTemplate restTemplate
     String syncServerDownloadInfoUrl
-    String serverUploadDir
+    String syncServerUploadUrl
+    RestTemplate restTemplate
+    Integer changelogChunkSize
 
 
     Gson gson = new Gson()
 
-    AgentService(DbAccess dbAccess, DbStore dbStore, AwakeFileSession awakeFileSession, FileManager fileManager, RestTemplate restTemplate, String syncServerDownloadInfoUrl,String serverUploadDir) {
+    AgentService(Sql gSql, DbAccess dbAccess, DbStore dbStore, String syncServerDownloadInfoUrl, String syncServerUploadUrl, RestTemplate restTemplate, Integer changelogChunkSize) {
+        this.gSql = gSql
         this.dbAccess = dbAccess
         this.dbStore = dbStore
-        this.awakeFileSession = awakeFileSession
-        this.fileManager = fileManager
         this.restTemplate = restTemplate
         this.syncServerDownloadInfoUrl = syncServerDownloadInfoUrl
+        this.syncServerUploadUrl = syncServerUploadUrl
+        this.restTemplate = restTemplate
+        this.changelogChunkSize = changelogChunkSize
     }
+
+
+    List<Map> getDownloadInfo() {
+
+        Map[] downloadInfo = restTemplate.getForObject(syncServerDownloadInfoUrl, Map[].class)
+        downloadInfo as List
+    }
+
 
     void saveDownloadInfo(List<Map> list) {
+        dbStore.saveOrUpdateFromMapList(list, 'inbox')
 
-        dbStore.saveOrUpdateFromMapList(list, "inbox")
     }
 
-    List<Map> getInboxFilesToDownload() {
+    List<Map> getInboxMessagesToDownload() {
 
-        dbAccess.getRowsAsListOfMaps("select id,message from inbox where dwnStatus is null", [])
+        dbAccess.getRowsAsListOfMaps("select * from inbox where impStatus is null")
+
     }
 
-    List getInboxFilesToDistribute() {
-        dbAccess.getRowsAsListOfMaps("select id,message from inbox where distStatus is null", [])
+    void downloadAndImport(Map message) {
+
+
     }
 
-    void distributeMessage(String message, String recepients) {
+    void importSuccessful(Map message) {
 
-        def recepientsArray = recepients.split(",")
-        recepientsArray.each {
-            recepient ->
-                dbStore.saveOrUpdate([message: message, recepient: recepient], "outbox")
+        dbStore.saveOrUpdate([id: message.id, impStatus: 1], 'inbox')
+    }
+
+    List<Map> getInboxMessagesToDistribute() {
+
+        dbAccess.getRowsAsListOfMaps("select * from inbox where impStatus is not null and distStatus is null")
+    }
+
+    void distributeMessage(Map message, String recepient) {
+
+        dbStore.saveOrUpdate([datastore: message.datastore, ref: message.ref, refId: message.refId], 'outbox')
+    }
+
+    void distributeSuccessful(Map message) {
+        dbStore.saveOrUpdate([id: message.id, distStatus: 1], 'inbox')
+
+    }
+
+    Integer getDataChangelogChunks() {
+
+        Integer pendingLogs = dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null").count
+        Math.floor(pendingLogs / changelogChunkSize) + 1
+
+    }
+
+    String getDataChangelogBatch() {
+
+        List logs = []
+        def sql = "select log from datachangelog where status is null limit $changelogChunkSize".toString()
+        gSql.eachRow(sql) {
+            row ->
+                logs << row.log.getAsciiStream().getText()
         }
+        logs.toString()
+    }
+
+    void postBatch(String changelogBatch) {
+
+//Todo
+        //restTemplate.postForObject(syncServerUploadUrl,changelogBatch)
 
     }
 
-    void saveLogInfToDatabase(Map map) {
+    void postBatchSuccessful() {
 
-        dbStore.saveOrUpdate(map.data, map.datastore)
+
+        gSql.executeUpdate("update datachangelog set status=1 where status is null limit $changelogChunkSize")
     }
 
-    List<Map> getFilesToImport() {
 
-        dbAccess.getRowsAsListOfMaps("select id,message from inbox where impStatus is null", [])
-    }
-
-    String getInboxFileContents(String filename) {
-
-        fileManager.getInboxFile(filename).text
-    }
-
-    String getAllLogs() {
-
-        List result = []
-
-        result = dbAccess.eachRow('select log from datachangelog where status is null', [], result, {
-
-            result << it.log.getAsciiStream().getText()
-        })
-
-        gson.toJson(result)
-
-    }
-
-    String createAFileName() {
-
-        new SimpleDateFormat("dd-mm-yy-HH:MM:ss").format(new Date()) + ".json"
-    }
-
-    def createOutboxFile(String fileName, String fileContents) {
-
-        fileManager.createOutboxFile(fileName, fileContents)
-
-    }
-
-    void saveFileToOutbox(String fileName) {
-
-        dbStore.saveOrUpdate([message: fileName], 'outbox')
-
-    }
-
-    File getOutboxFile(String filename) {
-
-        fileManager.getOutboxFile(filename)
-    }
-
-    List<Map> getOutboxFilesToUpload() {
-
-        dbAccess.getRowsAsListOfMaps("select id,message from outbox where upldStatus is null", [])
-    }
-
-    def uploadSuccessful(String fileId) {
-
-        dbStore.saveOrUpdate([id: fileId, upldStatus: 1], "outbox")
-    }
-
-    List getDownloadInfo() {
-
-
-        restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter())
-        restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-
-
-        String jsonResponse = restTemplate.getForObject(syncServerDownloadInfoUrl, String.class)
-        gson.fromJson(jsonResponse, List.class)
-
-    }
-
-    def download(String filename) {
-
-        File file = fileManager.createInboxFile(filename, "")
-        awakeFileSession.download(filename, file)
-
-    }
-
-    def upload(File localFile) {
-
-        String remoteFile=serverUploadDir+localFile.getName()
-        awakeFileSession.upload(localFile,remoteFile)
-
-    }
-
-    def downloadSuccessful(String filename) {
-
-        dbStore.saveOrUpdate([dwnStatus:'1',message: filename],"inbox")
-
-    }
 }

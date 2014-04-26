@@ -3,19 +3,18 @@ import com.google.gson.Gson
 import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
-import org.cghr.dataSync1.util.FileManager
+//import org.cghr.dataSync1.util.FileManager
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
-import spock.lang.Specification
 /**
  * Created by ravitej on 20/2/14.
  */
 @ContextConfiguration(locations = "classpath:spring-context.xml")
-class AgentServiceSpec extends Specification {
+class AgentServiceSpec  {
 
     AgentService agentService
     String outboxPath = File.createTempDir().absolutePath + '/'
@@ -130,33 +129,33 @@ class AgentServiceSpec extends Specification {
 
             }
         }
-        FileManager fileManager = Stub() {
-            getInboxFile('file1.json') >> {
-
-                File file = File.createTempFile('file1', 'json')
-                file.text = new Gson().toJson(countryData)
-                file
-            }
-            getOutboxFile(outboxFile) >> {
-
-                File file = new File(outboxPath + outboxFile)
-                file.text = gson.toJson(countryData)
-                return file
-            }
-            createOutboxFile(outboxFile, gson.toJson(countryData)) >> {
-
-                File file = new File(outboxPath + outboxFile)
-                file.setText(gson.toJson(countryData))
-                return file
-            }
-            createInboxFile('file1.json', _) >> {
-
-
-                File file = new File(inboxPath + inboxFile);
-                file.write("");
-                return file
-            }
-        }
+//        FileManager fileManager = Stub() {
+//            getInboxFile('file1.json') >> {
+//
+//                File file = File.createTempFile('file1', 'json')
+//                file.text = new Gson().toJson(countryData)
+//                file
+//            }
+//            getOutboxFile(outboxFile) >> {
+//
+//                File file = new File(outboxPath + outboxFile)
+//                file.text = gson.toJson(countryData)
+//                return file
+//            }
+//            createOutboxFile(outboxFile, gson.toJson(countryData)) >> {
+//
+//                File file = new File(outboxPath + outboxFile)
+//                file.setText(gson.toJson(countryData))
+//                return file
+//            }
+//            createInboxFile('file1.json', _) >> {
+//
+//
+//                File file = new File(inboxPath + inboxFile);
+//                file.write("");
+//                return file
+//            }
+//        }
 
         String syncServerDownloadInfoUrl = 'http://dummyServer:8080/app/downloadInfo'
         RestTemplate restTemplate = Stub() {

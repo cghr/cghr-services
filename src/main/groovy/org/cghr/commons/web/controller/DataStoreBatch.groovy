@@ -1,6 +1,5 @@
 package org.cghr.commons.web.controller
 
-import com.google.gson.Gson
 import org.cghr.commons.db.DbStore
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -19,10 +18,16 @@ class DataStoreBatch {
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    String saveData(@RequestBody String data) {
+    String saveData(@RequestBody Map[] data) {
 
-        List<Map<String, String>> changelogs = new Gson().fromJson(data, List.class)
+        List<Map<String, String>> changelogs = data as List
+                //new Gson().fromJson(data, List.class)
         dbStore.saveOrUpdateBatch(changelogs)
+
+        //Create Changelogs
+        changelogs.each {
+            dbStore.createDataChangeLogs(it.data,it.datastore)
+        }
     }
 
 

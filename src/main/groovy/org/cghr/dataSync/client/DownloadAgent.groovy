@@ -14,17 +14,16 @@ class DownloadAgent implements Agent {
 
     public void run() {
 
-        List<Map> files = agentService.getInboxFilesToDownload()
-        downloadFiles(files)
+        List<Map> messages = agentService.getInboxMessagesToDownload()
+        downloadAndImportMessages(messages)
 
     }
 
-    void downloadFiles(List<Map> files) {
-        files.each {
-            fileInfo ->
-                String filename=fileInfo.message
-                agentService.download(filename)
-                agentService.downloadSuccessful(filename)
+    void downloadAndImportMessages(List<Map> messages) {
+        messages.each {
+            message ->
+                agentService.downloadAndImport(message)
+                agentService.importSuccessful(message)
         }
     }
 }

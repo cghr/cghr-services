@@ -1,4 +1,4 @@
-package org.cghr.dataSync1.commons
+package org.cghr.dataSync.commons
 
 class AgentProvider {
 
