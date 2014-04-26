@@ -37,8 +37,8 @@ class OnlineAuthServiceSpec extends Specification {
 
         mockServerAuthUrl = "http://dummyServer:8080/app/api/security/auth"
         mockRestTemplate = Stub() {
-            postForObject(mockServerAuthUrl,request, User.class) >> {
-                new User(id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active')}
+            postForObject(mockServerAuthUrl,request, Map.class) >> {
+               [id: 1, username: 'user1', password: 'secret1', role:[title:'user',bitMask:2], status: 'active']}
             getMessageConverters() >> [] //Mock list for adding message convertors
         }
 
@@ -47,8 +47,8 @@ class OnlineAuthServiceSpec extends Specification {
 
     def "should return User information for a valid User"() {
         given:
-        User actual = onlineAuthService.authenticate(validUser,"localhost")
-        User expected = new User(id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active')
+        Map actual = onlineAuthService.authenticate(validUser,"localhost")
+        Map expected = [id: 1, username: 'user1', password: 'secret1', role:[title:'user',bitMask:2], status: 'active']
 
         expect:
         ReflectionAssert.assertReflectionEquals(expected, actual)
@@ -65,7 +65,7 @@ class OnlineAuthServiceSpec extends Specification {
         HttpEntity<String> request=new HttpEntity<String>(new Gson().toJson(invalidUser),headers)
 
         RestTemplate fakeRestTemplate = Stub(){
-        postForObject(mockServerAuthUrl, request, User.class) >> {
+        postForObject(mockServerAuthUrl, request, Map.class) >> {
             throw new HttpClientErrorException(HttpStatus.FORBIDDEN)
         }
         getMessageConverters() >> []
@@ -90,7 +90,7 @@ class OnlineAuthServiceSpec extends Specification {
         HttpEntity<String> request=new HttpEntity<String>(new Gson().toJson(validUser),headers)
 
         RestTemplate fakeRestTemplate = Mock()
-        fakeRestTemplate.postForObject(mockServerAuthUrl, request, User.class) >> {
+        fakeRestTemplate.postForObject(mockServerAuthUrl, request, Map.class) >> {
             throw new HttpClientErrorException(HttpStatus.NOT_FOUND)
         }
         fakeRestTemplate.getMessageConverters() >> []

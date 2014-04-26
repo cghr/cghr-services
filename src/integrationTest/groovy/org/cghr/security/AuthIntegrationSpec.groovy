@@ -1,6 +1,5 @@
 package org.cghr.security.controller
 
-import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.google.gson.Gson
 import groovy.sql.Sql
@@ -9,7 +8,6 @@ import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
@@ -19,7 +17,6 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
-
 /**
  * Created by ravitej on 27/1/14.
  */
@@ -40,6 +37,8 @@ class AuthIntegrationSpec extends Specification {
     User invalidUser = new User(username: 'invaliduser', password: 'secret1')
     @Shared
     Gson gson = new Gson()
+    @Shared
+    String userJson='{"id":1,"username":"user1","password":"secret1","role":{"title":"user","bitMask":2},"status":"active"}'
 
 
     @Rule
@@ -82,8 +81,8 @@ class AuthIntegrationSpec extends Specification {
 
         where:
         user        | httpStatus                   | expectedJsonResp
-        validUser   | HttpStatus.OK.value()        | new Gson().toJson(dataSet[0])
-        invalidUser | HttpStatus.FORBIDDEN.value() | "{}"
+        validUser   | HttpStatus.OK.value()        | userJson
+        invalidUser | HttpStatus.FORBIDDEN.value() | '{"role":{}}'
 
 
     }
@@ -109,7 +108,7 @@ class AuthIntegrationSpec extends Specification {
 
         where:
         user        | usernameCookie | useridCookie | userCookie
-        validUser   | "user1"        | '1'          | '{"username":"user1","role":{"title":"user","bitMask":2}}'
+        validUser   | "user1"        | '1'          | userJson
         invalidUser | null           | null         | null
 
 
@@ -157,7 +156,7 @@ class AuthIntegrationSpec extends Specification {
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
-                .withBody(new Gson().toJson(dataSet[0]))));
+                .withBody(userJson)));
 
         stubFor(post(urlEqualTo("/app/api/security/auth"))
                 .withHeader("Content-Type", equalTo("application/json"))
@@ -165,7 +164,7 @@ class AuthIntegrationSpec extends Specification {
                 .willReturn(aResponse()
                 .withStatus(403)
                 .withHeader("Content-Type", "application/json")
-                .withBody('{}')));
+                .withBody('{"role":{}}')));
 
 
 
@@ -184,8 +183,8 @@ class AuthIntegrationSpec extends Specification {
 
         where:
         user        | httpStatus                   | expectedJsonResp
-        validUser   | HttpStatus.OK.value()        | new Gson().toJson(dataSet[0])
-        invalidUser | HttpStatus.FORBIDDEN.value() | '{}'
+        validUser   | HttpStatus.OK.value()        | userJson
+        invalidUser | HttpStatus.FORBIDDEN.value() | '{"role":{}}'
 
 
     }

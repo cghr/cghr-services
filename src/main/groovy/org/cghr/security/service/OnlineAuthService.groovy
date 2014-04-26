@@ -28,11 +28,11 @@ class OnlineAuthService {
     }
 
 
-    public User authenticate(User user,String hostname) {
+    public Map authenticate(User user,String hostname) {
 
 
         Gson gson = new Gson()
-        User serverRespUser
+        Map serverRespUser
 
 
         String onlinAuthHostname=serverAuthUrl.toURL().getHost()
@@ -59,7 +59,7 @@ class OnlineAuthService {
 
         try {
 
-            serverRespUser = restTemplate.postForObject(serverAuthUrl, request, User.class);
+            serverRespUser = restTemplate.postForObject(serverAuthUrl, request, Map.class);
             println 'Online Server Available'
             return serverRespUser
         }

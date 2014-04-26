@@ -83,7 +83,7 @@ class UserServiceSpec extends Specification {
 
         OnlineAuthService mockOnlineAuthService = Stub() {
 
-            authenticate(validUser,hostname) >> new User(id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active')
+            authenticate(validUser,hostname) >> [id: 1, username: 'user1', password: 'secret1', role: [title:'user',bitMask:2], status: 'active']
             authenticate(invalidUser,hostname) >> {throw new NoSuchUserFound()}
         }
 
@@ -148,7 +148,7 @@ class UserServiceSpec extends Specification {
 
         where:
         user      || result
-        validUser || '{"username":"user1","role":{"title":"user","bitMask":2}}'
+        validUser || '{"id":1,"username":"user1","password":"secret1","role":{"title":"user","bitMask":2},"status":"active"}'
 
     }
 
@@ -198,7 +198,7 @@ class UserServiceSpec extends Specification {
 
     def "should cache(save to database) a userJson got from a http response as String"() {
         given:
-        User user = new User(id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active')
+        Map user = [id: 1, username: 'user1', password: 'secret1', role:[title:'user',bitMask: 2], status: 'active']
 
 
         when:

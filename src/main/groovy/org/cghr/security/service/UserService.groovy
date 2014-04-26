@@ -22,7 +22,7 @@ class UserService {
     def boolean isValid(User user,String hostname) {
 
         try {
-            User userRespFromServer = onlineAuthService.authenticate(user,hostname);
+            Map userRespFromServer = onlineAuthService.authenticate(user,hostname);
             cacheUserLocally(userRespFromServer)
         }
         catch (ServerNotFoundException ex)
@@ -51,10 +51,10 @@ class UserService {
         isValid
     }
 
-    def cacheUserLocally(User user) {
+    def cacheUserLocally(Map user) {
 
 
-        dbStore.saveOrUpdate([id: user.id, username: user.username, password: user.password, role: user.role, status: user.status], 'user')
+        dbStore.saveOrUpdate([id: user.id, username: user.username, password: user.password, role: user.role.title, status: user.status], 'user')
     }
 
     def String getUserJson(User user) {
@@ -72,11 +72,13 @@ class UserService {
     def String getUserCookieJson(User user) {
 
         def row = getUserAsMap(user)
-        def userMap = [username: row.username, role: [title: row.role, bitMask: getBitMask(row.role)]]
+        def userMap = [id:row.id,username: row.username,password: row.password,role: [title: row.role, bitMask: getBitMask(row.role)],status: row.status]
         new Gson().toJson(userMap)
     }
 
-    def int getBitMask(String role) {
+    Integer getBitMask(String role) {
+
+        println 'role '+role
 
         switch (role) {
 

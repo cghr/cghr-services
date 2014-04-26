@@ -14,8 +14,8 @@ class DownloadOrganizerAgent implements Agent {
 
     void run() {
 
-        List files = agentService.getDownloadInfo()
-        agentService.saveDownloadInfo(files)
+        List entities = agentService.getDownloadInfo()
+        agentService.saveDownloadInfo(entities)
     }
 
 
