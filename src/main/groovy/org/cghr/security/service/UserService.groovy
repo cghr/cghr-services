@@ -47,7 +47,8 @@ class UserService {
     def boolean isValidLocalUser(User user) {
 
         Map userData = getUserAsMap(user)
-        userData.isEmpty() ? false : (userData.password.equals(user.password))
+        def isValid=userData.isEmpty() ? false : (userData.password.equals(user.password))
+        isValid
     }
 
     def cacheUserLocally(User user) {

@@ -18,12 +18,12 @@ class DataAccessSpec extends Specification {
     def setupSpec() {
 
         dataSet = new MockData().sampleData.get("country")
-        dataAccess = new DataAccess()
         DbAccess mockDbAccess = Stub() {
             getRowAsJson("country", "id", "1") >> new Gson().toJson(dataSet[0]).toString()
             getRowAsJson("country", "id", "999") >> "{}"
         }
-        dataAccess.dbAccess = mockDbAccess
+        dataAccess=new DataAccess(mockDbAccess)
+
     }
 
     def "should get requested data as json"() {

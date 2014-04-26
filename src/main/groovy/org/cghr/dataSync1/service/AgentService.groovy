@@ -1,4 +1,4 @@
-package org.cghr.dataSync.service
+package org.cghr.dataSync1.service
 
 import com.google.gson.Gson
 import org.awakefw.file.api.client.AwakeFileSession

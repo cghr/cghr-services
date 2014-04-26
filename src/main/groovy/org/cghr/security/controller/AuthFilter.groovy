@@ -1,8 +1,8 @@
 package org.cghr.security.controller
-
 import org.cghr.security.service.UserService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.web.context.WebApplicationContext
+import org.springframework.web.context.support.WebApplicationContextUtils
 
 import javax.servlet.*
 import javax.servlet.http.HttpServletRequest
@@ -10,12 +10,23 @@ import javax.servlet.http.HttpServletResponse
 
 class AuthFilter implements Filter {
 
-    @Autowired
     UserService userService
-    @Autowired
+
     RequestParser requestParser
 
     public void init(FilterConfig filterConfig) throws ServletException {
+
+        ServletContext servletContext = filterConfig.getServletContext();
+        WebApplicationContext webApplicationContext =
+                WebApplicationContextUtils.getWebApplicationContext(servletContext);
+
+        userService= webApplicationContext.getBean("userService")
+        requestParser=webApplicationContext.getBean("requestParser")
+//        AutowireCapableBeanFactory autowireCapableBeanFactory =
+//                webApplicationContext.getAutowireCapableBeanFactory();
+//
+//        autowireCapableBeanFactory.configureBean(userService,"userService");
+//        autowireCapableBeanFactory.configureBean(requestParser,"requestParser")
     }
 
     public void doFilter(ServletRequest req, ServletResponse resp,

@@ -1,4 +1,6 @@
 package org.cghr.commons.web.controller
+
+import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.commons.db.DbStore
 import org.cghr.test.db.DbTester
@@ -9,10 +11,17 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 @ContextConfiguration(locations = "classpath:spring-context.xml")
-class DataStoreSpec extends Specification {
+class DataStoreBatchSpec extends Specification {
 
-    @Shared DataStore dataStore
+    @Shared
+    DataStoreBatch dataStoreBatch
+    @Shared
+    def dataChangelogs
     def data = [id: 1, name: 'india', continent: 'asia']
+    @Autowired
+    DbStore dbStore
+    @Shared
+    def countryBatchData
 
 
     @Shared
@@ -20,34 +29,29 @@ class DataStoreSpec extends Specification {
     @Autowired
     Sql gSql
     @Autowired
-    DbStore dbStore
-    @Autowired
     DbTester dt
 
     def setupSpec() {
         dataSet = new MockData().sampleData.get("country")
+        countryBatchData = new MockData().sampleData.get("countryBatchData")
     }
 
     def setup() {
 
 
-        dataStore = new DataStore(dbStore)
-
+        dataStoreBatch = new DataStoreBatch(dbStore)
         dt.clean("country")
-        dt.clean("datachangelog")
     }
 
     def "should save a map to database"() {
         setup:
-        Map data = dataSet[0]
-        data.put("datastore", "country")
+        String changelogs = new Gson().toJson(countryBatchData)
 
         when:
-        dataStore.saveData(data)
+        dataStoreBatch.saveData(changelogs)
 
 
         then:
-        gSql.firstRow("select * from country where id=?", [1]) == dataSet[0]
-        gSql.rows("select * from datachangelog").size()==1
+        gSql.rows("select * from country").size() == 3
     }
 }

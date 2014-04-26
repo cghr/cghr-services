@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.ResponseBody
 
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
@@ -28,7 +29,8 @@ class Auth {
     Auth() {
     }
 
-    @RequestMapping(value="",method = RequestMethod.POST)
+    @RequestMapping(value="",method = RequestMethod.POST,consumes = "application/json",produces = "application/json")
+    @ResponseBody
     String authenticate(@RequestBody User user, HttpServletResponse response,HttpServletRequest request) {
 
 
@@ -37,23 +39,39 @@ class Auth {
 
 
         def isValidUser = userService.isValid(user,hostname)
+
+        println 'auth is valid user '+isValidUser
         def httpStatus = isValidUser ? HttpStatus.OK.value : HttpStatus.FORBIDDEN.value
+        println 'http status'+httpStatus
 
         response.setStatus(httpStatus)
 
         if (isValidUser) {
 
             addAuthTokenCookie(user, response)
-            response.addCookie(new Cookie("user", userService.getUserCookieJson(user)))
-            response.addCookie(new Cookie("username", user.username))
-            response.addCookie(new Cookie("userid", userService.getId(user)))
+
+            Cookie userCookie=new Cookie("user", userService.getUserCookieJson(user))
+            userCookie.setMaxAge(60*60*24)
+            userCookie.setPath(cookiePath)
+            response.addCookie(userCookie)
+
+            Cookie usernameCoookie=new Cookie("username", user.username)
+            //usernameCoookie.setMaxAge(60*60*24)
+            usernameCoookie.setPath(cookiePath)
+            response.addCookie(usernameCoookie)
+
+            Cookie useridCookie=new Cookie("userid", userService.getId(user))
+            //useridCookie.setMaxAge(60*60*24)
+            useridCookie.setPath(cookiePath)
+            response.addCookie(useridCookie)
+
             userService.logUserAuthStatus(user, "success")
         } else
             userService.logUserAuthStatus(user, "fail")
 
 
 
-        return userService.getUserJson(user)
+        return userService.getUserCookieJson(user)
     }
 
     void addAuthTokenCookie(User user, HttpServletResponse response) {

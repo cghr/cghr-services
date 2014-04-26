@@ -1,4 +1,6 @@
 package org.cghr.commons.db
+
+import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
@@ -16,6 +18,8 @@ class DbStoreSpec extends Specification {
     @Shared
     def dataSet
     @Shared
+    def countryBatchData
+    @Shared
     def dataSetUpdate
     @Shared
     def dataStore = 'country'
@@ -30,11 +34,13 @@ class DbStoreSpec extends Specification {
 
     def setupSpec() {
         dataSet = new MockData().sampleData.get("country")
+        countryBatchData=new MockData().sampleData.get("countryBatchData")
         dataSetUpdate = new MockData().sampleDataUpdate.get("country")
     }
 
     def setup() {
         dt.clean("country")
+        dt.clean("datachangelog")
     }
 
 
@@ -45,6 +51,15 @@ class DbStoreSpec extends Specification {
 
         then:
         gSql.firstRow("SELECT * FROM country WHERE id=?", [1]) == dataSet[0]
+    }
+
+    def "verify batch data insert from a list of maps"() {
+        when:
+        dbStore.saveOrUpdateBatch(countryBatchData)
+
+        then:
+        gSql.rows("select * from country").size() == 3;
+
     }
 
     def "verify data insert from a map List to database"() {
@@ -71,6 +86,20 @@ class DbStoreSpec extends Specification {
 
         then:
         gSql.rows("select * from country") == dataSetUpdate
+    }
+
+    def "should create a datachangelog for a given log"() {
+        when:
+        dbStore.createDataChangeLogs(dataSet[0], dataStore)
+        Map log = [dataStore: dataStore, data: dataSet[0]]
+        String expectedLog
+
+        then:
+        gSql.firstRow("select count(*) count from datachangelog").count == 1;
+        gSql.eachRow("select log from datachangelog") {
+            expectedLog = it.log.getAsciiStream().getText();
+        }
+        expectedLog == new Gson().toJson(log)
     }
 }
 

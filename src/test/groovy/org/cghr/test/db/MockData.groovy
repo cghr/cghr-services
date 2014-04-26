@@ -10,7 +10,8 @@ class MockData {
             userlog: [id: 'int', username: 'varchar(20)', status: 'varchar(20)', time: 'varchar(20)', ipaddress: 'varchar(20)'],
             inbox: [id: 'int', message: 'varchar(100)', sender: 'varchar(20)', dwnStatus: 'varchar(20)', distList: 'varchar(20)', distStatus: 'varchar(20)', impStatus: 'varchar(20)'],
             outbox: [id: 'int', message: 'varchar(100)', recepient: 'varchar(20)', upldStatus: 'varchar(20)'],
-            datachangelog: [id: 'int', log: 'text', status: 'varchar(20)']
+            datachangelog: [id: 'int', log: 'text', status: 'varchar(20)'],
+            memberImage: [memberId: 'int', consent: 'varchar(100)', photoId: 'varchar(100)', photo: 'varchar(100)']
     ]
 
     def sampleData = [
@@ -18,6 +19,12 @@ class MockData {
                     [id: 1, name: 'india', continent: 'asia'],
                     [id: 2, name: 'pakistan', continent: 'asia'],
                     [id: 3, name: 'srilanka', continent: 'asia']
+            ],
+            countryBatchData: [
+                    [datastore: 'country', data: [id: '1', name: 'india', continent: 'asia']],
+                    [datastore: 'country', data: [id: '2', name: 'pakistan', continent: 'asia']],
+                    [datastore: 'country', data: [id: '3', name: 'srilanka', continent: 'asia']]
+
             ],
             user: [
                     [id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active'],
@@ -29,7 +36,7 @@ class MockData {
             authtoken: [],
             userlog: [],
             inbox: [
-                    [id: 1, message: 'file1.json', sender: 'admin', dwnStatus: null, distList: '1,21    ', distStatus: null, impStatus: null],
+                    [id: 1, message: 'file1.json', sender: 'admin', dwnStatus: null, distList: '1,2', distStatus: null, impStatus: null],
                     [id: 2, message: 'file2.json', sender: 'admin', dwnStatus: null, distList: '3,4', distStatus: null, impStatus: null]
             ],
             outbox: [
@@ -50,10 +57,11 @@ class MockData {
                     [id: 3, name: 'srilanka-update', continent: 'asia']
             ]
     ]
-    List<Map> getFilteredSampleData(String datastore,List columns){
+
+    List<Map> getFilteredSampleData(String datastore, List columns) {
 
 
-        List actualData=  this.sampleData.get(datastore)
+        List actualData = this.sampleData.get(datastore)
         actualData.collect {
             it.subMap(columns)
         }

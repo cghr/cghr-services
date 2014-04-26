@@ -1,5 +1,6 @@
 package org.cghr.commons.db
 
+import com.google.gson.Gson
 import groovy.sql.Sql
 
 
@@ -35,9 +36,27 @@ class DbStore {
             saveOrUpdate(data, dataStore)
     }
 
+    void saveOrUpdateBatch(List<Map> datachangelogs) {
+
+        datachangelogs.each {
+            log ->
+                saveOrUpdate(log.get('data'), log.get('datastore'))
+        }
+
+
+    }
+
     boolean isNewData(String dataStore, String keyField, String keyFieldValue) {
 
         List rows = gSql.rows("select * from $dataStore where $keyField=?", [keyFieldValue])
         rows.isEmpty()
+    }
+
+    void createDataChangeLogs(Map data, String dataStore) {
+
+        def sql = "insert into datachangelog(log) values(?)".toString()
+        Map log = [dataStore: dataStore, data: data];
+        gSql.execute(sql, new Gson().toJson(log));
+
     }
 }

@@ -10,25 +10,26 @@ import org.springframework.web.bind.annotation.ResponseBody
 
 
 @Controller
-@RequestMapping("/data/dataAccessService")
-class DataAccess {
+@RequestMapping("/data/dataAccessBatchService")
+class DataAccessBatch {
 
     @Autowired
     DbAccess dbAccess
 
     @RequestMapping(value = "/{dataStore}/{keyField}/{keyFieldValue}", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    String getDataAsJson(
+    String getDataAsJsonArray(
             @PathVariable String dataStore, @PathVariable String keyField, @PathVariable String keyFieldValue) {
 
-        dbAccess.getRowAsJson(dataStore, keyField, keyFieldValue)
+        dbAccess.getRowsAsJsonArray(dataStore, keyField, keyFieldValue)
     }
 
-    DataAccess() {
+    DataAccessBatch() {
 
     }
 
-    DataAccess(DbAccess dbAccess) {
+    DataAccessBatch(DbAccess dbAccess) {
+
         this.dbAccess = dbAccess
     }
 }
