@@ -4,6 +4,9 @@ import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.web.client.RestTemplate
 
 /**
@@ -16,13 +19,14 @@ class AgentService {
     DbStore dbStore
     String syncServerDownloadInfoUrl
     String syncServerUploadUrl
+    String syncServerDownloadDataBatchUrl
     RestTemplate restTemplate
     Integer changelogChunkSize
 
 
     Gson gson = new Gson()
 
-    AgentService(Sql gSql, DbAccess dbAccess, DbStore dbStore, String syncServerDownloadInfoUrl, String syncServerUploadUrl, RestTemplate restTemplate, Integer changelogChunkSize) {
+    AgentService(Sql gSql, DbAccess dbAccess, DbStore dbStore, String syncServerDownloadInfoUrl, String syncServerUploadUrl, RestTemplate restTemplate, Integer changelogChunkSize, String syncServerDownloadDataBatchUrl) {
         this.gSql = gSql
         this.dbAccess = dbAccess
         this.dbStore = dbStore
@@ -31,6 +35,7 @@ class AgentService {
         this.syncServerUploadUrl = syncServerUploadUrl
         this.restTemplate = restTemplate
         this.changelogChunkSize = changelogChunkSize
+        this.syncServerDownloadDataBatchUrl = syncServerDownloadDataBatchUrl
     }
 
 
@@ -48,13 +53,20 @@ class AgentService {
 
     List<Map> getInboxMessagesToDownload() {
 
-        dbAccess.getRowsAsListOfMaps("select * from inbox where impStatus is null")
+        dbAccess.getRowsAsListOfMaps("select * from inbox where impStatus is null", [])
 
     }
 
     void downloadAndImport(Map message) {
 
+        Map[] data = restTemplate.getForObject(syncServerDownloadDataBatchUrl, Map[].class)
 
+        List<Map<String, String>> list = data as List
+
+        List chagenlogs = list.collect {
+            [datastore: message.datastore, data: it]
+        }
+        dbStore.saveOrUpdateBatch(chagenlogs)
     }
 
     void importSuccessful(Map message) {
@@ -64,12 +76,12 @@ class AgentService {
 
     List<Map> getInboxMessagesToDistribute() {
 
-        dbAccess.getRowsAsListOfMaps("select * from inbox where impStatus is not null and distStatus is null")
+        dbAccess.getRowsAsListOfMaps("select * from inbox where impStatus is not null and distStatus is null",[])
     }
 
-    void distributeMessage(Map message, String recepient) {
+    void distributeMessage(Map message, String recipient) {
 
-        dbStore.saveOrUpdate([datastore: message.datastore, ref: message.ref, refId: message.refId], 'outbox')
+        dbStore.saveOrUpdate([datastore: message.datastore, ref: message.ref, refId: message.refId,recepient:recipient], 'outbox')
     }
 
     void distributeSuccessful(Map message) {
@@ -79,7 +91,7 @@ class AgentService {
 
     Integer getDataChangelogChunks() {
 
-        Integer pendingLogs = dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null").count
+        Integer pendingLogs = dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null",[]).count
         Math.floor(pendingLogs / changelogChunkSize) + 1
 
     }
@@ -87,6 +99,7 @@ class AgentService {
     String getDataChangelogBatch() {
 
         List logs = []
+
         def sql = "select log from datachangelog where status is null limit $changelogChunkSize".toString()
         gSql.eachRow(sql) {
             row ->
@@ -97,13 +110,15 @@ class AgentService {
 
     void postBatch(String changelogBatch) {
 
-//Todo
-        //restTemplate.postForObject(syncServerUploadUrl,changelogBatch)
-
+        //restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter())
+        //restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+        HttpHeaders headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        HttpEntity<String> request = new HttpEntity<String>(changelogBatch, headers)
+        restTemplate.postForLocation(syncServerUploadUrl, request)
     }
 
     void postBatchSuccessful() {
-
 
         gSql.executeUpdate("update datachangelog set status=1 where status is null limit $changelogChunkSize")
     }

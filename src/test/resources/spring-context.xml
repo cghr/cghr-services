@@ -35,6 +35,8 @@
         <constructor-arg>
             <map>
                 <entry key="country" value="id"></entry>
+                <entry key="inbox" value="id"></entry>
+                <entry key="outbox" value="id"></entry>
                 <entry key="memberImage" value="memberId"></entry>
             </map>
         </constructor-arg>
