@@ -1,5 +1,4 @@
 package org.cghr.security.controller
-
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.google.gson.Gson
 import groovy.sql.Sql
@@ -8,11 +7,9 @@ import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.junit.Rule
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
@@ -25,7 +22,7 @@ class AuthIntegrationSpec extends Specification {
 
     Sql gSql=SpringContext.sql
     DbTester dt=SpringContext.dbTester
-    Auth auth
+    Auth auth=SpringContext.getBean('auth')
     @Shared
     List dataSet
     @Shared

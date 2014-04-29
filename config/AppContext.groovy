@@ -30,8 +30,8 @@ beans {
     serverAuthUrl(String, "http://localhost:8089/app/api/security/auth")
     restTemplate(RestTemplate)
     onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
-    auth(Auth)
     userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService)
+    auth(Auth,userService=userService)
     //Ends
 
 }

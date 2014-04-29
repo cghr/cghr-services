@@ -26,8 +26,6 @@ class Auth {
         this.userService = userService
     }
 
-    Auth() {
-    }
 
     @RequestMapping(value="",method = RequestMethod.POST,consumes = "application/json",produces = "application/json")
     @ResponseBody
