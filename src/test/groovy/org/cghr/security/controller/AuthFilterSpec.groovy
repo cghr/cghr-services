@@ -10,7 +10,6 @@ import spock.lang.Specification
 
 import javax.servlet.FilterChain
 
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class AuthFilterSpec extends Specification {
 
     @Shared

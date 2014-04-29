@@ -1,15 +1,13 @@
 package org.cghr.commons.web.controller
-
 import groovy.sql.Sql
 import org.cghr.commons.db.DbStore
+import org.cghr.context.SpringContext
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class DataStoreBatchSpec extends Specification {
 
     @Shared
@@ -17,18 +15,15 @@ class DataStoreBatchSpec extends Specification {
     @Shared
     def dataChangelogs
     def data = [id: 1, name: 'india', continent: 'asia']
-    @Autowired
-    DbStore dbStore
+    DbStore dbStore=SpringContext.dbStore
     @Shared
     def countryBatchData
 
 
     @Shared
     def dataSet
-    @Autowired
-    Sql gSql
-    @Autowired
-    DbTester dt
+    Sql gSql=SpringContext.sql
+    DbTester dt=SpringContext.dbTester
 
     def setupSpec() {
         dataSet = new MockData().sampleData.get("country")

@@ -1,17 +1,15 @@
 package org.cghr.security.service
-
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
+import org.cghr.context.SpringContext
 import org.cghr.security.exception.NoSuchUserFound
 import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
-@ContextConfiguration(locations = "classpath:spring-context.xml")
+
 class UserServiceSpec extends Specification {
 
 
@@ -19,10 +17,8 @@ class UserServiceSpec extends Specification {
     @Shared
     def authtoken = "ABCDEFG-12345"
 
-    @Autowired
-    Sql gSql
-    @Autowired
-    DbTester dt
+    Sql gSql=SpringContext.sql
+    DbTester dt=SpringContext.dbTester
     DbAccess mockDbAccess
     DbStore mockDbStore
 
@@ -91,7 +87,7 @@ class UserServiceSpec extends Specification {
 
 
         userService = new UserService(mockDbAccess, mockDbStore, mockOnlineAuthService)
-        userService.onlineAuthService = mockOnlineAuthService
+
 
         dt.cleanInsert("user,authtoken,userlog")
     }

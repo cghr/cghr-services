@@ -2,11 +2,9 @@ package org.cghr.commons.web.controller
 import com.google.gson.Gson
 import org.cghr.commons.db.DbAccess
 import org.cghr.test.db.MockData
-import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class DataAccessSpec extends Specification {
 
     @Shared

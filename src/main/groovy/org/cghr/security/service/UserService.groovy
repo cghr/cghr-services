@@ -1,4 +1,5 @@
 package org.cghr.security.service
+
 import com.google.gson.Gson
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -19,22 +20,21 @@ class UserService {
     }
 
 
-    def boolean isValid(User user,String hostname) {
+
+    def boolean isValid(User user, String hostname) {
 
         try {
-            Map userRespFromServer = onlineAuthService.authenticate(user,hostname);
+            Map userRespFromServer = onlineAuthService.authenticate(user, hostname);
             cacheUserLocally(userRespFromServer)
         }
-        catch (ServerNotFoundException ex)
-        {
+        catch (ServerNotFoundException ex) {
             println 'Server Not Found'
         }
         catch (NoSuchUserFound ex) {
             println 'No Such User Found on Server'
             return false
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             println "Unexpected Exception"
             println ex
         }
@@ -47,7 +47,7 @@ class UserService {
     def boolean isValidLocalUser(User user) {
 
         Map userData = getUserAsMap(user)
-        def isValid=userData.isEmpty() ? false : (userData.password.equals(user.password))
+        def isValid = userData.isEmpty() ? false : (userData.password.equals(user.password))
         isValid
     }
 
@@ -72,13 +72,13 @@ class UserService {
     def String getUserCookieJson(User user) {
 
         def row = getUserAsMap(user)
-        def userMap = [id:row.id,username: row.username,password: row.password,role: [title: row.role, bitMask: getBitMask(row.role)],status: row.status]
+        def userMap = [id: row.id, username: row.username, password: row.password, role: [title: row.role, bitMask: getBitMask(row.role)], status: row.status]
         new Gson().toJson(userMap)
     }
 
     Integer getBitMask(String role) {
 
-        println 'role '+role
+        println 'role ' + role
 
         switch (role) {
 

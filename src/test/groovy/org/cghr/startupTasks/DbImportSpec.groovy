@@ -1,21 +1,16 @@
 package org.cghr.startupTasks
-
 import groovy.sql.Sql
-import org.springframework.beans.factory.annotation.Autowired
+import org.cghr.context.SpringContext
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
-
-
 /**
  * Created by ravitej on 25/4/14.
  */
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class DbImportSpec extends Specification {
 
     DbImport dbImport
 
-    @Autowired
-    Sql gSql
+    Sql gSql=SpringContext.sql
     String sqlDir = File.createTempDir().absolutePath
 
     def setupSpec() {

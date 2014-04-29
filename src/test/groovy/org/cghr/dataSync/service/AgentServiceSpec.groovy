@@ -1,31 +1,24 @@
 package org.cghr.dataSync.service
-
 import com.google.gson.Gson
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
+import org.cghr.context.SpringContext
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
-
 /**
  * Created by ravitej on 27/4/14.
  */
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class AgentServiceSpec extends Specification {
 
     //General
-    @Autowired
-    DbTester dt
-    @Autowired
-    DbAccess dbAccess
-    @Autowired
-    DbStore dbStore
-    @Autowired
-    def gSql
+    DbTester dt=SpringContext.dbTester
+    DbAccess dbAccess=SpringContext.dbAccess
+    DbStore dbStore=SpringContext.dbStore
+    def gSql=SpringContext.sql
+
     @Shared
     List inboxMessages
     @Shared

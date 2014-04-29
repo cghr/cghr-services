@@ -1,23 +1,18 @@
 package org.cghr.commons.web.controller
-
 import com.google.gson.Gson
 import org.cghr.commons.db.DbAccess
+import org.cghr.context.SpringContext
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class DataAccessBatchSpec extends Specification {
 
     @Shared
     DataAccessBatch dataAccessBatch
-    @Autowired
-    DbAccess dbAccess
-    @Autowired
-    DbTester dbTester
+    DbAccess dbAccess=SpringContext.dbAccess
+    DbTester dbTester=SpringContext.dbTester
 
     @Shared
     def dataSet

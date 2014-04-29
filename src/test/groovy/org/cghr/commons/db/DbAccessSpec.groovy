@@ -1,19 +1,17 @@
 package org.cghr.commons.db
-
 import com.google.gson.Gson
+import groovy.sql.Sql
+import org.cghr.context.SpringContext
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class DbAccessSpec extends Specification {
 
     //specific
-    @Autowired
-    DbAccess dbAccess //SUS
+
+    DbAccess dbAccess=SpringContext.dbAccess
 
     @Shared
     def singleRowSql = 'select * from country where name=?'
@@ -33,13 +31,11 @@ class DbAccessSpec extends Specification {
     @Shared
     def dataSet
 
-    @Autowired
-    def gSql
+    Sql gSql=SpringContext.getSql()
+    DbTester dt=SpringContext.getDbTester()
+
     def dataStore = 'country'
 
-    //General
-    @Autowired
-    DbTester dt
 
     def setup() {
         dt.cleanInsert("country")
@@ -53,6 +49,7 @@ class DbAccessSpec extends Specification {
 
 
     def "should have rows for a valid sql and no rows for an invalid sql"() {
+
 
         expect:
         dbAccess.hasRows(sql, params) == result

@@ -3,6 +3,7 @@ package org.cghr.security.controller
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.google.gson.Gson
 import groovy.sql.Sql
+import org.cghr.context.SpringContext
 import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
@@ -20,14 +21,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*
 /**
  * Created by ravitej on 27/1/14.
  */
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class AuthIntegrationSpec extends Specification {
 
-    @Autowired
-    Sql gSql
-    @Autowired
-    DbTester dt
-    @Autowired
+    Sql gSql=SpringContext.sql
+    DbTester dt=SpringContext.dbTester
     Auth auth
     @Shared
     List dataSet

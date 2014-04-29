@@ -1,33 +1,25 @@
 package org.cghr.commons.file
-
 import groovy.sql.Sql
 import org.cghr.commons.db.DbStore
+import org.cghr.context.SpringContext
 import org.cghr.test.db.DbTester
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockMultipartFile
-import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
-
 /**
  * Created by ravitej on 24/4/14.
  */
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class FileSystemStoreSpec extends Specification {
 
     FileSystemStore fileSystemStore
-    @Autowired
-    DbStore dbStore
 
-    @Autowired
-    Sql gSql
+    Sql gSql = SpringContext.sql
+    DbTester dt = SpringContext.dbTester
+
+    DbStore dbStore = SpringContext.dbStore
+
 
     String rootPath = File.createTempDir().absolutePath
     Map fileStoreFactory = [memberImage: [memberConsent: 'hcDemo/images/consent/', memberPhoto: 'hcDemo/images/photo/']]
-
-
-    @Autowired
-    DbTester dt
-
 
     def setupSpec() {
 
@@ -87,7 +79,7 @@ class FileSystemStoreSpec extends Specification {
         String fileStore = 'memberImage'
         byte[] content = "dummy File contents".getBytes()
         MockMultipartFile multipartFile = new MockMultipartFile("151001001_photo.png", 'fileData', "text/plain", content);
-        
+
         when:
         fileSystemStore.saveOrUpdate(formData, fileStore, multipartFile, rootPath)
 

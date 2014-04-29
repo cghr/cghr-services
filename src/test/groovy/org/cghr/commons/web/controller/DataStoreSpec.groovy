@@ -1,14 +1,13 @@
 package org.cghr.commons.web.controller
 import groovy.sql.Sql
 import org.cghr.commons.db.DbStore
+import org.cghr.context.SpringContext
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class DataStoreSpec extends Specification {
 
     @Shared DataStore dataStore
@@ -17,12 +16,9 @@ class DataStoreSpec extends Specification {
 
     @Shared
     def dataSet
-    @Autowired
-    Sql gSql
-    @Autowired
-    DbStore dbStore
-    @Autowired
-    DbTester dt
+    Sql gSql=SpringContext.sql
+    DbStore dbStore=SpringContext.dbStore
+    DbTester dt=SpringContext.dbTester
 
     def setupSpec() {
         dataSet = new MockData().sampleData.get("country")

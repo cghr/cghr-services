@@ -1,25 +1,21 @@
 package org.cghr.security.controller
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
+import org.cghr.context.SpringContext
 import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
-import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 import javax.servlet.http.Cookie
 
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class LogoutSpec extends Specification {
 
     Logout logout
 
-    @Autowired
-    Sql gSql
-    @Autowired
-    DbTester dt
+    Sql gSql=SpringContext.sql
+    DbTester dt=SpringContext.dbTester
     User validUser = new User(username: 'user1', password: 'secret1')
     User invalidUser = new User(username: 'invaliduser', password: 'invalidpassword')
     def authtoken = 'ABCDEFG-12345'

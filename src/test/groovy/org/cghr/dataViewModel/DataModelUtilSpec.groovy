@@ -1,12 +1,9 @@
 package org.cghr.dataViewModel
-
 import org.cghr.commons.db.DbAccess
 import org.cghr.test.db.MockData
-import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(locations = "classpath:spring-context.xml")
 class DataModelUtilSpec extends Specification {
 
     //specific
