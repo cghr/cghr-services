@@ -26,21 +26,23 @@ class Auth {
         this.userService = userService
     }
 
+    Auth() {
 
-    @RequestMapping(value="",method = RequestMethod.POST,consumes = "application/json",produces = "application/json")
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     @ResponseBody
-    String authenticate(@RequestBody User user, HttpServletResponse response,HttpServletRequest request) {
+    String authenticate(@RequestBody User user, HttpServletResponse response, HttpServletRequest request) {
 
 
+        String hostname = request.getRequestURL().toURL().getHost()
 
-        String hostname=request.getRequestURL().toURL().getHost()
 
+        def isValidUser = userService.isValid(user, hostname)
 
-        def isValidUser = userService.isValid(user,hostname)
-
-        println 'auth is valid user '+isValidUser
+        println 'auth is valid user ' + isValidUser
         def httpStatus = isValidUser ? HttpStatus.OK.value : HttpStatus.FORBIDDEN.value
-        println 'http status'+httpStatus
+        println 'http status' + httpStatus
 
         response.setStatus(httpStatus)
 
@@ -48,17 +50,17 @@ class Auth {
 
             addAuthTokenCookie(user, response)
 
-            Cookie userCookie=new Cookie("user", userService.getUserCookieJson(user))
-            userCookie.setMaxAge(60*60*24)
+            Cookie userCookie = new Cookie("user", userService.getUserCookieJson(user))
+            userCookie.setMaxAge(60 * 60 * 24)
             userCookie.setPath(cookiePath)
             response.addCookie(userCookie)
 
-            Cookie usernameCoookie=new Cookie("username", user.username)
+            Cookie usernameCoookie = new Cookie("username", user.username)
             //usernameCoookie.setMaxAge(60*60*24)
             usernameCoookie.setPath(cookiePath)
             response.addCookie(usernameCoookie)
 
-            Cookie useridCookie=new Cookie("userid", userService.getId(user))
+            Cookie useridCookie = new Cookie("userid", userService.getId(user))
             //useridCookie.setMaxAge(60*60*24)
             useridCookie.setPath(cookiePath)
             response.addCookie(useridCookie)

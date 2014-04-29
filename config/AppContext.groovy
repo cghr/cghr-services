@@ -1,4 +1,5 @@
 import groovy.sql.Sql
+import org.apache.tomcat.jdbc.pool.DataSource
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.dataViewModel.DataModelUtil
@@ -7,16 +8,19 @@ import org.cghr.security.controller.Auth
 import org.cghr.security.service.OnlineAuthService
 import org.cghr.security.service.UserService
 import org.cghr.test.db.DbTester
-import org.springframework.jdbc.datasource.DriverManagerDataSource
 import org.springframework.web.client.RestTemplate
 
 beans {
 
-    dataSource(DriverManagerDataSource) {
+    dataSource(DataSource) {
         driverClassName = 'org.h2.Driver'
         url = 'jdbc:h2:mem:specs;database_to_upper=false;mode=mysql'
         username = 'sa'
         password = ''
+        initialSize = 5
+        maxActive = 10
+        maxIdle = 5
+        minIdle = 2
     }
     gSql(Sql, dataSource = dataSource)
     dbAccess(DbAccess, gSql = gSql)
@@ -31,7 +35,7 @@ beans {
     restTemplate(RestTemplate)
     onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
     userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService)
-    auth(Auth,userService=userService)
+    auth(Auth, userService = userService)
     //Ends
 
 }

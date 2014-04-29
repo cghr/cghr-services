@@ -23,6 +23,7 @@ class AuthIntegrationSpec extends Specification {
     Sql gSql=SpringContext.sql
     DbTester dt=SpringContext.dbTester
     Auth auth=SpringContext.getBean('auth')
+
     @Shared
     List dataSet
     @Shared
