@@ -20,7 +20,6 @@ class UserService {
     }
 
 
-
     def boolean isValid(User user, String hostname) {
 
         try {
@@ -54,7 +53,7 @@ class UserService {
     def cacheUserLocally(Map user) {
 
 
-        dbStore.saveOrUpdate([id: user.id, username: user.username, password: user.password, role: user.role.title, status: user.status], 'user')
+        dbStore.saveOrUpdate([id: user.id, username: user.username, password: user.password, role: user.role.title], 'user')
     }
 
     def String getUserJson(User user) {
@@ -72,7 +71,7 @@ class UserService {
     def String getUserCookieJson(User user) {
 
         def row = getUserAsMap(user)
-        def userMap = [id: row.id, username: row.username, password: row.password, role: [title: row.role, bitMask: getBitMask(row.role)], status: row.status]
+        def userMap = [id: row.id, username: row.username, password: row.password, role: [title: row.role, bitMask: getBitMask(row.role)]]
         new Gson().toJson(userMap)
     }
 

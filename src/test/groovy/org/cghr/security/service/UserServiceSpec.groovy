@@ -1,4 +1,5 @@
 package org.cghr.security.service
+
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -17,8 +18,8 @@ class UserServiceSpec extends Specification {
     @Shared
     def authtoken = "ABCDEFG-12345"
 
-    Sql gSql=SpringContext.sql
-    DbTester dt=SpringContext.dbTester
+    Sql gSql = SpringContext.sql
+    DbTester dt = SpringContext.dbTester
     DbAccess mockDbAccess
     DbStore mockDbStore
 
@@ -29,28 +30,28 @@ class UserServiceSpec extends Specification {
     User invalidUser = new User(username: 'invalidUser', password: 'secret1')
     @Shared
     User validUserWithBadPassword = new User(username: 'user1', password: 'badpassword')
-    @Shared String hostname="localhost"
+    @Shared
+    String hostname = "localhost"
 
 
     def setup() {
 
         mockDbAccess = Stub() {
-            getRowAsMap("select * from user where username=?", [validUser.username]) >> [id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active']
+            getRowAsMap("select * from user where username=?", [validUser.username]) >> [id: 1, username: 'user1', password: 'secret1', role: 'user']
             getRowAsMap("select * from user where username=?", [invalidUser.username]) >> [:]
-            getRowAsJson("select * from user where username=?", [validUser.username]) >> '{"id":1,"username":"user1","password":"secret1","role":"user","status":"active"}'
+            getRowAsJson("select * from user where username=?", [validUser.username]) >> '{"id":1,"username":"user1","password":"secret1","role":"user"}'
             getRowAsJson("select * from user where username=?", [invalidUser.username]) >> '{}'
             hasRows("select * from authtoken where token=?", [authtoken]) >> true
         }
 
         mockDbStore = Mock()
-        def userMap = [id: 1, username: 'user1', password: 'secret1', role: 'user', status: 'active']
+        def userMap = [id: 1, username: 'user1', password: 'secret1', role: 'user']
         mockDbStore.saveOrUpdate(userMap, 'user') >> {
-            gSql.executeInsert("insert into user(id,username,password,role,status) values(?,?,?,?,?)", [
+            gSql.executeInsert("insert into user(id,username,password,role,status) values(?,?,?,?)", [
                     userMap.id,
                     userMap.username,
                     userMap.password,
-                    userMap.role,
-                    userMap.status
+                    userMap.role
             ])
         }
         def authTokenMap = [token: _, username: 'user1', role: 'user']
@@ -79,8 +80,8 @@ class UserServiceSpec extends Specification {
 
         OnlineAuthService mockOnlineAuthService = Stub() {
 
-            authenticate(validUser,hostname) >> [id: 1, username: 'user1', password: 'secret1', role: [title:'user',bitMask:2], status: 'active']
-            authenticate(invalidUser,hostname) >> {throw new NoSuchUserFound()}
+            authenticate(validUser, hostname) >> [id: 1, username: 'user1', password: 'secret1', role: [title: 'user', bitMask: 2]]
+            authenticate(invalidUser, hostname) >> { throw new NoSuchUserFound() }
         }
 
 
@@ -98,7 +99,7 @@ class UserServiceSpec extends Specification {
         dt.clean('user')
 
         expect:
-        userService.isValid(user,hostname) == result
+        userService.isValid(user, hostname) == result
 
         where:
         user                     || result
@@ -121,7 +122,7 @@ class UserServiceSpec extends Specification {
         UserService userServiceOffline = new UserService(mockDbAccess, mockDbStore, onlineAuthServiceOffline)
 
         expect:
-        userServiceOffline.isValid(validUser,hostname) == true
+        userServiceOffline.isValid(validUser, hostname) == true
 
     }
 
@@ -132,7 +133,7 @@ class UserServiceSpec extends Specification {
 
         where:
         user        || json
-        validUser   || '{"id":1,"username":"user1","password":"secret1","role":"user","status":"active"}'
+        validUser   || '{"id":1,"username":"user1","password":"secret1","role":"user"}'
         invalidUser || '{}'
     }
 
@@ -144,7 +145,7 @@ class UserServiceSpec extends Specification {
 
         where:
         user      || result
-        validUser || '{"id":1,"username":"user1","password":"secret1","role":{"title":"user","bitMask":2},"status":"active"}'
+        validUser || '{"id":1,"username":"user1","password":"secret1","role":{"title":"user","bitMask":2}}'
 
     }
 
@@ -194,14 +195,14 @@ class UserServiceSpec extends Specification {
 
     def "should cache(save to database) a userJson got from a http response as String"() {
         given:
-        Map user = [id: 1, username: 'user1', password: 'secret1', role:[title:'user',bitMask: 2], status: 'active']
+        Map user = [id: 1, username: 'user1', password: 'secret1', role: [title: 'user', bitMask: 2]]
 
 
         when:
         userService.cacheUserLocally(user)
 
         then:
-        gSql.firstRow("select * from user where id=?", [1]) == [id: 1, username: "user1", password: "secret1", role: "user", status: "active"]
+        gSql.firstRow("select id,username,password,role from user where id=?", [1]) == [id: 1, username: "user1", password: "secret1", role: "user"]
     }
 
     def "should get a valid user as Map"() {
@@ -210,7 +211,7 @@ class UserServiceSpec extends Specification {
 
         where:
         user        || result
-        validUser   || [id: 1, username: "user1", password: "secret1", role: "user", status: "active"]
+        validUser   || [id: 1, username: "user1", password: "secret1", role: "user"]
         invalidUser || [:]
     }
 

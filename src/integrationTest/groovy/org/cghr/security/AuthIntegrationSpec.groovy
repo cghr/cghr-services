@@ -33,7 +33,7 @@ class AuthIntegrationSpec extends Specification {
     @Shared
     Gson gson = new Gson()
     @Shared
-    String userJson='{"id":1,"username":"user1","password":"secret1","role":{"title":"user","bitMask":2},"status":"active"}'
+    String userJson='{"id":1,"username":"user1","password":"secret1","role":{"title":"user","bitMask":2}}'
 
 
     @Rule
