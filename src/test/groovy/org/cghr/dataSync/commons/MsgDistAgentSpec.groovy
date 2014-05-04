@@ -30,7 +30,7 @@ class MsgDistAgentSpec extends Specification {
         dt.clean("outbox")
 
         gSql.execute("update inbox set impStatus=1")
-        dataSet=gSql.rows("select * from inbox")
+        dataSet=gSql.rows("select * from inbox order by id")
 
         AgentService agentService = Stub() {
 

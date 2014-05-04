@@ -45,8 +45,10 @@ class UserService {
 
     def boolean isValidLocalUser(User user) {
 
+        println 'inside is valid local user'
         Map userData = getUserAsMap(user)
-        def isValid = userData.isEmpty() ? false : (userData.password.equals(user.password))
+        def isValid = userData.isEmpty() ? false : (userData.password==user.password)
+        println 'isvalid local user '+isValid
         isValid
     }
 

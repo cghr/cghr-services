@@ -47,7 +47,7 @@ class UserServiceSpec extends Specification {
         mockDbStore = Mock()
         def userMap = [id: 1, username: 'user1', password: 'secret1', role: 'user']
         mockDbStore.saveOrUpdate(userMap, 'user') >> {
-            gSql.executeInsert("insert into user(id,username,password,role,status) values(?,?,?,?)", [
+            gSql.executeInsert("insert into user(id,username,password,role) values(?,?,?,?)", [
                     userMap.id,
                     userMap.username,
                     userMap.password,

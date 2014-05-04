@@ -77,7 +77,7 @@ class AuthIntegrationSpec extends Specification {
         where:
         user        | httpStatus                   | expectedJsonResp
         validUser   | HttpStatus.OK.value()        | userJson
-        invalidUser | HttpStatus.FORBIDDEN.value() | '{"role":{}}'
+        invalidUser | HttpStatus.FORBIDDEN.value() | '{}'
 
 
     }
@@ -179,7 +179,7 @@ class AuthIntegrationSpec extends Specification {
         where:
         user        | httpStatus                   | expectedJsonResp
         validUser   | HttpStatus.OK.value()        | userJson
-        invalidUser | HttpStatus.FORBIDDEN.value() | '{"role":{}}'
+        invalidUser | HttpStatus.FORBIDDEN.value() | '{}'
 
 
     }

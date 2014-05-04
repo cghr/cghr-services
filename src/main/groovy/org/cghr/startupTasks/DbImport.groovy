@@ -23,7 +23,10 @@ class DbImport {
     @PostConstruct
     void importSqlScripts() {
 
-        File[] sqlDir = new File(dbScriptsPath).listFiles().sort() { it.name }
+        File[] sqlDir = new File(dbScriptsPath).listFiles()
+        if (sqlDir == null)
+            return
+        sqlDir = new File(dbScriptsPath).listFiles().sort() { it.name }
         sqlDir.each() {
             importSqlFile(it)
         }

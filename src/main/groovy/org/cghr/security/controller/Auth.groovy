@@ -1,20 +1,15 @@
 package org.cghr.security.controller
-
 import org.cghr.security.model.User
 import org.cghr.security.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-@Controller
+@RestController
 @RequestMapping("/security/auth")
 class Auth {
 
@@ -31,7 +26,6 @@ class Auth {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    @ResponseBody
     String authenticate(@RequestBody User user, HttpServletResponse response, HttpServletRequest request) {
 
 
@@ -40,9 +34,7 @@ class Auth {
 
         def isValidUser = userService.isValid(user, hostname)
 
-        println 'auth is valid user ' + isValidUser
         def httpStatus = isValidUser ? HttpStatus.OK.value : HttpStatus.FORBIDDEN.value
-        println 'http status' + httpStatus
 
         response.setStatus(httpStatus)
 
@@ -66,12 +58,16 @@ class Auth {
             response.addCookie(useridCookie)
 
             userService.logUserAuthStatus(user, "success")
-        } else
+            return userService.getUserCookieJson(user)
+        } else{
             userService.logUserAuthStatus(user, "fail")
+            return "{}"
+        }
 
 
 
-        return userService.getUserCookieJson(user)
+
+
     }
 
     void addAuthTokenCookie(User user, HttpServletResponse response) {
