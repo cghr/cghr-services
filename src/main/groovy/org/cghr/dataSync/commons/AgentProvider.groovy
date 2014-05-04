@@ -35,7 +35,7 @@ class AgentProvider {
     Agent uploadAgent
 
 
-    List<Agent> provideAllAgents(String agentId) {
+    List<Agent> provideAllAgents() {
 
         createAgentsDynamically()
         return [downloadOrganizerAgent, downloadAgent, msgDistAgent, uploadAgent]

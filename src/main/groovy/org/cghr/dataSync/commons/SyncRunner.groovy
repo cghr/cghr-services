@@ -1,15 +1,20 @@
 package org.cghr.dataSync.commons
 
+import org.springframework.beans.factory.annotation.Autowired
+
 class SyncRunner {
 
+    @Autowired
+    AgentProvider agentProvider
     List agents = []
 
     //Run All agents who perform individual tasks which accomplish download and upload
     void run() {
 
-        for (agentId in agents) {
-          Agent agent = AgentProvider.provide(agentId)
-            agent.run();
+        agents = agentProvider.provideAllAgents()
+        agents.each {
+            Agent agent ->
+                agent.run()
         }
     }
 }

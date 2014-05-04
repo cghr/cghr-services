@@ -1,4 +1,4 @@
-package org.cghr.survey
+package org.cghr.survey.controller
 
 import com.google.gson.Gson
 import org.cghr.commons.db.DbAccess

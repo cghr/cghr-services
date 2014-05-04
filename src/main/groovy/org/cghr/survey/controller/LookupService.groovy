@@ -1,4 +1,4 @@
-package org.cghr.survey
+package org.cghr.survey.controller
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
