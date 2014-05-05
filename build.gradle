@@ -1,7 +1,17 @@
 apply plugin: 'groovy'
-apply plugin: 'eclipse'
-apply plugin: 'maven'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:1.1.1"
+    }
+}
+apply plugin: 'cobertura'
 
+cobertura {
+    coverageSourceDirs << project.sourceSets.main.groovy.srcDirs
+}
 sourceCompatibility = 1.6
 version = '0.1-beta3'
 group = 'org.cghr'
@@ -14,6 +24,7 @@ jar {
 
 }
 
+
 repositories {
     mavenCentral()
 }
@@ -25,6 +36,7 @@ test {
     include 'src/integrationTest'
 
 }
+
 
 sourceSets {
     integrationTest
@@ -77,4 +89,3 @@ uploadArchives {
         }
     }
 }
-

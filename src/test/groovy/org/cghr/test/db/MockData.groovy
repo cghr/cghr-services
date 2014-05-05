@@ -8,7 +8,7 @@ class MockData {
             user: [id: 'int', username: 'varchar(20)', password: 'varchar(20)', role: 'varchar(20)'],
             authtoken: [id: 'int', token: 'varchar(255)', time: 'varchar(20)', expires: 'varchar(255)', username: 'varchar(20)', role: 'varchar(20)'],
             userlog: [id: 'int', username: 'varchar(20)', status: 'varchar(20)', time: 'varchar(20)', ipaddress: 'varchar(20)'],
-            inbox: [id: 'int', datastore: 'varchar(100)', ref: 'varchar(20)', refId: 'varchar(20)', distList: 'varchar(20)', distStatus: 'varchar(20)', impStatus: 'varchar(20)'],
+            inbox: [id: 'int auto_increment', datastore: 'varchar(100)', ref: 'varchar(20)', refId: 'varchar(20)', distList: 'varchar(20)', distStatus: 'varchar(20)', impStatus: 'varchar(20)'],
             outbox: [id: 'int', datastore: 'varchar(100)',ref: 'varchar(20)', refId: 'varchar(20)',recepient: 'varchar(20)', dwnStatus: 'varchar(20)'],
             datachangelog: [id: 'int', log: 'text', status: 'varchar(20)'],
             memberImage: [memberId: 'int', consent: 'varchar(100)', photoId: 'varchar(100)', photo: 'varchar(100)']

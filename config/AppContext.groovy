@@ -2,6 +2,9 @@ import groovy.sql.Sql
 import org.apache.tomcat.jdbc.pool.DataSource
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
+import org.cghr.dataSync.commons.AgentProvider
+import org.cghr.dataSync.commons.SyncRunner
+import org.cghr.dataSync.controller.SyncService
 import org.cghr.dataViewModel.DataModelUtil
 import org.cghr.dataViewModel.DhtmlxGridModelTransformer
 import org.cghr.security.controller.Auth
@@ -36,6 +39,15 @@ beans {
     onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
     userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService)
     auth(Auth, userService = userService)
+    //Ends
+
+    //Data Sync Integration Test
+    agentProvider(AgentProvider, gSql = gSql, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
+            serverBaseUrl = 'http://demo1278634.mockable.io/', downloadInfoPath = 'api/sync/downloadInfo', downloadDataBatchPath = 'api/data/dataAccessBatchService/', uploadPath = 'api/data/dataStoreBatchService')
+
+    syncRunner(SyncRunner, agentProvider = agentProvider)
+    sync(SyncService,syncRunner=syncRunner)
+
     //Ends
 
 }

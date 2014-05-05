@@ -26,9 +26,22 @@ class DbAccess {
 
     }
 
+    //Overloaded
+    Map<String, String> getRowAsMap(String sql) {
+
+        hasRows(sql,[]) ? gSql.firstRow(sql) : [:] //empty map
+
+    }
+
     List getRowsAsListOfMaps(String sql, List params) {
 
         hasRows(sql, params) ? gSql.rows(sql, params) : [] //empty list
+    }
+
+    //Overloaded
+    List getRowsAsListOfMaps(String sql) {
+
+        hasRows(sql,[]) ? gSql.rows(sql) : [] //empty list
     }
 
     String getRowAsJson(String sql, List params) {

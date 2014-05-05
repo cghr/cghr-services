@@ -8,10 +8,20 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/sync/dataSync")
-class Sync {
+class SyncService {
 
     @Autowired
     SyncRunner syncRunner
+
+    SyncService(SyncRunner syncRunner) {
+
+        this.syncRunner = syncRunner
+
+    }
+
+    SyncService() {
+
+    }
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
     String synchronize() {

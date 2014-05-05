@@ -47,6 +47,7 @@ class AgentService {
 
 
     void saveDownloadInfo(List<Map> list) {
+
         dbStore.saveOrUpdateFromMapList(list, 'inbox')
 
     }
@@ -59,7 +60,8 @@ class AgentService {
 
     void downloadAndImport(Map message) {
 
-        Map[] data = restTemplate.getForObject(syncServerDownloadDataBatchUrl, Map[].class)
+        String url = syncServerDownloadDataBatchUrl + message.datastore + File.separator + message.ref + File.separator + message.refId
+        Map[] data = restTemplate.getForObject(url, Map[].class)
 
         List<Map<String, String>> list = data as List
 
@@ -76,12 +78,12 @@ class AgentService {
 
     List<Map> getInboxMessagesToDistribute() {
 
-        dbAccess.getRowsAsListOfMaps("select * from inbox where impStatus is not null and distStatus is null",[])
+        dbAccess.getRowsAsListOfMaps("select * from inbox where impStatus is not null and distStatus is null", [])
     }
 
     void distributeMessage(Map message, String recipient) {
 
-        dbStore.saveOrUpdate([datastore: message.datastore, ref: message.ref, refId: message.refId,recepient:recipient], 'outbox')
+        dbStore.saveOrUpdate([datastore: message.datastore, ref: message.ref, refId: message.refId, recepient: recipient], 'outbox')
     }
 
     void distributeSuccessful(Map message) {
@@ -91,7 +93,7 @@ class AgentService {
 
     Integer getDataChangelogChunks() {
 
-        Integer pendingLogs = dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null",[]).count
+        Integer pendingLogs = dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null", []).count
         Math.floor(pendingLogs / changelogChunkSize) + 1
 
     }

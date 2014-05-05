@@ -8,6 +8,11 @@ class SyncRunner {
     AgentProvider agentProvider
     List agents = []
 
+    SyncRunner(AgentProvider agentProvider) {
+
+        this.agentProvider = agentProvider
+    }
+
     //Run All agents who perform individual tasks which accomplish download and upload
     void run() {
 
