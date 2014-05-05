@@ -49,10 +49,10 @@ class AgentServiceSpec extends Specification {
 
         String dwnldInfoUrl = "http://dummyServer/downloadInfo"
         String upldUrl = "http://dummyServer/dataStoreBatch"
-        String dataBatchUrl = "http://dummyServer/dataAccessBatch"
+        String dataBatchUrl = "http://dummyServer/dataAccessBatch/"
         RestTemplate restTemplate = Stub() {
             getForObject(dwnldInfoUrl, Map[].class) >> inboxMessages
-            getForObject(dataBatchUrl, Map[].class) >> countryData
+            getForObject(dataBatchUrl+"country/continent/asia", Map[].class) >> countryData
 
         }
         Integer changelogChunk = 20

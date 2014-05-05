@@ -77,19 +77,18 @@ class AgentProvider {
         syncServerUploadUrl = syncServer + uploadPath
         syncServerDownloadDataBatchUrl = syncServer + downloadDataBatchPath
 
-
     }
 
     String syncServerBaseUrl() {
 
-        String role = dbAccess.getRowAsMap("select role from authtoken order by id desc limit 1").role
+        String role = dbAccess.getRowAsMap("select role from authtoken order by id desc limit 1",[]).role
         role == 'manager' ? serverBaseUrl : new SyncUtil().getLocalServerBaseUrl()
 
     }
 
     String getRecipientId() {
 
-        String username = dbAccess.getRowAsMap("select username from authtoken order by id desc limit 1").username
+        String username = dbAccess.getRowAsMap("select username from authtoken order by id desc limit 1",[]).username
         dbAccess.getRowAsMap("select id from user where username=?", [username]).id
     }
 

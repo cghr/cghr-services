@@ -61,6 +61,8 @@ class AgentService {
     void downloadAndImport(Map message) {
 
         String url = syncServerDownloadDataBatchUrl + message.datastore + File.separator + message.ref + File.separator + message.refId
+        println 'batch url '
+        println url
         Map[] data = restTemplate.getForObject(url, Map[].class)
 
         List<Map<String, String>> list = data as List

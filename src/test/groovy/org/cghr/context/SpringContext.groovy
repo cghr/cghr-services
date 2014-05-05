@@ -9,6 +9,7 @@ import org.springframework.context.support.GenericGroovyApplicationContext
 class SpringContext {
 
     static ApplicationContext ctx = new GenericGroovyApplicationContext("file:config/AppContext.groovy")
+    //static ApplicationContext ctx = new GenericGroovyApplicationContext("classpath:AppContext.groovy")
 
 
     static getBean(String bean) {
