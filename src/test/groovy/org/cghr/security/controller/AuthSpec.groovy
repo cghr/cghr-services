@@ -1,22 +1,27 @@
 package org.cghr.security.controller
 import com.google.gson.Gson
 import groovy.sql.Sql
-import org.cghr.context.SpringContext
+import org.cghr.GenericGroovyContextLoader
 import org.cghr.security.model.User
 import org.cghr.security.service.UserService
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
+@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
 class AuthSpec extends Specification {
 
 
-    Sql gSql=SpringContext.sql
-    DbTester dt=SpringContext.dbTester
+    @Autowired
+    Sql gSql
+    @Autowired
+    DbTester dt
     Auth auth
     @Shared
     User validUser = new User(username: 'user1', password: 'secret1')

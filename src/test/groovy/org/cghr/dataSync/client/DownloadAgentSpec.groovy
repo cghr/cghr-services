@@ -1,21 +1,25 @@
 package org.cghr.dataSync.client
 import groovy.sql.Sql
-import org.cghr.context.SpringContext
+import org.cghr.GenericGroovyContextLoader
 import org.cghr.dataSync.service.AgentService
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 /**
  * Created by ravitej on 26/4/14.
  */
+@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
 class DownloadAgentSpec extends Specification {
 
     DownloadAgent downloadAgent
 
-    Sql gSql=SpringContext.sql
-    DbTester dt=SpringContext.dbTester
+    @Autowired
+    Sql gSql
+    @Autowired
+    DbTester dt
 
     @Shared
     List dataSet

@@ -1,17 +1,20 @@
 package org.cghr.commons.db
-
 import com.google.gson.Gson
 import groovy.sql.Sql
-import org.cghr.context.SpringContext
+import org.cghr.GenericGroovyContextLoader
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
+@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
 class DbStoreSpec extends Specification {
 
     //specific
-    DbStore dbStore = SpringContext.dbStore
+    @Autowired
+    DbStore dbStore
     @Shared
     def dataSet
     @Shared
@@ -22,8 +25,10 @@ class DbStoreSpec extends Specification {
     def dataStore = 'country'
 
 
-    Sql gSql = SpringContext.getSql()
-    DbTester dt = SpringContext.getDbTester()
+    @Autowired
+    Sql gSql
+    @Autowired
+    DbTester dt
 
 
     def setupSpec() {

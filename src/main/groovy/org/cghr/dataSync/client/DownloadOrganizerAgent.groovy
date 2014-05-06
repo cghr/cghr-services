@@ -7,14 +7,12 @@ class DownloadOrganizerAgent implements Agent {
 
 
     AgentService agentService
-
     DownloadOrganizerAgent(AgentService agentService) {
         this.agentService = agentService
     }
 
 
     void run() {
-
         List entities = agentService.getDownloadInfo()
         agentService.saveDownloadInfo(entities)
     }

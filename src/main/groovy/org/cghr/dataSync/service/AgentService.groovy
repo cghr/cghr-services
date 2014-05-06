@@ -85,7 +85,7 @@ class AgentService {
 
     void distributeMessage(Map message, String recipient) {
 
-        dbStore.saveOrUpdate([datastore: message.datastore, ref: message.ref, refId: message.refId, recepient: recipient], 'outbox')
+        dbStore.saveOrUpdate([datastore: message.datastore, ref: message.ref, refId: message.refId, recipient: recipient], 'outbox')
     }
 
     void distributeSuccessful(Map message) {

@@ -48,21 +48,17 @@ class AgentProvider {
 
 
     List<Agent> provideAllAgents() {
-
         createAgentsDynamically()
         return [downloadOrganizerAgent, downloadAgent, msgDistAgent, uploadAgent]
-
     }
 
     void createAgentsDynamically() {
-
         createDynamicSyncServerUrls()
         createAgentService()
         downloadOrganizerAgent = new DownloadOrganizerAgent(agentService)
         downloadAgent = new DownloadAgent(agentService)
         msgDistAgent = new MsgDistAgent(agentService)
         uploadAgent = new UploadAgent(agentService)
-
     }
 
     void createAgentService() {
@@ -71,23 +67,18 @@ class AgentProvider {
     }
 
     void createDynamicSyncServerUrls() {
-
         String syncServer = syncServerBaseUrl()
         syncServerDownloadInfoUrl = syncServer + downloadInfoPath + File.separator + getRecipientId()
         syncServerUploadUrl = syncServer + uploadPath
         syncServerDownloadDataBatchUrl = syncServer + downloadDataBatchPath
-
     }
 
     String syncServerBaseUrl() {
-
         String role = dbAccess.getRowAsMap("select role from authtoken order by id desc limit 1",[]).role
         role == 'manager' ? serverBaseUrl : new SyncUtil().getLocalServerBaseUrl()
-
     }
 
     String getRecipientId() {
-
         String username = dbAccess.getRowAsMap("select username from authtoken order by id desc limit 1",[]).username
         dbAccess.getRowAsMap("select id from user where username=?", [username]).id
     }

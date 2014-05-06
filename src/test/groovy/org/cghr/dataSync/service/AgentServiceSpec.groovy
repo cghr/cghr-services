@@ -1,23 +1,30 @@
 package org.cghr.dataSync.service
 import com.google.gson.Gson
+import org.cghr.GenericGroovyContextLoader
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
-import org.cghr.context.SpringContext
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
 /**
  * Created by ravitej on 27/4/14.
  */
+@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
 class AgentServiceSpec extends Specification {
 
     //General
-    DbTester dt=SpringContext.dbTester
-    DbAccess dbAccess=SpringContext.dbAccess
-    DbStore dbStore=SpringContext.dbStore
-    def gSql=SpringContext.sql
+    @Autowired
+    DbTester dt
+    @Autowired
+    DbAccess dbAccess
+    @Autowired
+    DbStore dbStore
+    @Autowired
+    def gSql
 
     @Shared
     List inboxMessages
@@ -112,17 +119,18 @@ class AgentServiceSpec extends Specification {
         agentService.getInboxMessagesToDistribute() == gSql.rows('select * from inbox where impStatus is not null and distStatus is null')
     }
 
-    def "should distribute a message to a recepient"() {
+
+    def "should distribute a message to a recipient"() {
         given:
         Map message = [datastore: 'country', ref: 'continent', refId: 'asia'];
-        String recepient = '15'
+        String recipient = '15'
         dt.clean('outbox')
 
         when:
-        agentService.distributeMessage(message, recepient)
+        agentService.distributeMessage(message, recipient)
 
         then:
-        gSql.firstRow("select datastore,ref,refId,recepient from outbox") == [datastore: 'country', ref: 'continent', refId: 'asia', recepient: '15'];
+        gSql.firstRow("select datastore,ref,refId,recipient from outbox") == [datastore: 'country', ref: 'continent', refId: 'asia', recipient: '15'];
 
     }
 

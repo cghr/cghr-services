@@ -18,6 +18,12 @@ class DownloadInfo {
     @Autowired
     DbAccess dbAccess
 
+    DownloadInfo(DbAccess dbAccess){
+        this.dbAccess=dbAccess
+    }
+    DownloadInfo(){
+
+    }
 
     @RequestMapping(value = "/{recipient}", method = RequestMethod.GET, produces = "application/json")
     String downloadInfo(@PathVariable("recipient") Integer recipient) {

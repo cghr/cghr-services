@@ -8,12 +8,10 @@ class DownloadAgent implements Agent {
     AgentService agentService
 
     DownloadAgent(AgentService agentService) {
-
         this.agentService = agentService
     }
 
     public void run() {
-
         List<Map> messages = agentService.getInboxMessagesToDownload()
         downloadAndImportMessages(messages)
 

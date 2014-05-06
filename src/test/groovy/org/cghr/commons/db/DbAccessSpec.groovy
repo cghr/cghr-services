@@ -1,17 +1,22 @@
 package org.cghr.commons.db
+
 import com.google.gson.Gson
 import groovy.sql.Sql
-import org.cghr.context.SpringContext
+import org.cghr.GenericGroovyContextLoader
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
+@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
 class DbAccessSpec extends Specification {
 
     //specific
 
-    DbAccess dbAccess=SpringContext.dbAccess
+    @Autowired
+    DbAccess dbAccess
 
     @Shared
     def singleRowSql = 'select * from country where name=?'
@@ -31,8 +36,11 @@ class DbAccessSpec extends Specification {
     @Shared
     def dataSet
 
-    Sql gSql=SpringContext.getSql()
-    DbTester dt=SpringContext.getDbTester()
+
+    @Autowired
+    Sql gSql
+    @Autowired
+    DbTester dt
 
     def dataStore = 'country'
 
@@ -166,18 +174,18 @@ class DbAccessSpec extends Specification {
     def "should process the closure for each row"() {
 
         given:
-        List result=[]
-        Closure closure={
+        List result = []
+        Closure closure = {
             row ->
                 result << row.name
         }
 
 
         when:
-        dbAccess.eachRow(multipleRowSql,validParamsMultipleRow,result,closure)
+        dbAccess.eachRow(multipleRowSql, validParamsMultipleRow, result, closure)
 
         then:
-        result==['india','pakistan','srilanka']
+        result == ['india', 'pakistan', 'srilanka']
 
 
     }

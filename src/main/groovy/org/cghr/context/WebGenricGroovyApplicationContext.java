@@ -13,7 +13,7 @@ public class WebGenricGroovyApplicationContext extends AbstractRefreshableWebApp
     /**
      * Default config location for the root context
      */
-    public static final String DEFAULT_CONFIG_LOCATION = "/WEB-INF/applicationContext.groovy";
+    public static final String DEFAULT_CONFIG_LOCATION = "/WEB-INF/appContext.groovy";
 
     /**
      * Default prefix for building a config location for a namespace

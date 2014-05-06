@@ -1,21 +1,35 @@
 package org.cghr.commons.web.controller
+
 import com.google.gson.Gson
+import org.cghr.GenericGroovyContextLoader
 import org.cghr.commons.db.DbAccess
-import org.cghr.context.SpringContext
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Shared
 import spock.lang.Specification
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
+@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
 class DataAccessBatchSpec extends Specification {
 
-    @Shared
+    @Autowired
     DataAccessBatch dataAccessBatch
-    DbAccess dbAccess=SpringContext.dbAccess
-    DbTester dbTester=SpringContext.dbTester
+    @Autowired
+    DbAccess dbAccess
+    @Autowired
+    DbTester dbTester
 
     @Shared
     def dataSet
+    MockMvc mockMvc
 
     def setupSpec() {
 
@@ -27,15 +41,19 @@ class DataAccessBatchSpec extends Specification {
     def setup() {
 
         dbTester.cleanInsert('country')
-        dataAccessBatch = new DataAccessBatch(dbAccess)
+        mockMvc = MockMvcBuilders.standaloneSetup(dataAccessBatch).build()
     }
 
     def "should get requested data as json"() {
+
         expect:
-        dataAccessBatch.getDataAsJsonArray(table, keyField, keyFieldValue) == result
+        mockMvc.perform(get("/data/dataAccessBatchService/" + datastore + "/" + keyField + "/" + keyFieldValue))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(result))
 
         where:
-        table     | keyField    | keyFieldValue || result
+        datastore | keyField    | keyFieldValue || result
         "country" | "continent" | "asia"        || new Gson().toJson(dataSet).toString()
         "country" | "continent" | "antarctica"  || "[]"
     }

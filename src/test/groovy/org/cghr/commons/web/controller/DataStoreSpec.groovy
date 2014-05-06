@@ -1,24 +1,39 @@
 package org.cghr.commons.web.controller
+
+import com.google.gson.Gson
 import groovy.sql.Sql
+import org.cghr.GenericGroovyContextLoader
 import org.cghr.commons.db.DbStore
-import org.cghr.context.SpringContext
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Shared
 import spock.lang.Specification
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
+@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
 class DataStoreSpec extends Specification {
 
-    @Shared DataStore dataStore
+    @Autowired
+    DataStore dataStore
     def data = [id: 1, name: 'india', continent: 'asia']
 
 
     @Shared
     def dataSet
-    Sql gSql=SpringContext.sql
-    DbStore dbStore=SpringContext.dbStore
-    DbTester dt=SpringContext.dbTester
+    @Autowired
+    Sql gSql
+    @Autowired
+    DbStore dbStore
+    @Autowired
+    DbTester dt
+    MockMvc mockMvc
 
     def setupSpec() {
         dataSet = new MockData().sampleData.get("country")
@@ -26,20 +41,19 @@ class DataStoreSpec extends Specification {
 
     def setup() {
 
-
-        dataStore = new DataStore(dbStore)
+        mockMvc=MockMvcBuilders.standaloneSetup(dataStore).build()
 
         dt.clean("country")
         dt.clean("datachangelog")
     }
 
     def "should save a map to database"() {
-        setup:
-        Map data = dataSet[0]
-        data.put("datastore", "country")
+
+        given:
+        String json=new Gson().toJson([id:1,name:'india',continent:'asia',datastore:'country'])
 
         when:
-        dataStore.saveData(data)
+        mockMvc.perform(post('/data/dataStoreService').contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk()).andReturn();
 
 
         then:

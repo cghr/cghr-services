@@ -15,6 +15,7 @@ class GenericGroovyContextLoader extends AbstractGenericContextLoader {
         return new GroovyBeanDefinitionReader(context)
     }
 
+
     @Override
     protected String getResourceSuffix() {
         return null

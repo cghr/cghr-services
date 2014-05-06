@@ -2,7 +2,7 @@ import groovy.sql.Sql
 import org.apache.tomcat.jdbc.pool.DataSource
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
-import org.cghr.commons.web.controller.DataAccess
+import org.cghr.commons.file.FileSystemStore
 import org.cghr.dataSync.commons.AgentProvider
 import org.cghr.dataSync.commons.SyncRunner
 import org.cghr.dataSync.controller.SyncService
@@ -15,6 +15,16 @@ import org.cghr.test.db.DbTester
 import org.springframework.web.client.RestTemplate
 
 beans {
+
+    xmlns([context: 'http://www.springframework.org/schema/context'])
+    xmlns([mvc: 'http://www.springframework.org/schema/mvc'])
+
+    //Common Services
+    context.'component-scan'('base-package': 'org.cghr.commons.web.controller')
+    context.'component-scan'('base-package': 'org.cghr.dataSync.controller')
+
+    //context.'component-scan'('base-package': 'org.cghr.security.controller')
+    //context.'component-scan'('base-package': 'org.cghr.survey.controller')
 
     dataSource(DataSource) {
         driverClassName = 'org.h2.Driver'
@@ -47,11 +57,21 @@ beans {
             serverBaseUrl = 'http://demo1278634.mockable.io/', downloadInfoPath = 'api/sync/downloadInfo', downloadDataBatchPath = 'api/data/dataAccessBatchService/', uploadPath = 'api/data/dataStoreBatchService')
 
     syncRunner(SyncRunner, agentProvider = agentProvider)
-    sync(SyncService,syncRunner=syncRunner)
+    sync(SyncService, syncRunner = syncRunner)
 
     //Ends
 
+    String appPath='fakePath'
+    //File Store Config
+    fileStoreFactory(HashMap,
+            [memberImage: [
+                    memberConsent: appPath + "/repo/images/consent",
+                    memberPhotoId: appPath + "/repo/images/photoId",
+                    memberPhoto: appPath + "/repo/images/photo"
+            ]])
+    fileSystemStore(FileSystemStore, fileStoreFactory = fileStoreFactory, dbStore = dbStore)
+
     //Data Controllers test
-    dataAccess(DataAccess)
+    //dataAccess(DataAccess)
 
 }

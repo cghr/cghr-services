@@ -1,12 +1,14 @@
 package org.cghr.dataViewModel
 import groovy.sql.Sql
-import org.cghr.context.SpringContext
+import org.cghr.GenericGroovyContextLoader
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
+@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
 class DhtmlxGridModelTransformerSpec extends Specification {
 
     //specific
@@ -25,9 +27,9 @@ class DhtmlxGridModelTransformerSpec extends Specification {
 
     //General
     @Autowired
-    Sql gSql=SpringContext.sql
+    Sql gSql
     @Autowired
-    DbTester dt=SpringContext.dbTester
+    DbTester dt
 
     def setupSpec() {
 

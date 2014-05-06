@@ -1,10 +1,11 @@
 apply plugin: 'groovy'
+apply plugin: 'maven'
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath "net.saliman:gradle-cobertura-plugin:1.1.1"
+         classpath 'net.saliman:gradle-cobertura-plugin:2.2.2'
     }
 }
 apply plugin: 'cobertura'
@@ -67,6 +68,7 @@ dependencies {
     compile 'javax.servlet:javax.servlet-api:3.0.1'
     testCompile 'com.h2database:h2:1.4.177'
     testCompile 'org.spockframework:spock-unitils:0.7-groovy-2.0'
+    testCompile 'org.spockframework:spock-spring:0.7-groovy-2.0'
     testCompile "org.springframework:spring-test:$springVersion"
     testCompile 'cglib:cglib-nodep:3.1'
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
