@@ -1,13 +1,18 @@
 package org.cghr.security.controller
+import groovy.transform.CompileStatic
 import org.cghr.security.model.User
 import org.cghr.security.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RestController
 
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+
 
 @RestController
 @RequestMapping("/security/auth")
@@ -17,13 +22,6 @@ class Auth {
     UserService userService
     final def cookiePath = '/'
 
-    Auth(UserService userService) {
-        this.userService = userService
-    }
-
-    Auth() {
-
-    }
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     String authenticate(@RequestBody User user, HttpServletResponse response, HttpServletRequest request) {

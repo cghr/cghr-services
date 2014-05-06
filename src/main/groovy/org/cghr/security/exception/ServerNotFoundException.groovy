@@ -1,6 +1,9 @@
 package org.cghr.security.exception
 
+import groovy.transform.CompileStatic
 
+
+@CompileStatic
 class ServerNotFoundException extends Exception {
 
     ServerNotFoundException() {

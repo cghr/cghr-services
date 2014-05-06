@@ -1,6 +1,7 @@
 package org.cghr.security.service
 
 import com.google.gson.Gson
+import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.security.exception.NoSuchUserFound
@@ -55,7 +56,7 @@ class UserService {
     def cacheUserLocally(Map user) {
 
 
-        dbStore.saveOrUpdate([id: user.id, username: user.username, password: user.password, role: user.role.title], 'user')
+        dbStore.saveOrUpdate([id: user.id, username: user.username, password: user.password, role: ((Map)user.role).title], 'user')
     }
 
     def String getUserJson(User user) {
@@ -72,8 +73,8 @@ class UserService {
 
     def String getUserCookieJson(User user) {
 
-        def row = getUserAsMap(user)
-        def userMap = [id: row.id, username: row.username, password: row.password, role: [title: row.role, bitMask: getBitMask(row.role)]]
+        Map row = getUserAsMap(user)
+        def userMap = [id: row.id, username: row.username, password: row.password, role: [title: row.role, bitMask: getBitMask(row.get('role'))]]
         new Gson().toJson(userMap)
     }
 

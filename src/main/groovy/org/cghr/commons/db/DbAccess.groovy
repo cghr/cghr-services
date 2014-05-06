@@ -2,7 +2,11 @@ package org.cghr.commons.db
 
 import com.google.gson.Gson
 import groovy.sql.Sql
+import groovy.transform.CompileStatic
 
+import java.sql.ResultSetMetaData
+
+@CompileStatic
 class DbAccess {
 
 
@@ -16,31 +20,26 @@ class DbAccess {
 
     boolean hasRows(String sql, List params) {
 
-        def row = gSql.firstRow("select count(*) count from (${sql}) a", params)
-        row.count > 0
+        gSql.rows(sql, params).size() > 0
     }
 
     Map<String, String> getRowAsMap(String sql, List params) {
 
         hasRows(sql, params) ? gSql.firstRow(sql, params) : [:] //empty map
-
     }
 
 
     List getRowsAsListOfMaps(String sql, List params) {
 
-        hasRows(sql, params) ? gSql.rows(sql, params) : [] //empty list
+        gSql.rows(sql, params)
     }
-
 
 
     String getRowAsJson(String sql, List params) {
 
-        def rows = gSql.rows(sql, params)
-        rows.isEmpty() ? '{}' : gson.toJson(rows[0])
+        Map row = getRowAsMap(sql, params)
+        row.isEmpty() ? '{}' : gson.toJson(row)
     }
-
-
     //overloaded
     String getRowAsJson(String dataStore, String keyField, String keyFieldValue) {
         def sql = "select * from $dataStore where $keyField=?"
@@ -55,21 +54,22 @@ class DbAccess {
 
     //overloaded
     String getRowsAsJsonArray(String dataStore, String keyField, String keyFieldValue) {
-        def sql = "select * from $dataStore where $keyField=?"
+        String sql = "select * from $dataStore where $keyField=?"
         getRowsAsJsonArray(sql, [keyFieldValue])
     }
 
     String getRowsAsJsonArrayOnlyValues(String sql, List params) {
 
-        def rows = gSql.rows(sql, params)
-        rows.isEmpty() ? '[]' : gson.toJson(rows.collect() { row -> row.values() })
+        List rows = gSql.rows(sql, params)
+        rows.isEmpty() ? '[]' : gson.toJson(rows.collect() { Map row -> row.values() })
     }
 
     String getColumnLabels(String sql, List params) {
         List columnLabels = []
-        def metaClosure = { meta ->
+        def metaClosure = { ResultSetMetaData meta ->
             (1..meta.columnCount).each {
-                columnLabels.add(meta.getColumnLabel(it))
+                Integer i ->
+                columnLabels.add(meta.getColumnLabel(i))
             }
         }
 

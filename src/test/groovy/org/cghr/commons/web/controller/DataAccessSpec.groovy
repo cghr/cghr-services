@@ -1,7 +1,9 @@
 package org.cghr.commons.web.controller
 
 import com.google.gson.Gson
+import groovy.sql.Sql
 import org.cghr.GenericGroovyContextLoader
+import org.cghr.commons.db.DbAccess
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,12 +25,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
 class DataAccessSpec extends Specification {
 
-    @Autowired
-    DataAccess dataAccess
+    //@Autowired
+    DataAccess dataAccess=new DataAccess()
     @Autowired
     DbTester dt
     @Shared
     def dataSet
+    @Autowired
+    Sql gSql
 
 
     MockMvc mockMvc
@@ -42,6 +46,11 @@ class DataAccessSpec extends Specification {
 
         dt.cleanInsert('country')
         mockMvc = MockMvcBuilders.standaloneSetup(dataAccess).build()
+        DbAccess mockDbAccess =Stub(){
+            getRowAsJson('country','id','1') >> new Gson().toJson(dataSet[0]).toString()
+            getRowAsJson('country','id','999') >> "{}"
+        }
+        dataAccess.dbAccess=mockDbAccess
 
     }
 
@@ -62,6 +71,7 @@ class DataAccessSpec extends Specification {
 
 
     }
+
 
 
 }

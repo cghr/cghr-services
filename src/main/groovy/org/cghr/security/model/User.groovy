@@ -1,5 +1,8 @@
 package org.cghr.security.model
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class User {
 
     String id

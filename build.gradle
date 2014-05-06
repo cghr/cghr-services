@@ -1,20 +1,10 @@
 apply plugin: 'groovy'
 apply plugin: 'maven'
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-         classpath 'net.saliman:gradle-cobertura-plugin:2.2.2'
-    }
-}
-apply plugin: 'cobertura'
 
-cobertura {
-    coverageSourceDirs << project.sourceSets.main.groovy.srcDirs
-}
-sourceCompatibility = 1.6
-version = '0.1-beta3'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+version = '0.1-0'
 group = 'org.cghr'
 
 jar {

@@ -1,8 +1,10 @@
 package org.cghr.dataSync.client
 
+import groovy.transform.CompileStatic
 import org.cghr.dataSync.commons.Agent
 import org.cghr.dataSync.service.AgentService
 
+@CompileStatic
 class DownloadAgent implements Agent {
 
     AgentService agentService
@@ -19,7 +21,7 @@ class DownloadAgent implements Agent {
 
     void downloadAndImportMessages(List<Map> messages) {
         messages.each {
-            message ->
+             Map message ->
                 agentService.downloadAndImport(message)
                 agentService.importSuccessful(message)
         }

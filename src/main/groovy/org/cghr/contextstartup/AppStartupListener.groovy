@@ -1,5 +1,6 @@
 package org.cghr.contextstartup
 
+import groovy.transform.CompileStatic
 import org.apache.log4j.PropertyConfigurator
 
 import javax.servlet.ServletContext
@@ -9,6 +10,7 @@ import javax.servlet.ServletContextListener
 /**
  * Created by ravitej on 25/4/14.
  */
+@CompileStatic
 class AppStartupListener implements ServletContextListener {
 
 

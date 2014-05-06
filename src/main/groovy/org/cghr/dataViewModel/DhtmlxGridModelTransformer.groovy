@@ -1,8 +1,10 @@
 package org.cghr.dataViewModel
-
 import com.google.gson.Gson
+import groovy.sql.GroovyResultSet
 import groovy.sql.Sql
+import groovy.transform.CompileStatic
 
+@CompileStatic
 class DhtmlxGridModelTransformer implements GenericDataModelTransformer {
 
 
@@ -22,7 +24,7 @@ class DhtmlxGridModelTransformer implements GenericDataModelTransformer {
 
         int i = 1
         def rows = []
-        def closure = { row ->
+        def closure = { GroovyResultSet row ->
 
             def rowMap = [id: i++, data: row.toRowResult().values()]
             rows << rowMap

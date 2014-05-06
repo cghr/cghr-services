@@ -1,5 +1,4 @@
 package org.cghr.dataSync.service
-
 import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
@@ -8,7 +7,6 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.client.RestTemplate
-
 /**
  * Created by ravitej on 3/2/14.
  */
@@ -95,7 +93,7 @@ class AgentService {
 
     Integer getDataChangelogChunks() {
 
-        Integer pendingLogs = dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null", []).count
+        Integer pendingLogs =(Integer) dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null", []).count
         Math.floor(pendingLogs / changelogChunkSize) + 1
 
     }

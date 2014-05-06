@@ -1,5 +1,6 @@
 package org.cghr.commons.web.controller
 
+import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbStore
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.ResponseBody
 
+@CompileStatic
 @Controller
 @RequestMapping("/data/dataStoreBatchService")
 class DataStoreBatch {
@@ -26,7 +28,8 @@ class DataStoreBatch {
 
         //Create Changelogs
         changelogs.each {
-            dbStore.createDataChangeLogs(it.data,it.datastore)
+            Map log ->
+            dbStore.createDataChangeLogs((Map)log.get('data'),(String)log.get('datastore'))
         }
     }
 

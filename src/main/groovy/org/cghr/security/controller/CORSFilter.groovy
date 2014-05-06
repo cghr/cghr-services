@@ -1,11 +1,14 @@
 package org.cghr.security.controller
 
+import groovy.transform.CompileStatic
+
 import javax.servlet.*
 import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by ravitej on 5/5/14.
  */
+@CompileStatic
 class CORSFilter implements Filter {
 
     @Override

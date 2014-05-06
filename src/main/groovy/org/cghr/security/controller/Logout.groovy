@@ -1,5 +1,6 @@
 package org.cghr.security.controller
 
+import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -10,6 +11,7 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+@CompileStatic
 @Controller
 @RequestMapping("/security/logout")
 class Logout {

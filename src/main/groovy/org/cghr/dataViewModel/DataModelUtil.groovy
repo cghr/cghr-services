@@ -2,8 +2,10 @@ package org.cghr.dataViewModel
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 
+@CompileStatic
 class DataModelUtil {
 
 

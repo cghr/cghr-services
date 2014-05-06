@@ -9,7 +9,7 @@ class MockData {
             authtoken: [id: 'int', token: 'varchar(255)', time: 'varchar(20)', expires: 'varchar(255)', username: 'varchar(20)', role: 'varchar(20)'],
             userlog: [id: 'int', username: 'varchar(20)', status: 'varchar(20)', time: 'varchar(20)', ipaddress: 'varchar(20)'],
             inbox: [id: 'int auto_increment', datastore: 'varchar(100)', ref: 'varchar(20)', refId: 'varchar(20)', distList: 'varchar(20)', distStatus: 'varchar(20)', impStatus: 'varchar(20)'],
-            outbox: [id: 'int', datastore: 'varchar(100)',ref: 'varchar(20)', refId: 'varchar(20)',recipient: 'varchar(20)', dwnStatus: 'varchar(20)'],
+            outbox: [id: 'int', datastore: 'varchar(100)',ref: 'varchar(20)', refId: 'varchar(20)',recipient: 'varchar(20)',distList: 'varchar(20)' ,dwnStatus: 'varchar(20)'],
             datachangelog: [id: 'int', log: 'text', status: 'varchar(20)'],
             memberImage: [memberId: 'int', consent: 'varchar(100)', photoId: 'varchar(100)', photo: 'varchar(100)']
     ]
@@ -40,8 +40,8 @@ class MockData {
                     [id: 2,datastore: 'country',ref: 'id',refId: '2' , distList: '3,4', distStatus: null, impStatus: null]
             ],
             outbox: [
-                    [id: 1, datastore: 'country',ref: 'id',refId: '1', recipient: '15', dwnStatus: null],
-                    [id: 2, datastore: 'country',ref: 'id',refId: '2', recipient: '16', dwnStatus: null]
+                    [id: 1, datastore: 'country',ref: 'id',refId: '1', recipient: '15',distList: null,dwnStatus: null],
+                    [id: 2, datastore: 'country',ref: 'id',refId: '2', recipient: '16',distList: null,dwnStatus: null]
             ],
             datachangelog: [
                     [id: 1, log: '{"datastore":"country","data":{"id":1,"name":"india","continent":"asia"}}', status: null],

@@ -1,5 +1,6 @@
 package org.cghr.security.controller
 
+import groovy.transform.CompileStatic
 import org.cghr.security.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

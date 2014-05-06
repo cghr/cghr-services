@@ -1,8 +1,6 @@
 package org.cghr.commons.db
-
 import com.google.gson.Gson
 import groovy.sql.Sql
-
 
 class DbStore {
 
@@ -30,7 +28,7 @@ class DbStore {
         gSql.execute(sql, data.values() as List)
     }
 
-    void saveOrUpdateFromMapList(List list, String dataStore) {
+    void saveOrUpdateFromMapList(List<Map> list, String dataStore) {
 
         for (Map data : list)
             saveOrUpdate(data, dataStore)

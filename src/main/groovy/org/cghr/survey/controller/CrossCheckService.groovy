@@ -1,5 +1,6 @@
 package org.cghr.survey.controller
 import com.google.gson.Gson
+import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 /**
  * Created by ravitej on 7/4/14.
  */
+@CompileStatic
 @Controller
 @RequestMapping("/CrossCheckService")
 public class CrossCheckService {

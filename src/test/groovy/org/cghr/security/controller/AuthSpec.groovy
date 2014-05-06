@@ -22,6 +22,7 @@ class AuthSpec extends Specification {
     Sql gSql
     @Autowired
     DbTester dt
+    @Autowired
     Auth auth
     @Shared
     User validUser = new User(username: 'user1', password: 'secret1')
@@ -88,7 +89,7 @@ class AuthSpec extends Specification {
                 ])
             }
         }
-        auth = new Auth(mockUserService)
+        //auth = new Auth(mockUserService)
 
 
         dt.cleanInsert("user")
@@ -135,9 +136,9 @@ class AuthSpec extends Specification {
 
         where:
         user        | usernameCookie | useridCookie | userCookie
-        validUser   | "user1"        | '1'          | '{"username":"user1","role":{"title":"user","bitMask":2}}'
+        validUser   | "user1"        | '1'          | '{"id":1,"username":"user1","password":"secret1","role":{"title":"user","bitMask":2}}'
         invalidUser | null           | null         | null
-        manager     | "user4"        | '4'          | '{"username":"user4","role":{"title":"manager","bitMask":3}}'
+        manager     | "user4"        | '4'          | '{"id":4,"username":"user4","password":"secret4","role":{"title":"manager","bitMask":3}}'
 
 
     }

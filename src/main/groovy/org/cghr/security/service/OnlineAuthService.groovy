@@ -2,6 +2,7 @@ package org.cghr.security.service
 
 
 import com.google.gson.Gson
+import groovy.transform.CompileStatic
 import org.cghr.security.exception.NoSuchUserFound
 import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User

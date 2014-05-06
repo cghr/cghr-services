@@ -1,10 +1,12 @@
 package org.cghr.commons.file
 
+import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbStore
 import org.springframework.web.multipart.MultipartFile
 /**
  * Created by ravitej on 24/4/14.
  */
+@CompileStatic
 class FileSystemStore {
 
 
@@ -24,7 +26,7 @@ class FileSystemStore {
         String fileName = data.remove("filename")
         String fileId=data.remove('fileId')
         fileName=fileName+'.'+file.name.split("\\.")[1]
-        String fullPath = rootPath+File.separator+ fileStoreFactory.get(fileStore).get(fileId)
+        String fullPath = rootPath+File.separator+ ((Map)fileStoreFactory.get(fileStore)).get(fileId)
 
         //Save file to Disk
         byte[] bytes = file.getBytes()

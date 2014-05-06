@@ -1,9 +1,7 @@
 package org.cghr.startupTasks
-
 import groovy.sql.Sql
 
 import javax.annotation.PostConstruct
-
 /**
  * Created by ravitej on 25/4/14.
  */
@@ -26,9 +24,10 @@ class DbImport {
         File[] sqlDir = new File(dbScriptsPath).listFiles()
         if (sqlDir == null)
             return
-        sqlDir = new File(dbScriptsPath).listFiles().sort() { it.name }
+        sqlDir = new File(dbScriptsPath).listFiles().sort() { File file -> file.name }
         sqlDir.each() {
-            importSqlFile(it)
+            File file ->
+            importSqlFile(file)
         }
 
     }

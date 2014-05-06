@@ -1,7 +1,9 @@
 package org.cghr.dataSync.commons
 
+import groovy.transform.CompileStatic
 import org.cghr.dataSync.service.AgentService
 
+@CompileStatic
 class MsgDistAgent implements Agent {
 
     AgentService agentService
@@ -20,10 +22,10 @@ class MsgDistAgent implements Agent {
     void distributeMessages(List messages) {
 
         messages.each {
-            message ->
+            Map<String, String> message ->
                 List recepients = message.distList.split(",") as List
                 recepients.each {
-                    recepient ->
+                    String recepient ->
                         agentService.distributeMessage(message, recepient)
                 }
                 agentService.distributeSuccessful(message);

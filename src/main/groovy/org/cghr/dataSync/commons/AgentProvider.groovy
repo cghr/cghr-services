@@ -1,6 +1,7 @@
 package org.cghr.dataSync.commons
 
 import groovy.sql.Sql
+import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.dataSync.client.DownloadAgent
