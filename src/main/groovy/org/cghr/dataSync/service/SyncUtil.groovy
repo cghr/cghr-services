@@ -1,8 +1,6 @@
 package org.cghr.dataSync.service
 
-import groovy.transform.CompileStatic
 import org.springframework.web.client.RestTemplate
-
 /**
  * Created by ravitej on 5/5/14.
  */

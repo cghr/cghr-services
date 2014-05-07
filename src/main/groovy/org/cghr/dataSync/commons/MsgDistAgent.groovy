@@ -23,6 +23,7 @@ class MsgDistAgent implements Agent {
 
         messages.each {
             Map<String, String> message ->
+                if (message.distList == null) return
                 List recepients = message.distList.split(",") as List
                 recepients.each {
                     String recepient ->

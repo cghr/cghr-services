@@ -30,15 +30,15 @@ class DbStore {
 
     void saveOrUpdateFromMapList(List<Map> list, String dataStore) {
 
-        for (Map data : list)
+        for (Map<String, String> data : list)
             saveOrUpdate(data, dataStore)
     }
 
     void saveOrUpdateBatch(List<Map> datachangelogs) {
 
         datachangelogs.each {
-            log ->
-                saveOrUpdate(log.get('data'), log.get('datastore'))
+            Map log ->
+                saveOrUpdate((Map) log.get('data'), (String) log.get('datastore'))
         }
 
 
@@ -47,7 +47,7 @@ class DbStore {
     boolean isNewData(String dataStore, String keyField, String keyFieldValue) {
 
         List rows = gSql.rows("select * from $dataStore where $keyField=?", [keyFieldValue])
-        rows.isEmpty()
+        rows.size() == 0
     }
 
     void createDataChangeLogs(Map data, String dataStore) {

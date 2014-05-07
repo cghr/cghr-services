@@ -39,7 +39,7 @@ class AgentService {
 
     List<Map> getDownloadInfo() {
 
-        Map[] downloadInfo = restTemplate.getForObject(syncServerDownloadInfoUrl, Map[].class)
+        List downloadInfo = restTemplate.getForObject(syncServerDownloadInfoUrl, List.class)
         downloadInfo as List
     }
 
@@ -59,9 +59,7 @@ class AgentService {
     void downloadAndImport(Map message) {
 
         String url = syncServerDownloadDataBatchUrl + message.datastore + File.separator + message.ref + File.separator + message.refId
-        println 'batch url '
-        println url
-        Map[] data = restTemplate.getForObject(url, Map[].class)
+        List data = restTemplate.getForObject(url, List.class)
 
         List<Map<String, String>> list = data as List
 
@@ -111,9 +109,6 @@ class AgentService {
     }
 
     void postBatch(String changelogBatch) {
-
-        //restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter())
-        //restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
         HttpEntity<String> request = new HttpEntity<String>(changelogBatch, headers)

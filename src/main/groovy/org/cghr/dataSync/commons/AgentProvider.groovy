@@ -1,7 +1,6 @@
 package org.cghr.dataSync.commons
 
 import groovy.sql.Sql
-import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.dataSync.client.DownloadAgent
@@ -23,6 +22,7 @@ class AgentProvider {
     String downloadInfoPath
     String downloadDataBatchPath
     String uploadPath
+    SyncUtil syncUtil
 
     AgentProvider(Sql gSql, DbAccess dbAccess, DbStore dbStore, RestTemplate restTemplate, Integer changelogChunkSize, String serverBaseUrl, String downloadInfoPath, String downloadDataBatchPath, String uploadPath) {
         this.gSql = gSql
@@ -75,12 +75,14 @@ class AgentProvider {
     }
 
     String syncServerBaseUrl() {
-        String role = dbAccess.getRowAsMap("select role from authtoken order by id desc limit 1",[]).role
-        role == 'manager' ? serverBaseUrl : new SyncUtil().getLocalServerBaseUrl()
+        String role = dbAccess.getRowAsMap("select role from authtoken order by id desc limit 1", []).role
+        String url = (role == 'manager') ? serverBaseUrl : syncUtil.getLocalServerBaseUrl()
+        //println 'server base url '+url
+        return url
     }
 
     String getRecipientId() {
-        String username = dbAccess.getRowAsMap("select username from authtoken order by id desc limit 1",[]).username
+        String username = dbAccess.getRowAsMap("select username from authtoken order by id desc limit 1", []).username
         dbAccess.getRowAsMap("select id from user where username=?", [username]).id
     }
 
