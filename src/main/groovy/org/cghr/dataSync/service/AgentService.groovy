@@ -1,12 +1,15 @@
 package org.cghr.dataSync.service
+
 import com.google.gson.Gson
 import groovy.sql.Sql
+import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.client.RestTemplate
+
 /**
  * Created by ravitej on 3/2/14.
  */
@@ -20,11 +23,13 @@ class AgentService {
     String syncServerDownloadDataBatchUrl
     RestTemplate restTemplate
     Integer changelogChunkSize
-
+    AwakeFileSession awakeFileSession
+    Map fileStoreFactory
+    String userHome
 
     Gson gson = new Gson()
 
-    AgentService(Sql gSql, DbAccess dbAccess, DbStore dbStore, String syncServerDownloadInfoUrl, String syncServerUploadUrl, RestTemplate restTemplate, Integer changelogChunkSize, String syncServerDownloadDataBatchUrl) {
+    AgentService(Sql gSql, DbAccess dbAccess, DbStore dbStore, String syncServerDownloadInfoUrl, String syncServerUploadUrl, RestTemplate restTemplate, Integer changelogChunkSize, String syncServerDownloadDataBatchUrl,AwakeFileSession awakeFileSession,Map fileStoreFactory,String userHome) {
         this.gSql = gSql
         this.dbAccess = dbAccess
         this.dbStore = dbStore
@@ -34,6 +39,9 @@ class AgentService {
         this.restTemplate = restTemplate
         this.changelogChunkSize = changelogChunkSize
         this.syncServerDownloadDataBatchUrl = syncServerDownloadDataBatchUrl
+        this.awakeFileSession=awakeFileSession
+        this.fileStoreFactory=fileStoreFactory
+        this.userHome=userHome
     }
 
 
@@ -91,7 +99,7 @@ class AgentService {
 
     Integer getDataChangelogChunks() {
 
-        Integer pendingLogs =(Integer) dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null", []).count
+        Integer pendingLogs = (Integer) dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null", []).count
         Math.floor(pendingLogs / changelogChunkSize) + 1
 
     }
@@ -119,6 +127,25 @@ class AgentService {
 
         gSql.executeUpdate("update datachangelog set status=1 where status is null limit $changelogChunkSize")
     }
+
+    List getFileChangelogs() {
+
+        gSql.rows("select * from filechangelog where status is null")
+    }
+
+    void fileUploadSuccessful(Integer id) {
+        dbStore.saveOrUpdate([id: id, status: 1], 'filechangelog')
+    }
+
+    void uploadFile(Map fileInfo) {
+
+        String path=((Map)fileStoreFactory.get(fileInfo.filestore)).get(fileInfo.fileId)
+        String remoteFile=path+File.separator+fileInfo.filename
+        File file=new File(userHome+File.separator+path+fileInfo.filename)
+        awakeFileSession.upload(file,remoteFile)
+
+    }
+
 
 
 }

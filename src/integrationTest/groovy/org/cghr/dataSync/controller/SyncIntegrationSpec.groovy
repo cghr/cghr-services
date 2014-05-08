@@ -36,13 +36,7 @@ class SyncIntegrationSpec extends Specification {
     }
 
     def setup() {
-
-        dbTester.clean('user')
-        dbTester.clean('inbox')
-        dbTester.clean('outbox')
-        dbTester.clean('country')
-        dbTester.clean('authtoken')
-
+        dbTester.clean('user,inbox,outbox,country,authtoken,filechangelog')
         dbTester.cleanInsert('datachangelog')
 
         mockMvc = MockMvcBuilders.standaloneSetup(syncService).build()
@@ -69,7 +63,7 @@ class SyncIntegrationSpec extends Specification {
 
     }
 
-    def "should download and upload data to a mock Server Online (Surveyor)"() {
+    def "should download and upload data to a mock Server (Surveyor)"() {
         setup:
         Map[] downloadInfo=[[datastore: 'country', ref: 'continent', refId: 'asia', distList: null]]
         RestTemplate restTemplate = Stub() {
@@ -83,6 +77,7 @@ class SyncIntegrationSpec extends Specification {
         Integer startNode = 100
         Integer endNode = 120
         Integer port = 8080
+
         String pathToCheck = 'app/status/manager'
         SyncUtil syncUtil = new SyncUtil(restTemplate, baseIp, startNode, endNode, port, pathToCheck)
         syncService.syncRunner.agentProvider.syncUtil = syncUtil
@@ -95,7 +90,6 @@ class SyncIntegrationSpec extends Specification {
         when:
         mockMvc.perform(get('/sync/dataSync'))
                 .andExpect(status().isOk())
-
 
         then:
         gSql.rows("select * from country").size() == 3

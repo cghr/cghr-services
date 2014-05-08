@@ -1,45 +1,28 @@
 package org.cghr.commons.web.controller
-
-import groovy.transform.CompileStatic
+import com.google.gson.Gson
 import org.cghr.commons.file.FileSystemStore
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
-import javax.servlet.http.HttpServletRequest
-
-@CompileStatic
-@Controller
+@RestController
 @RequestMapping("/file/fileStoreService")
 class FileStoreService {
 
     @Autowired
     FileSystemStore fileSystemStore
-    @Autowired
-    String basePath
 
+    @RequestMapping("")
+    String saveOrUpdate(@RequestParam("file") MultipartFile file, @RequestParam("data") String json) {
 
-    FileStoreService(FileSystemStore fileSystemStore, String basePath) {
-        this.fileSystemStore = fileSystemStore
-        this.basePath = basePath
-    }
+        Map data = new Gson().fromJson(json, Map.class)
+        String filestore = data.remove('filestore')
+        fileSystemStore.saveOrUpdate(data, filestore, file)
 
-    FileStoreService() {
-        
-    }
-
-
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    @ResponseBody
-    void saveOrUpdate(
-            @RequestParam("data") Map data, @RequestParam("file") MultipartFile file, HttpServletRequest request) {
-
-        String fileStore = data.remove("filestore")
-        fileSystemStore.saveOrUpdate(data, fileStore, file, basePath)
+        //Create changelogs for file and data
+        fileSystemStore.createFileChangelogs(data,filestore)
 
 
     }

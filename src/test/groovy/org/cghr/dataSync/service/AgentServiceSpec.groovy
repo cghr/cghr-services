@@ -1,5 +1,7 @@
 package org.cghr.dataSync.service
+
 import com.google.gson.Gson
+import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.GenericGroovyContextLoader
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -10,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 27/4/14.
  */
@@ -59,11 +62,18 @@ class AgentServiceSpec extends Specification {
         String dataBatchUrl = "http://dummyServer/dataAccessBatch/"
         RestTemplate restTemplate = Stub() {
             getForObject(dwnldInfoUrl, List.class) >> inboxMessages
-            getForObject(dataBatchUrl+"country/continent/asia", List.class) >> countryData
+            getForObject(dataBatchUrl + "country/continent/asia", List.class) >> countryData
 
         }
         Integer changelogChunk = 20
-        agentService = new AgentService(gSql, dbAccess, dbStore, dwnldInfoUrl, upldUrl, restTemplate, changelogChunk, dataBatchUrl)
+        AwakeFileSession awakeFileSession = Stub() {
+
+        }
+        Map fileStoreFactory = Stub() {
+
+        }
+        String userHome=''
+        agentService = new AgentService(gSql, dbAccess, dbStore, dwnldInfoUrl, upldUrl, restTemplate, changelogChunk, dataBatchUrl, awakeFileSession,fileStoreFactory,userHome)
 
     }
 
@@ -171,7 +181,6 @@ class AgentServiceSpec extends Specification {
     }
 
 
-
     def "should update the status of a succesfully posted batc of changelogs"() {
         given:
         dt.cleanInsert('datachangelog')
@@ -180,8 +189,30 @@ class AgentServiceSpec extends Specification {
         agentService.postBatchSuccessful()
 
         then:
-        gSql.rows('select * from datachangelog where status=1').size()==3
+        gSql.rows('select * from datachangelog where status=1').size() == 3
 
+
+    }
+
+    def "should get all the file changelogs"() {
+        setup:
+        dt.cleanInsert('filechangelog')
+        def filechangelogs = new MockData().sampleData.get('filechangelog')
+
+        expect:
+        agentService.getFileChangelogs() == filechangelogs
+    }
+
+    def "should change the status of the upload"() {
+        given:
+        dt.cleanInsert('filechangelog')
+
+        when:
+        agentService.fileUploadSuccessful(1)
+        println gSql.rows('select * from filechangelog')
+
+        then:
+        gSql.firstRow('select status from filechangelog where id=?', ['1']).status == '1'
 
     }
 

@@ -32,8 +32,7 @@ class SyncStatusSpec extends Specification {
 
     def setup() {
 
-        dbTester.cleanInsert('datachangelog')
-        dbTester.cleanInsert('inbox')
+        dbTester.cleanInsert('datachangelog,filechangelog,inbox')
         dbTester.clean('authtoken')
 
         mockMvc = MockMvcBuilders.standaloneSetup(syncStatus).build()
@@ -52,6 +51,10 @@ class SyncStatusSpec extends Specification {
         .andExpect(content().string('2'))
 
         mockMvc.perform(get('/sync/status/upload'))
+                .andExpect(status().isOk())
+                .andExpect(content().string('3'))
+
+        mockMvc.perform(get('/sync/status/fileupload'))
                 .andExpect(status().isOk())
                 .andExpect(content().string('3'))
 

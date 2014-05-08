@@ -33,6 +33,11 @@ class SyncStatus {
 
         dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null", []).count
     }
+    @RequestMapping("/fileupload")
+    String fileUploadTotal() {
+
+        dbAccess.getRowAsMap("select count(*) count from filechangelog where status is null", []).count
+    }
 
     @RequestMapping(value = "/manager",method = RequestMethod.GET ,produces = "application/json")
     Map isManager(HttpServletResponse response) {

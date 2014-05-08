@@ -26,7 +26,7 @@ class FileSystemStoreSpec extends Specification {
     DbStore dbStore
 
 
-    String rootPath = File.createTempDir().absolutePath
+    String userHome = File.createTempDir().absolutePath
     Map fileStoreFactory = [memberImage: [memberConsent: 'hcDemo/images/consent/', memberPhoto: 'hcDemo/images/photo/']]
 
     def setupSpec() {
@@ -35,7 +35,7 @@ class FileSystemStoreSpec extends Specification {
 
     def setup() {
 
-        fileSystemStore = new FileSystemStore(fileStoreFactory, dbStore)
+        fileSystemStore = new FileSystemStore(fileStoreFactory, dbStore,userHome)
 
         dt.clean('memberImage')
         dt.clean('datachangelog')
@@ -69,10 +69,10 @@ class FileSystemStoreSpec extends Specification {
 
 
         when:
-        fileSystemStore.saveOrUpdate(formData, fileStore, multipartFile, rootPath)
+        fileSystemStore.saveOrUpdate(formData, fileStore, multipartFile)
 
         then:
-        File dir = new File(rootPath + File.separator + fileStoreFactory.get(fileStore).get('memberConsent'))
+        File dir = new File(userHome + File.separator + fileStoreFactory.get(fileStore).get('memberConsent'))
         println dir.path
         dir.listFiles().length == 1
         gSql.rows('select * from memberImage').size() == 1
@@ -89,10 +89,10 @@ class FileSystemStoreSpec extends Specification {
         MockMultipartFile multipartFile = new MockMultipartFile("151001001_photo.png", 'fileData', "text/plain", content);
 
         when:
-        fileSystemStore.saveOrUpdate(formData, fileStore, multipartFile, rootPath)
+        fileSystemStore.saveOrUpdate(formData, fileStore, multipartFile)
 
         then:
-        File dir = new File(rootPath + File.separator + fileStoreFactory.get(fileStore).get('memberPhoto'))
+        File dir = new File(userHome + File.separator + fileStoreFactory.get(fileStore).get('memberPhoto'))
         println dir.path
         dir.listFiles().length == 1
         gSql.rows('select * from memberImage').size() == 1

@@ -12,20 +12,23 @@ import org.cghr.security.service.OnlineAuthService
 import org.cghr.security.service.UserService
 import org.cghr.test.db.DbTester
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.multipart.commons.CommonsMultipartResolver
 
 beans {
 
     xmlns([context: 'http://www.springframework.org/schema/context'])
     xmlns([mvc: 'http://www.springframework.org/schema/mvc'])
-    xmlns([aop: 'http://www.springframework.org/schema/aop'])
 
     //Common Services
     context.'component-scan'('base-package': 'org.cghr.commons.web.controller')
     context.'component-scan'('base-package': 'org.cghr.dataSync.controller')
     context.'component-scan'('base-package': 'org.cghr.security.controller')
     context.'component-scan'('base-package': 'org.cghr.survey.controller')
+    multiPartResolver(CommonsMultipartResolver)
+    //Add Project Specific Services
 
-
+    String appPath = 'dummyPath' //System.getProperty('basePath')
+    //Database Config
     dataSource(DataSource) {
         driverClassName = 'org.h2.Driver'
         url = 'jdbc:h2:mem:specs;database_to_upper=false;mode=mysql'
@@ -38,29 +41,8 @@ beans {
     }
     gSql(Sql, dataSource = dataSource)
     dbAccess(DbAccess, gSql = gSql)
-    dataStoreFactory(HashMap, [country: 'id', inbox: 'id', outbox: 'id', memberImage: 'memberId'])
+    dataStoreFactory(HashMap, [country: 'id', inbox: 'id', outbox: 'id', memberImage: 'memberId', filechangelog: 'id'])
     dbStore(DbStore, gSql = gSql, dataStoreFactory = dataStoreFactory)
-    dt(DbTester, dataSource = dataSource)
-
-    //Integration Test Beans
-    transformer(DhtmlxGridModelTransformer, gSql = gSql)
-    dataModelUtil(DataModelUtil, transformer = transformer, dbAccess = dbAccess)
-    serverAuthUrl(String, "http://localhost:8089/app/api/security/auth")
-    restTemplate(RestTemplate)
-    onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
-    userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService)
-    auth(Auth)
-    //Ends
-
-    //Data Sync Integration Test
-    agentProvider(AgentProvider, gSql = gSql, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
-            serverBaseUrl = 'http://demo1278634.mockable.io/', downloadInfoPath = 'api/sync/downloadInfo', downloadDataBatchPath = 'api/data/dataAccessBatchService/', uploadPath = 'api/data/dataStoreBatchService')
-
-    syncRunner(SyncRunner, agentProvider = agentProvider)
-
-    //Ends
-
-    String appPath = 'fakePath'
     //File Store Config
     fileStoreFactory(HashMap,
             [memberImage: [
@@ -68,6 +50,30 @@ beans {
                     memberPhotoId: appPath + "/repo/images/photoId",
                     memberPhoto: appPath + "/repo/images/photo"
             ]])
-    fileSystemStore(FileSystemStore, fileStoreFactory = fileStoreFactory, dbStore = dbStore)
+    fileSystemStore(FileSystemStore, fileStoreFactory = fileStoreFactory, dbStore = dbStore, userHome = '')
+    dt(DbTester, dataSource = dataSource)
+
+    //Data Model for reports
+    transformer(DhtmlxGridModelTransformer, gSql = gSql)
+    dataModelUtil(DataModelUtil, transformer = transformer, dbAccess = dbAccess)
+
+    //Security
+    serverAuthUrl(String, "http://localhost:8089/app/api/security/auth")
+    restTemplate(RestTemplate)
+    onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
+    userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService)
+    auth(Auth)
+
+    //Data Synchronization
+    agentProvider(AgentProvider, gSql = gSql, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
+            serverBaseUrl = 'http://demo1278634.mockable.io/',
+            downloadInfoPath = 'api/sync/downloadInfo',
+            downloadDataBatchPath = 'api/data/dataAccessBatchService/',
+            uploadPath = 'api/data/dataStoreBatchService',
+            awakeFileManagerPath = 'app/AwakeFileManager',
+            fileStoreFactory = fileStoreFactory,
+            userHome = userHome)
+    syncRunner(SyncRunner, agentProvider = agentProvider)
+
 
 }

@@ -23,14 +23,14 @@ class DataStoreBatch {
     String saveData(@RequestBody Map[] data) {
 
         List<Map<String, String>> changelogs = data as List
-                //new Gson().fromJson(data, List.class)
+        //new Gson().fromJson(data, List.class)
         dbStore.saveOrUpdateBatch(changelogs)
 
         //Create Changelogs
-        changelogs.each {
-            Map log ->
-            dbStore.createDataChangeLogs((Map)log.get('data'),(String)log.get('datastore'))
-        }
+//        changelogs.each {
+//            Map log ->
+//            dbStore.createDataChangeLogs((Map)log.get('data'),(String)log.get('datastore'))
+//        }
     }
 
 
