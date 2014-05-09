@@ -49,7 +49,6 @@ class DbImportSpec extends Specification {
         gSql.rows("select * from country").size() == 2;
         new File(sqlDir).listFiles().size()==0
 
-
     }
 
 }

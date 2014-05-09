@@ -15,14 +15,6 @@ public class CrossCheckService {
     @Autowired
     DbAccess dbAccess
 
-    CrossCheckService() {
-
-    }
-
-    CrossCheckService(DbAccess dbAccess) {
-        this.dbAccess = dbAccess
-    }
-
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public String getCrossCheck(@RequestBody Map<String, String> crossCheck) {
 

@@ -1,37 +1,25 @@
 package org.cghr.survey.controller
-
 import com.google.gson.Gson
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.RestController
 
 import javax.servlet.http.HttpServletResponse
-
 /**
  * Created by ravitej on 7/4/14.
  */
 
-@Controller
+@RestController
 @RequestMapping("/CrossFlowService")
 public class CrossFlowService {
 
     @Autowired
     DbAccess dbAccess
 
-    CrossFlowService() {
-
-    }
-
-    CrossFlowService(DbAccess dbAccess) {
-        this.dbAccess = dbAccess
-    }
-
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    @ResponseBody
     public String getCrossFlowCheck(@RequestBody String crossFlowsJson, HttpServletResponse response) {
 
         List<Map> crossFlows=new Gson().fromJson(crossFlowsJson,List.class)
