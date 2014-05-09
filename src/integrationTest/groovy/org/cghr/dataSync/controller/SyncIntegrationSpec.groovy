@@ -44,7 +44,6 @@ class SyncIntegrationSpec extends Specification {
 
     }
 
-    @Ignore
     def "should download and upload data to a mock Server Online (Team Leader)"() {
 
         given:
@@ -65,7 +64,6 @@ class SyncIntegrationSpec extends Specification {
 
     }
 
-    @Ignore
     def "should download and upload data to a mock Server (Surveyor)"() {
         setup:
         Map[] downloadInfo=[[datastore: 'country', ref: 'continent', refId: 'asia', distList: null]]
