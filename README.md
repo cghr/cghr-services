@@ -1,4 +1,4 @@
-CGHR-Services  [![Build Status](https://travis-ci.org/cghr/cghr-services.png?branch=master)](https://travis-ci.org/cghr/cghr-services)
+CGHR-Services  [![Build Status](https://travis-ci.org/cghr/cghr-services.png?branch=master)](https://travis-ci.org/cghr/cghr-services) [![Coverage Status](https://img.shields.io/coveralls/cghr/cghr-services.svg)](https://coveralls.io/r/cghr/cghr-services?branch=master)
 =============
 
 
