@@ -69,7 +69,7 @@ class DbAccess {
         def metaClosure = { ResultSetMetaData meta ->
             (1..meta.columnCount).each {
                 Integer i ->
-                columnLabels.add(meta.getColumnLabel(i))
+                    columnLabels.add(meta.getColumnLabel(i))
             }
         }
 
@@ -80,6 +80,15 @@ class DbAccess {
     void removeData(String table, String keyField, Object value) {
         def sql = "delete from $table where $keyField=?".toString()
         gSql.executeUpdate(sql, [value])
+
+    }
+    //Overloaded
+    void removeData(List tables) {
+
+        tables.each {
+            def sql = "truncate table $it".toString()
+            gSql.execute(sql)
+        }
 
     }
 

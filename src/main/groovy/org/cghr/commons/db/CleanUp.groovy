@@ -1,20 +1,40 @@
 package org.cghr.commons.db
-
-import org.springframework.beans.factory.annotation.Autowired
-
 /**
  * Created by ravitej on 9/5/14.
  */
 class CleanUp {
 
-    @Autowired
-    List entities
-    @Autowired
+    String excludedEntities
     DbAccess dbAccess
 
-    void cleanup() {
+    CleanUp(String excludedEntities, DbAccess dbAccess) {
+
+        this.excludedEntities = excludedEntities
+        this.dbAccess = dbAccess
+    }
 
 
+    void cleanupTables() {
+
+        List tablesToTruncate = []
+        List exemptTables = excludedEntities.split(',')
+        List allTables = getAllTables()
+
+
+        exemptTables.each {
+            if (allTables.contains(it))
+                allTables.remove(it)
+        }
+        dbAccess.removeData(allTables)
+    }
+
+    List getAllTables() {
+
+        List<Map> rows = dbAccess.getRowsAsListOfMaps('show tables', [])
+        rows.collect {
+            Map row ->
+                row.values()[0]
+        }
 
     }
 
