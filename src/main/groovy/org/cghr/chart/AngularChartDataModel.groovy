@@ -24,7 +24,9 @@ class AngularChartDataModel implements ChartDataModel {
         List<Map> rows = dbAccess.getRowsAsListOfMaps(sql, params)
         String columns = dbAccess.getColumnLabels(sql, params)
 
-        model.series = columns.split(',') as List
+        List cols = columns.split(',') as List
+        cols.remove(0)
+        model.series = cols
 
         model.data = rows.collect {
             Map row ->

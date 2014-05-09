@@ -12,10 +12,16 @@ class MockData {
             outbox: [id: 'int', datastore: 'varchar(100)', ref: 'varchar(20)', refId: 'varchar(20)', recipient: 'varchar(20)', distList: 'varchar(20)', dwnStatus: 'varchar(20)'],
             datachangelog: [id: 'int', log: 'text', status: 'varchar(20)'],
             filechangelog: [id: 'int', filename: 'varchar(100)', filestore: 'varchar(100)', fileId: 'varchar(100)', status: 'varchar(20)'],
-            memberImage: [memberId: 'int', consent: 'varchar(100)', photoId: 'varchar(100)', photo: 'varchar(100)']
+            memberImage: [memberId: 'int', consent: 'varchar(100)', photoId: 'varchar(100)', photo: 'varchar(100)'],
+            sales:[name:'varchar(100)',total:'int',month:'int']
     ]
 
     def sampleData = [
+            sales: [
+                    [name:'india',total:  100,month:  20],
+                    [name:  'pakistan',total:  80,month:  10],
+                    [name:  'srilanka',total:  40,month:  20]
+            ],
             country: [
                     [id: 1, name: 'india', continent: 'asia'],
                     [id: 2, name: 'pakistan', continent: 'asia'],

@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.client.RestTemplate
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -43,6 +44,7 @@ class SyncIntegrationSpec extends Specification {
 
     }
 
+    @Ignore
     def "should download and upload data to a mock Server Online (Team Leader)"() {
 
         given:
@@ -63,6 +65,7 @@ class SyncIntegrationSpec extends Specification {
 
     }
 
+    @Ignore
     def "should download and upload data to a mock Server (Surveyor)"() {
         setup:
         Map[] downloadInfo=[[datastore: 'country', ref: 'continent', refId: 'asia', distList: null]]

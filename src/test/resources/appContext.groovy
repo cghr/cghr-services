@@ -1,5 +1,6 @@
 import groovy.sql.Sql
 import org.apache.tomcat.jdbc.pool.DataSource
+import org.cghr.chart.AngularChartDataModel
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.commons.file.FileSystemStore
@@ -74,6 +75,8 @@ beans {
             fileStoreFactory = fileStoreFactory,
             userHome = userHome)
     syncRunner(SyncRunner, agentProvider = agentProvider)
+
+    angularChartDataModel(AngularChartDataModel,dbAccess=dbAccess)
 
 
 }
