@@ -1,6 +1,20 @@
 apply plugin: 'groovy'
 apply plugin: 'maven'
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:2.2.2"
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.4.0'
+    }
+}
+apply plugin: 'cobertura'
+apply plugin: 'coveralls'
+
+cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
+cobertura.coverageSourceDirs = sourceSets.main.groovy.srcDirs
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -15,7 +29,6 @@ jar {
 
 }
 
-
 repositories {
     mavenCentral()
 }
@@ -25,6 +38,7 @@ String springVersion = '4.0.3.RELEASE'
 test {
     systemProperties 'property': 'value'
     include 'src/integrationTest'
+    include "**/*Spec.class"
 
 }
 
