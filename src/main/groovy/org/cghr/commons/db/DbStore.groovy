@@ -1,4 +1,5 @@
 package org.cghr.commons.db
+
 import com.google.gson.Gson
 import groovy.sql.Sql
 
@@ -28,6 +29,10 @@ class DbStore {
         gSql.execute(sql, data.values() as List)
     }
 
+    void execute(String sql, List params) {
+        gSql.execute(sql, params)
+    }
+
     void saveOrUpdateFromMapList(List<Map> list, String dataStore) {
 
         for (Map<String, String> data : list)
@@ -53,7 +58,7 @@ class DbStore {
     void createDataChangeLogs(Map data, String dataStore) {
 
         def sql = "insert into datachangelog(log) values(?)".toString()
-        Map log = [dataStore: dataStore, data: data];
+        Map log = [datastore: dataStore, data: data];
         gSql.execute(sql, new Gson().toJson(log));
 
     }

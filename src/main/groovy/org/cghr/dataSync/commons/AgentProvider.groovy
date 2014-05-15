@@ -29,7 +29,7 @@ class AgentProvider {
     Map fileStoreFactory
     String userHome
 
-    AgentProvider(Sql gSql, DbAccess dbAccess, DbStore dbStore, RestTemplate restTemplate, Integer changelogChunkSize, String serverBaseUrl, String downloadInfoPath, String downloadDataBatchPath, String uploadPath, String awakeFileManagerPath,Map fileStoreFactory,String userHome) {
+    AgentProvider(Sql gSql, DbAccess dbAccess, DbStore dbStore, RestTemplate restTemplate, Integer changelogChunkSize, String serverBaseUrl, String downloadInfoPath, String downloadDataBatchPath, String uploadPath, String awakeFileManagerPath,Map fileStoreFactory,String userHome,SyncUtil syncUtil) {
         this.gSql = gSql
         this.dbAccess = dbAccess
         this.dbStore = dbStore
@@ -42,6 +42,7 @@ class AgentProvider {
         this.awakeFileManagerPath = awakeFileManagerPath
         this.fileStoreFactory=fileStoreFactory
         this.userHome=userHome
+        this.syncUtil=syncUtil
     }
 //Dynamic Properties
     String syncServerDownloadInfoUrl

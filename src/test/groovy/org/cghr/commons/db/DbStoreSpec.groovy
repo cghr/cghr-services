@@ -90,7 +90,7 @@ class DbStoreSpec extends Specification {
     def "should create a datachangelog for a given log"() {
         when:
         dbStore.createDataChangeLogs(dataSet[0], dataStore)
-        Map log = [dataStore: dataStore, data: dataSet[0]]
+        Map log = [datastore: dataStore, data: dataSet[0]]
         String expectedLog
 
         then:

@@ -10,6 +10,8 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.client.RestTemplate
 
+import java.sql.Clob
+
 /**
  * Created by ravitej on 3/2/14.
  */
@@ -29,7 +31,7 @@ class AgentService {
 
     Gson gson = new Gson()
 
-    AgentService(Sql gSql, DbAccess dbAccess, DbStore dbStore, String syncServerDownloadInfoUrl, String syncServerUploadUrl, RestTemplate restTemplate, Integer changelogChunkSize, String syncServerDownloadDataBatchUrl,AwakeFileSession awakeFileSession,Map fileStoreFactory,String userHome) {
+    AgentService(Sql gSql, DbAccess dbAccess, DbStore dbStore, String syncServerDownloadInfoUrl, String syncServerUploadUrl, RestTemplate restTemplate, Integer changelogChunkSize, String syncServerDownloadDataBatchUrl, AwakeFileSession awakeFileSession, Map fileStoreFactory, String userHome) {
         this.gSql = gSql
         this.dbAccess = dbAccess
         this.dbStore = dbStore
@@ -39,9 +41,9 @@ class AgentService {
         this.restTemplate = restTemplate
         this.changelogChunkSize = changelogChunkSize
         this.syncServerDownloadDataBatchUrl = syncServerDownloadDataBatchUrl
-        this.awakeFileSession=awakeFileSession
-        this.fileStoreFactory=fileStoreFactory
-        this.userHome=userHome
+        this.awakeFileSession = awakeFileSession
+        this.fileStoreFactory = fileStoreFactory
+        this.userHome = userHome
     }
 
 
@@ -111,7 +113,12 @@ class AgentService {
         def sql = "select log from datachangelog where status is null limit $changelogChunkSize".toString()
         gSql.eachRow(sql) {
             row ->
-                logs << row.log.getAsciiStream().getText()
+
+                if (row.log instanceof Clob)
+                    logs << row.log.getAsciiStream().getText()
+                else
+                    logs << row.log
+
         }
         logs.toString()
     }
@@ -139,13 +146,12 @@ class AgentService {
 
     void uploadFile(Map fileInfo) {
 
-        String path=((Map)fileStoreFactory.get(fileInfo.filestore)).get(fileInfo.fileId)
-        String remoteFile=path+File.separator+fileInfo.filename
-        File file=new File(userHome+File.separator+path+fileInfo.filename)
-        awakeFileSession.upload(file,remoteFile)
+        String path = ((Map) fileStoreFactory.get(fileInfo.filestore)).get(fileInfo.fileId)
+        String remoteFile = path + File.separator + fileInfo.filename
+        File file = new File(userHome + File.separator + path + fileInfo.filename)
+        awakeFileSession.upload(file, remoteFile)
 
     }
-
 
 
 }

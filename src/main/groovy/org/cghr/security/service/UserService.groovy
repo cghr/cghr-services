@@ -1,7 +1,5 @@
 package org.cghr.security.service
-
 import com.google.gson.Gson
-import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.security.exception.NoSuchUserFound
@@ -89,11 +87,11 @@ class UserService {
             case 'user':
                 return 2;
             case 'manager':
-                return 3;
-            case 'coordinator':
                 return 4;
+            case 'coordinator':
+                return 8;
             case 'admin':
-                return 5;
+                return 16;
         }
     }
 

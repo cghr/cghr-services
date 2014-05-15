@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -45,6 +46,7 @@ class FileStoreServiceSpec extends Specification {
 
     }
 
+    @Ignore
     def "should save the data and write consent file to appropriate path"() {
         given:
         Map formData = [memberId: '151001001', consent: '151001001_consent.png', filename: '151001001_consent.png', fileId: 'memberConsent', filestore: 'memberImage']

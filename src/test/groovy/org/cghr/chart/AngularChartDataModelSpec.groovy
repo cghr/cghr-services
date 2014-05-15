@@ -19,11 +19,6 @@ class AngularChartDataModelSpec extends Specification {
     @Autowired
     DbTester dbTester
 
-
-    def setupSpec() {
-
-    }
-
     def setup() {
         dbTester.cleanInsert('sales')
 

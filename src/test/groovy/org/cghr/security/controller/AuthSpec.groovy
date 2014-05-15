@@ -49,7 +49,7 @@ class AuthSpec extends Specification {
 
             getUserCookieJson(validUser) >> '{"username":"user1","role":{"title":"user","bitMask":2}}'
             getUserCookieJson(invalidUser) >> '{}'
-            getUserCookieJson(manager) >> '{"username":"user4","role":{"title":"manager","bitMask":3}}'
+            getUserCookieJson(manager) >> '{"username":"user4","role":{"title":"manager","bitMask":4}}'
 
             getId(validUser) >> "1"
             getId(validUser) >> null
@@ -138,7 +138,7 @@ class AuthSpec extends Specification {
         user        | usernameCookie | useridCookie | userCookie
         validUser   | "user1"        | '1'          | '{"id":1,"username":"user1","password":"secret1","role":{"title":"user","bitMask":2}}'
         invalidUser | null           | null         | null
-        manager     | "user4"        | '4'          | '{"id":4,"username":"user4","password":"secret4","role":{"title":"manager","bitMask":3}}'
+        manager     | "user4"        | '4'          | '{"id":4,"username":"user4","password":"secret4","role":{"title":"manager","bitMask":4}}'
 
 
     }

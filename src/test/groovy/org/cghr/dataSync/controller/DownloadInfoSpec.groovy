@@ -1,4 +1,6 @@
 package org.cghr.dataSync.controller
+
+import groovy.sql.Sql
 import org.cghr.GenericGroovyContextLoader
 import org.cghr.commons.db.DbAccess
 import org.cghr.test.db.DbTester
@@ -9,8 +11,10 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Specification
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 /**
  * Created by ravitej on 5/5/14.
  */
@@ -23,18 +27,19 @@ class DownloadInfoSpec extends Specification {
     DbAccess dbAccess
     @Autowired
     DbTester dbTester
+    @Autowired
+    Sql gSql
 
     MockMvc mockMvc
 
     def setupSpec() {
 
 
-
     }
 
     def setup() {
 
-        mockMvc=MockMvcBuilders.standaloneSetup(downloadInfo).build()
+        mockMvc = MockMvcBuilders.standaloneSetup(downloadInfo).build()
         dbTester.cleanInsert('outbox')
 
     }
@@ -43,10 +48,11 @@ class DownloadInfoSpec extends Specification {
 
         expect:
         mockMvc.perform(get('/sync/downloadInfo/15'))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(content().string('[{"datastore":"country","ref":"id","refId":"1"}]'))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string('[{"datastore":"country","ref":"id","refId":"1"}]'))
 
+        gSql.rows("select * from outbox where dwnStatus=1 and recipient=15").size()==1
 
 
     }

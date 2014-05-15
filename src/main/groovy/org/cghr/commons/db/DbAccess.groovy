@@ -82,6 +82,7 @@ class DbAccess {
         gSql.executeUpdate(sql, [value])
 
     }
+
     //Overloaded
     void removeData(List tables) {
 

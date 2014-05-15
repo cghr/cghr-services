@@ -38,6 +38,7 @@ class DbImport {
     void importSqlFile(File file) {
 
         String[] sqls = file.text.split(";")
+        println sqls
         gSql.withBatch {
             stmt ->
                 sqls.each {

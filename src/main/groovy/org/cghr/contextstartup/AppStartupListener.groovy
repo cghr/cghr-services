@@ -13,14 +13,20 @@ import javax.servlet.ServletContextListener
 @CompileStatic
 class AppStartupListener implements ServletContextListener {
 
-
     @Override
     void contextInitialized(ServletContextEvent sce) {
 
         ServletContext sc = sce.getServletContext();
         String path = sc.getRealPath("/");
+        if (!path.endsWith("/")) {
+            path = path + File.separator
+        }
+        String userHome=System.getProperty('user.home')
+        if(!userHome.endsWith('/'))
+            userHome=userHome+File.separator
 
         setBasePath(path)
+        setUserHome(userHome)
         configureLogger(path)
 
         // Get all AppStartupTasks and execute one by one
@@ -48,6 +54,9 @@ class AppStartupListener implements ServletContextListener {
     void setBasePath(String path) {
         System.setProperty("basePath", path);
 
+    }
+    void setUserHome(String path){
+        System.setProperty("userHome",path);
     }
 
     void configureLogger(String path) {

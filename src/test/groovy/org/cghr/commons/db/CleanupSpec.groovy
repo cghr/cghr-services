@@ -21,9 +21,6 @@ class CleanupSpec extends Specification {
     @Autowired
     Sql  gSql
 
-    def setupSpec() {
-
-    }
 
     def setup() {
 
@@ -32,7 +29,6 @@ class CleanupSpec extends Specification {
     }
 
     def "should  truncate all tables except the Excluded Entities"() {
-
         when:
         cleanUp.cleanupTables()
 

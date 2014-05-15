@@ -43,7 +43,6 @@ class AuthIntegrationSpec extends Specification {
     @Shared
     String userJson = '{"id":1,"username":"user1","password":"secret1","role":{"title":"user","bitMask":2}}'
 
-
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(8089);
 
