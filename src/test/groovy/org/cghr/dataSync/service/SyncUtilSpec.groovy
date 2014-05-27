@@ -20,26 +20,28 @@ class SyncUtilSpec extends Specification {
     def setup() {
 
         RestTemplate restTemplate = Stub() {
-            getForObject('http://192.168.0.100:8080/api/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.101:8080/api/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.102:8080/api/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.103:8080/api/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.104:8080/api/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.105:8080/api/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.106:8080/api/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.107:8080/api/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.108:8080/api/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.109:8080/api/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.110:8080/api/status/manager', Map.class) >> [status: true]
+            getForObject('http://192.168.0.100:8080/hc/api/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.101:8080/hc/api/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.102:8080/hc/api/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.103:8080/hc/api/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.104:8080/hc/api/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.105:8080/hc/api/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.106:8080/hc/api/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.107:8080/hc/api/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.108:8080/hc/api/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.109:8080/hc/api/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.110:8080/hc/api/status/manager', Map.class) >> [status: true]
         }
         String baseIp = '192.168.0.'
         Integer startNode = 100
         Integer endNode = 120
         Integer port = 8080
         String pathToCheck = 'api/status/manager'
+        String appName='hc'
 
 
-        syncUtil = new SyncUtil(restTemplate, baseIp, startNode, endNode, port, pathToCheck)
+
+        syncUtil = new SyncUtil(restTemplate, baseIp, startNode, endNode, port, pathToCheck,appName)
 
 
     }
@@ -47,7 +49,7 @@ class SyncUtilSpec extends Specification {
     def "should get a local server base url"() {
 
         expect:
-        syncUtil.getLocalServerBaseUrl() == 'http://192.168.0.110:8080/'
+        syncUtil.getLocalServerBaseUrl() == 'http://192.168.0.110:8080/hc/'
 
 
     }

@@ -26,6 +26,7 @@ class FileUploadAgent implements Agent {
                     agentService.fileUploadSuccessful(fileInfo.id)
                 }
                 catch (Exception e) {
+                    e.printStackTrace();
                     println 'error in uploading the file'
                 }
 

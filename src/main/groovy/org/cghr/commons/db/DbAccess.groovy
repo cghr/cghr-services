@@ -9,7 +9,6 @@ import java.sql.ResultSetMetaData
 @CompileStatic
 class DbAccess {
 
-
     Sql gSql;
     Gson gson = new Gson()
 
@@ -18,28 +17,29 @@ class DbAccess {
         this.gSql = gSql
     }
 
-    boolean hasRows(String sql, List params) {
+    boolean hasRows(String sql, List params=[]) {
 
         gSql.rows(sql, params).size() > 0
     }
 
-    Map<String, String> getRowAsMap(String sql, List params) {
+    Map<String, String> getRowAsMap(String sql, List params=[]) {
 
-        hasRows(sql, params) ? gSql.firstRow(sql, params) : [:] //empty map
+        List rows = gSql.rows(sql, params)
+        rows.size() > 0 ? rows[0] : [:] //empty map
     }
 
 
-    List getRowsAsListOfMaps(String sql, List params) {
+    List getRowsAsListOfMaps(String sql, List params=[]) {
 
         gSql.rows(sql, params)
     }
 
-
     String getRowAsJson(String sql, List params) {
 
         Map row = getRowAsMap(sql, params)
-        row.isEmpty() ? '{}' : gson.toJson(row)
+        gson.toJson(row)
     }
+
     //overloaded
     String getRowAsJson(String dataStore, String keyField, String keyFieldValue) {
         def sql = "select * from $dataStore where $keyField=?"

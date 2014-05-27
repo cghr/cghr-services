@@ -76,6 +76,7 @@ beans {
 
     //Todo Security
     serverAuthUrl(String, "http://localhost:8089/app/api/security/auth")
+    httpClientParams()
     restTemplate(RestTemplate)
     onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
     userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService)
@@ -90,7 +91,8 @@ beans {
     ])
 
     //Todo Data Synchronization
-    syncUtil(SyncUtil, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/status/manager')
+    String appName='hc'
+    syncUtil(SyncUtil, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/status/manager',appName=appName)
     agentProvider(AgentProvider, gSql = gSql, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
             serverBaseUrl = 'http://demo1278634.mockable.io/',
             downloadInfoPath = 'api/sync/downloadInfo',

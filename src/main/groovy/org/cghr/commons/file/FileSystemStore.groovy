@@ -82,7 +82,7 @@ class FileSystemStore {
             dir.mkdirs()
 
         File file = new File(dir.getAbsolutePath()
-                + File.separator + fileName)
+                + '/' + fileName)
         file.write('')
         return file
     }

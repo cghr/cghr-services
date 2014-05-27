@@ -1,23 +1,19 @@
 package org.cghr.awakeFile
-
 import org.awakefw.file.api.server.AwakeFileConfigurator
-import org.springframework.beans.factory.annotation.Autowired
 
 import java.sql.Connection
 import java.sql.SQLException
-
 /**
  * Created by ravitej on 8/5/14.
  */
 
 class CghrAwakeFileConfigurator implements AwakeFileConfigurator {
 
-    @Autowired
-    String userHome
+    String userHome=System.getProperty('user.home')
 
     @Override
     File getServerRoot() {
-        return new File(userHome)
+        return new File(System.getProperty('user.home'))
     }
 
     @Override

@@ -68,7 +68,7 @@ class AgentService {
 
     void downloadAndImport(Map message) {
 
-        String url = syncServerDownloadDataBatchUrl + message.datastore + File.separator + message.ref + File.separator + message.refId
+        String url = syncServerDownloadDataBatchUrl + message.datastore + '/' + message.ref + '/' + message.refId
         List data = restTemplate.getForObject(url, List.class)
 
         List<Map<String, String>> list = data as List
@@ -147,8 +147,21 @@ class AgentService {
     void uploadFile(Map fileInfo) {
 
         String path = ((Map) fileStoreFactory.get(fileInfo.filestore)).get(fileInfo.fileId)
-        String remoteFile = path + File.separator + fileInfo.filename
-        File file = new File(userHome + File.separator + path + fileInfo.filename)
+        //String remoteFile = path + '/' + fileInfo.filename
+        String type = ((String) fileInfo.fileId).toLowerCase()
+        String remoteFile = ''
+
+        if (type.contains('consent'))
+            remoteFile = '/hcDemo/repo/images/consent'
+        else if (type.contains('photo'))
+            remoteFile = '/hcDemo/repo/images/photo'
+        else if (type.contains('photoId'))
+            remoteFile = '/hcDemo/repo/images/photoId'
+
+        remoteFile = remoteFile + '/' + fileInfo.filename
+        File file = new File(path + '/' + fileInfo.filename)
+        println 'file to upload'
+        println file
         awakeFileSession.upload(file, remoteFile)
 
     }

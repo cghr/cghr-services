@@ -29,13 +29,13 @@ class DbImportSpec extends Specification {
 
     def "should execute sql scripts in a given directory "() {
         given:
-        File file1 = new File(sqlDir + File.separator + 'a.sql')
+        File file1 = new File(sqlDir + '/' + 'a.sql')
         file1.setText("""DROP TABLE IF EXISTS country;
                          |DROP TABLE IF EXISTS state;
                          |CREATE TABLE  country(id int,name varchar(100),continent varchar(100));
                          |CREATE TABLE  state(id int,name varchar(100),country varchar(100)); """.stripMargin())
 
-        File file2 = new File(sqlDir + File.separator + 'b.sql')
+        File file2 = new File(sqlDir + '/' + 'b.sql')
         file2.setText("""INSERT INTO country values(1,'india','asia');
                          |INSERT INTO country values(1,'pakistan','asia');
                          |INSERT INTO state values(1,'Maharastra','india');

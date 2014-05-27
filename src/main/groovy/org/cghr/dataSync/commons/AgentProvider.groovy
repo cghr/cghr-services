@@ -82,7 +82,7 @@ class AgentProvider {
 
     void createDynamicSyncServerUrls() {
         String syncServer = syncServerBaseUrl()
-        syncServerDownloadInfoUrl = syncServer + downloadInfoPath + File.separator + getRecipientId()
+        syncServerDownloadInfoUrl = syncServer + downloadInfoPath + '/' + getRecipientId()
         syncServerUploadUrl = syncServer + uploadPath
         syncServerDownloadDataBatchUrl = syncServer + downloadDataBatchPath
 

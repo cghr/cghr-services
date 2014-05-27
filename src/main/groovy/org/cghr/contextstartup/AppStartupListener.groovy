@@ -19,11 +19,11 @@ class AppStartupListener implements ServletContextListener {
         ServletContext sc = sce.getServletContext();
         String path = sc.getRealPath("/");
         if (!path.endsWith("/")) {
-            path = path + File.separator
+            path = path + '/'
         }
         String userHome=System.getProperty('user.home')
         if(!userHome.endsWith('/'))
-            userHome=userHome+File.separator
+            userHome=userHome+'/'
 
         setBasePath(path)
         setUserHome(userHome)
