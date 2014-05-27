@@ -9,7 +9,6 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.client.RestTemplate
-import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -70,17 +69,18 @@ class SyncIntegrationSpec extends Specification {
         RestTemplate restTemplate = Stub() {
             getForObject('http://192.168.0.100:8080/app/status/manager', Map.class) >> [status: false]
             getForObject('http://192.168.0.101:8080/app/status/manager', Map.class) >> [status: true]
-            getForObject('http://192.168.0.101:8080/api/sync/downloadInfo/15', List.class) >> downloadInfo
-            getForObject('http://192.168.0.101:8080/api/data/dataAccessBatchService/country/continent/asia', List.class) >> dataSet
-            postForLocation('http://192.168.0.101:8080/api/data/dataStoreBatchService', _) >> {}
+            getForObject('http://192.168.0.101:8080/app/api/sync/downloadInfo/15', List.class) >> downloadInfo
+            getForObject('http://192.168.0.101:8080/app/api/data/dataAccessBatchService/country/continent/asia', List.class) >> dataSet
+            postForLocation('http://192.168.0.101:8080/app/api/data/dataStoreBatchService', _) >> {}
         }
         String baseIp = '192.168.0.'
         Integer startNode = 100
         Integer endNode = 120
         Integer port = 8080
 
-        String pathToCheck = 'app/status/manager'
-        SyncUtil syncUtil = new SyncUtil(restTemplate, baseIp, startNode, endNode, port, pathToCheck)
+        String pathToCheck = 'status/manager'
+        String appName='app'
+        SyncUtil syncUtil = new SyncUtil(restTemplate, baseIp, startNode, endNode, port, pathToCheck,appName)
         syncService.syncRunner.agentProvider.syncUtil = syncUtil
         syncService.syncRunner.agentProvider.restTemplate = restTemplate
 

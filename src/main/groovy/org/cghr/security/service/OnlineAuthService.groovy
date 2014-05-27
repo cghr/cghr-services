@@ -1,8 +1,6 @@
 package org.cghr.security.service
 
-
 import com.google.gson.Gson
-import groovy.transform.CompileStatic
 import org.cghr.security.exception.NoSuchUserFound
 import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
@@ -15,9 +13,6 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 
-
-
-
 class OnlineAuthService {
 
     String serverAuthUrl
@@ -29,19 +24,19 @@ class OnlineAuthService {
     }
 
 
-    public Map authenticate(User user,String hostname) {
+    public Map authenticate(User user, String hostname) {
 
 
         Gson gson = new Gson()
         Map serverRespUser
 
 
-        String onlinAuthHostname=serverAuthUrl.toURL().getHost()
+        String onlinAuthHostname = serverAuthUrl.toURL().getHost()
 
         println "hostname $hostname"
         println "Server auth host $onlinAuthHostname"
 
-        if(hostname==onlinAuthHostname && onlinAuthHostname!='localhost')
+        if (hostname == onlinAuthHostname && onlinAuthHostname != 'localhost')
             throw new ServerNotFoundException()
 
 
@@ -55,7 +50,7 @@ class OnlineAuthService {
 
 
 
-        HttpEntity<String> request=new HttpEntity<String>(gson.toJson(user),headers)
+        HttpEntity<String> request = new HttpEntity<String>(gson.toJson(user), headers)
 
 
         try {
@@ -76,11 +71,6 @@ class OnlineAuthService {
         catch (ResourceAccessException ex) {
             throw new ServerNotFoundException()
         }
-        catch (Exception ex) {
 
-            println 'Unexpected Exception'
-            println ex
-            throw ex
-        }
     }
 }

@@ -1,11 +1,14 @@
 package org.cghr.security.service
+
 import com.google.gson.Gson
+import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.security.exception.NoSuchUserFound
 import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
 
+@CompileStatic
 class UserService {
 
     DbAccess dbAccess
@@ -19,22 +22,18 @@ class UserService {
     }
 
 
-    def boolean isValid(User user, String hostname) {
+    boolean isValid(User user, String hostname) {
 
         try {
             Map userRespFromServer = onlineAuthService.authenticate(user, hostname);
             cacheUserLocally(userRespFromServer)
         }
+
         catch (ServerNotFoundException ex) {
             println 'Server Not Found'
         }
         catch (NoSuchUserFound ex) {
-            println 'No Such User Found on Server'
             return false
-        }
-        catch (Exception ex) {
-            println "Unexpected Exception"
-            println ex
         }
 
         finally {
@@ -42,36 +41,36 @@ class UserService {
         }
     }
 
-    def boolean isValidLocalUser(User user) {
+    boolean isValidLocalUser(User user) {
 
         println 'inside is valid local user'
         Map userData = getUserAsMap(user)
-        def isValid = userData.isEmpty() ? false : (userData.password==user.password)
-        println 'isvalid local user '+isValid
+        def isValid = userData.isEmpty() ? false : (userData.password == user.password)
+        println 'isvalid local user ' + isValid
         isValid
     }
 
-    def cacheUserLocally(Map user) {
+    void cacheUserLocally(Map user) {
 
 
-        dbStore.saveOrUpdate([id: user.id, username: user.username, password: user.password, role: ((Map)user.role).title], 'user')
+        dbStore.saveOrUpdate([id: user.id, username: user.username, password: user.password, role: ((Map) user.role).title], 'user')
     }
 
-    def String getUserJson(User user) {
+    String getUserJson(User user) {
 
 
         dbAccess.getRowAsJson("select * from user where username=?", [user.username])
     }
 
-    def String getId(User user) {
+    String getId(User user) {
 
         def row = getUserAsMap(user)
         row.id
     }
 
-    def String getUserCookieJson(User user) {
+    String getUserCookieJson(User user) {
 
-        Map row = getUserAsMap(user)
+        Map<String, String> row = getUserAsMap(user)
         def userMap = [id: row.id, username: row.username, password: row.password, role: [title: row.role, bitMask: getBitMask(row.get('role'))]]
         new Gson().toJson(userMap)
     }
@@ -95,7 +94,7 @@ class UserService {
         }
     }
 
-    def saveAuthToken(String authtoken, User user) {
+    void saveAuthToken(String authtoken, User user) {
 
         def row = getUserAsMap(user)
         def dataToSave = [token: authtoken, username: user.username, role: row.role]
@@ -103,17 +102,17 @@ class UserService {
         dbStore.saveOrUpdate(dataToSave, "authtoken")
     }
 
-    def logUserAuthStatus(User user, String status) {
+    void logUserAuthStatus(User user, String status) {
 
         dbStore.saveOrUpdate([username: user.username, status: status], "userlog")
     }
 
-    def getUserAsMap(User user) {
+    Map getUserAsMap(User user) {
 
         dbAccess.getRowAsMap("select * from user where username=?", [user.username])
     }
 
-    def isValidToken(String token) {
+    boolean isValidToken(String token) {
 
         dbAccess.hasRows("select * from authtoken where token=?", [token])
     }

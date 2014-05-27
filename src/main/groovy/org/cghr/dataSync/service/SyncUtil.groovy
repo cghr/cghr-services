@@ -43,7 +43,7 @@ class SyncUtil {
 
         try {
 
-            println 'Trying to Connect with fallback safety '
+            println 'checking for valid sync server '+url
             Map response = restTemplate.getForObject(url, Map.class)
             return response.status
 

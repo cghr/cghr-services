@@ -1,4 +1,5 @@
 package org.cghr.commons.db
+
 import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.GenericGroovyContextLoader
@@ -88,10 +89,15 @@ class DbStoreSpec extends Specification {
     }
 
     def "should create a datachangelog for a given log"() {
-        when:
-        dbStore.createDataChangeLogs(dataSet[0], dataStore)
+
+        given:
         Map log = [datastore: dataStore, data: dataSet[0]]
         String expectedLog
+
+
+        when:
+        dbStore.createDataChangeLogs(dataSet[0], dataStore)
+
 
         then:
         gSql.firstRow("select count(*) count from datachangelog").count == 1;
@@ -99,6 +105,19 @@ class DbStoreSpec extends Specification {
             expectedLog = it.log.getAsciiStream().getText();
         }
         expectedLog == new Gson().toJson(log)
+    }
+
+    def "should verify data to be new or not"() {
+
+        expect:
+        dbStore.isNewData('country', 'id', '1')
+
+        where:
+        datastore | key  | value || result
+        'country' | 'id' | '1'   || true
+        'country' | 'id' | '999' || false
+
+
     }
 }
 

@@ -21,6 +21,8 @@ class DbAccessSpec extends Specification {
     @Shared
     def singleRowSql = 'select * from country where name=?'
     @Shared
+    def singleRowSqlWithoutParams = "select * from country where name='india'"
+    @Shared
     def validParamsSingleRow = ['india'];
     @Shared
     def invalidParamsSingleRow = ['dummyContry'];
@@ -70,6 +72,18 @@ class DbAccessSpec extends Specification {
 
     }
 
+    def "should have rows for a valid sql and no rows for an invalid sql without params"() {
+
+        expect:
+        dbAccess.hasRows(sql) == result
+
+        where:
+        sql                                        || result
+        "select * from country where name='india'" || true
+        "select * from country where name='dummy'" || false
+
+    }
+
     def "should get database row as a Map object"() {
 
         expect:
@@ -81,6 +95,16 @@ class DbAccessSpec extends Specification {
         singleRowSql | invalidParamsSingleRow || [:]
     }
 
+    def "should get database row as a Map object without params"() {
+
+        expect:
+        dbAccess.getRowAsMap(sql) == result
+
+        where:
+        sql                                        || result
+        "select * from country where name='india'" || dataSet[0]
+        "select * from country where name='dummy'" || [:]
+    }
 
     def "should get db rows as List of Map Objects"() {
         expect:
@@ -90,6 +114,18 @@ class DbAccessSpec extends Specification {
         sql            | params                   || result
         multipleRowSql | validParamsMultipleRow   || dataSet
         multipleRowSql | invalidParamsMultipleRow || []
+
+
+    }
+
+    def "should get db rows as List of Map Objects without params"() {
+        expect:
+        dbAccess.getRowsAsListOfMaps(sql) == result
+
+        where:
+        sql                                             || result
+        "select * from country where continent='asia'"  || dataSet
+        "select * from country where continent='dummy'" || []
 
 
     }
@@ -104,6 +140,18 @@ class DbAccessSpec extends Specification {
         sql          | params                 || result
         singleRowSql | validParamsSingleRow   || new Gson().toJson(dataSet[0]).toString()
         singleRowSql | invalidParamsSingleRow || '{}'
+
+    }
+
+    def "should get db row as a Json without params"() {
+
+        expect:
+        dbAccess.getRowAsJson(sql) == result
+
+        where:
+        sql                                        || result
+        "select * from country where name='india'" || new Gson().toJson(dataSet[0]).toString()
+        "select * from country where name='dummy'" || '{}'
 
     }
 

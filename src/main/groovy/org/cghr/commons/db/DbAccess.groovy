@@ -28,13 +28,12 @@ class DbAccess {
         rows.size() > 0 ? rows[0] : [:] //empty map
     }
 
-
     List getRowsAsListOfMaps(String sql, List params = []) {
 
         gSql.rows(sql, params)
     }
 
-    String getRowAsJson(String sql, List params) {
+    String getRowAsJson(String sql, List params = []) {
 
         Map row = getRowAsMap(sql, params)
         gson.toJson(row)
@@ -54,6 +53,7 @@ class DbAccess {
 
     //overloaded
     String getRowsAsJsonArray(String dataStore, String keyField, String keyFieldValue) {
+
         String sql = "select * from $dataStore where $keyField=?"
         getRowsAsJsonArray(sql, [keyFieldValue])
     }
@@ -73,7 +73,8 @@ class DbAccess {
             }
         }
 
-        gSql.rows(sql, params, metaClosure)
+        String sqlWithOneRow = sql + " LIMIT 1"
+        gSql.rows(sqlWithOneRow, params, metaClosure)
         columnLabels.join(",")
     }
 

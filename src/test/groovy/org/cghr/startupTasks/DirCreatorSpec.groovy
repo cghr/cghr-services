@@ -30,7 +30,8 @@ class DirCreatorSpec extends Specification {
     def "should create non existing directories"() {
 
         when:
-        dirCreator.create()
+        dirCreator.create()//Only creates first time
+        dirCreator.create()//Doesn't create second time
 
         then:
         new File(baseDir + File.separator + 'inbox').exists() == true

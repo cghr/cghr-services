@@ -49,6 +49,8 @@ class AgentService {
 
     List<Map> getDownloadInfo() {
 
+        println 'sync server download info url '
+        println syncServerDownloadInfoUrl
         List downloadInfo = restTemplate.getForObject(syncServerDownloadInfoUrl, List.class)
         downloadInfo as List
     }

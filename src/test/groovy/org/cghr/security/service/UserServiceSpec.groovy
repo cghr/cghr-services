@@ -1,4 +1,5 @@
 package org.cghr.security.service
+
 import groovy.sql.Sql
 import org.cghr.GenericGroovyContextLoader
 import org.cghr.commons.db.DbAccess
@@ -90,7 +91,6 @@ class UserServiceSpec extends Specification {
 
 
 
-
         userService = new UserService(mockDbAccess, mockDbStore, mockOnlineAuthService)
 
 
@@ -119,7 +119,7 @@ class UserServiceSpec extends Specification {
         given:
 
         OnlineAuthService onlineAuthServiceOffline = Mock()
-        onlineAuthServiceOffline.authenticate(validUser) >> {
+        onlineAuthServiceOffline.authenticate(validUser,'localhost') >> {
             throw new ServerNotFoundException("connection to server failed")
         } //Offline Mode No server available
 
@@ -130,6 +130,22 @@ class UserServiceSpec extends Specification {
 
     }
 
+    def "should not authenticate an invalid user  when User is not Existant"() {
+
+        given:
+
+        OnlineAuthService onlineAuthServiceOffline = Mock()
+        User randomUser=new User([username: 'randomuser',password: 'randompassword'])
+        onlineAuthServiceOffline.authenticate(randomUser,'localhost') >> {
+            throw new NoSuchUserFound("No Such User Found")
+        }
+
+        UserService userServiceOffline = new UserService(mockDbAccess, mockDbStore, onlineAuthServiceOffline)
+
+        expect:
+        userServiceOffline.isValid(randomUser, hostname) == false
+
+    }
     def "should get an User as Json"() {
 
         expect:
