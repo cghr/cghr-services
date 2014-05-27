@@ -17,19 +17,19 @@ class DbAccess {
         this.gSql = gSql
     }
 
-    boolean hasRows(String sql, List params=[]) {
+    boolean hasRows(String sql, List params = []) {
 
         gSql.rows(sql, params).size() > 0
     }
 
-    Map<String, String> getRowAsMap(String sql, List params=[]) {
+    Map<String, String> getRowAsMap(String sql, List params = []) {
 
         List rows = gSql.rows(sql, params)
         rows.size() > 0 ? rows[0] : [:] //empty map
     }
 
 
-    List getRowsAsListOfMaps(String sql, List params=[]) {
+    List getRowsAsListOfMaps(String sql, List params = []) {
 
         gSql.rows(sql, params)
     }
@@ -61,7 +61,7 @@ class DbAccess {
     String getRowsAsJsonArrayOnlyValues(String sql, List params) {
 
         List rows = gSql.rows(sql, params)
-        rows.isEmpty() ? '[]' : gson.toJson(rows.collect() { Map row -> row.values() })
+        rows.isEmpty() ? '[]' : gson.toJson(rows.collect { Map row -> row.values() })
     }
 
     String getColumnLabels(String sql, List params) {
@@ -94,7 +94,6 @@ class DbAccess {
     }
 
     List eachRow(String sql, List params, List result, Closure closure) {
-
 
         gSql.eachRow(sql, params, closure)
         return result

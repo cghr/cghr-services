@@ -8,7 +8,7 @@ class SyncRunner {
 
     @Autowired
     AgentProvider agentProvider
-    List agents = []
+    List<Agent> agents = []
 
     SyncRunner(AgentProvider agentProvider) {
         this.agentProvider = agentProvider
@@ -18,7 +18,7 @@ class SyncRunner {
         agents = agentProvider.provideAllAgents()
         agents.each {
             Agent agent ->
-                agent.run()
+            agent.run()
         }
     }
 }

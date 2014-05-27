@@ -19,12 +19,12 @@ class MsgDistAgent implements Agent {
 
     }
 
-    void distributeMessages(List messages) {
+    void distributeMessages(List<Map<String,String>> messages) {
 
         messages.each {
             Map<String, String> message ->
                 if (message.distList == null) return
-                List recepients = message.distList.split(",") as List
+                List<String> recepients = message.distList.split(",") as List
                 recepients.each {
                     String recepient ->
                         agentService.distributeMessage(message, recepient)

@@ -26,7 +26,7 @@ class DataStoreBatch {
     @ResponseBody
     String saveData(@RequestBody Map[] data,HttpServletRequest request) {
 
-        List<Map<String, String>> changelogs = data as List
+        List<Map> changelogs = data as List
         //new Gson().fromJson(data, List.class)
         dbStore.saveOrUpdateBatch(changelogs)
 
