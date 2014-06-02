@@ -49,6 +49,7 @@ class SyncUtil {
 
         }
         catch (Exception e) {
+            println 'exception while accessing'
             return false
         }
 

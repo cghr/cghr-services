@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "net.saliman:gradle-cobertura-plugin:2.2.2"
+        classpath "net.saliman:gradle-cobertura-plugin:2.2.3"
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.4.0'
     }
 }
@@ -16,8 +16,8 @@ apply plugin: 'coveralls'
 cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
 cobertura.coverageSourceDirs = sourceSets.main.groovy.srcDirs
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 
 version = '0.1-beta1'
 group = 'org.cghr'

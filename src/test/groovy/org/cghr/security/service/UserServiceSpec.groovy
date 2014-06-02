@@ -25,8 +25,10 @@ class UserServiceSpec extends Specification {
     Sql gSql
     @Autowired
     DbTester dt
-    DbAccess mockDbAccess
-    DbStore mockDbStore
+    @Autowired
+    DbAccess dbAccess
+    @Autowired
+    DbStore dbStore
 
 
     @Shared
@@ -41,59 +43,12 @@ class UserServiceSpec extends Specification {
 
     def setup() {
 
-        mockDbAccess = Stub() {
-            getRowAsMap("select * from user where username=?", [validUser.username]) >> [id: 1, username: 'user1', password: 'secret1', role: 'user']
-            getRowAsMap("select * from user where username=?", [invalidUser.username]) >> [:]
-            getRowAsJson("select * from user where username=?", [validUser.username]) >> '{"id":1,"username":"user1","password":"secret1","role":"user"}'
-            getRowAsJson("select * from user where username=?", [invalidUser.username]) >> '{}'
-            hasRows("select * from authtoken where token=?", [authtoken]) >> true
-        }
-
-        mockDbStore = Mock()
-        def userMap = [id: 1, username: 'user1', password: 'secret1', role: 'user']
-        mockDbStore.saveOrUpdate(userMap, 'user') >> {
-            gSql.executeInsert("insert into user(id,username,password,role) values(?,?,?,?)", [
-                    userMap.id,
-                    userMap.username,
-                    userMap.password,
-                    userMap.role
-            ])
-        }
-        def authTokenMap = [token: _, username: 'user1', role: 'user']
-        mockDbStore.saveOrUpdate(_, "authtoken") >> {
-            gSql.executeInsert("insert into authtoken(token,username,role) values(?,?,?)", [
-                    "some random token",
-                    authTokenMap.username,
-                    authTokenMap.role
-            ])
-        }
-        def successUserlog = [username: validUser.username, status: "success"]
-        mockDbStore.saveOrUpdate(successUserlog, "userlog") >> {
-            gSql.executeInsert("insert into userlog(username,status) values(?,?)", [
-                    successUserlog.username,
-                    successUserlog.status
-            ])
-        }
-        def failUserlog = [username: invalidUser.username, status: "fail"]
-        mockDbStore.saveOrUpdate(failUserlog, "userlog") >> {
-            gSql.executeInsert("insert into userlog(username,status) values(?,?)", [
-                    failUserlog.username,
-                    failUserlog.status
-            ])
-        }
-
-
         OnlineAuthService mockOnlineAuthService = Stub() {
 
             authenticate(validUser, hostname) >> [id: 1, username: 'user1', password: 'secret1', role: [title: 'user', bitMask: 2]]
             authenticate(invalidUser, hostname) >> { throw new NoSuchUserFound() }
         }
-
-
-
-        userService = new UserService(mockDbAccess, mockDbStore, mockOnlineAuthService)
-
-
+        userService = new UserService(dbAccess, dbStore, mockOnlineAuthService)
         dt.cleanInsert("user,authtoken,userlog")
     }
 
@@ -119,11 +74,11 @@ class UserServiceSpec extends Specification {
         given:
 
         OnlineAuthService onlineAuthServiceOffline = Mock()
-        onlineAuthServiceOffline.authenticate(validUser,'localhost') >> {
+        onlineAuthServiceOffline.authenticate(validUser, 'localhost') >> {
             throw new ServerNotFoundException("connection to server failed")
         } //Offline Mode No server available
 
-        UserService userServiceOffline = new UserService(mockDbAccess, mockDbStore, onlineAuthServiceOffline)
+        UserService userServiceOffline = new UserService(dbAccess, dbStore, onlineAuthServiceOffline)
 
         expect:
         userServiceOffline.isValid(validUser, hostname) == true
@@ -135,17 +90,18 @@ class UserServiceSpec extends Specification {
         given:
 
         OnlineAuthService onlineAuthServiceOffline = Mock()
-        User randomUser=new User([username: 'randomuser',password: 'randompassword'])
-        onlineAuthServiceOffline.authenticate(randomUser,'localhost') >> {
+        User randomUser = new User([username: 'randomuser', password: 'randompassword'])
+        onlineAuthServiceOffline.authenticate(randomUser, 'localhost') >> {
             throw new NoSuchUserFound("No Such User Found")
         }
 
-        UserService userServiceOffline = new UserService(mockDbAccess, mockDbStore, onlineAuthServiceOffline)
+        UserService userServiceOffline = new UserService(dbAccess, dbStore, onlineAuthServiceOffline)
 
         expect:
         userServiceOffline.isValid(randomUser, hostname) == false
 
     }
+
     def "should get an User as Json"() {
 
         expect:
@@ -241,6 +197,25 @@ class UserServiceSpec extends Specification {
 
 
         expect:
-        userService.isValidToken(authtoken) == true
+        userService.isValidToken(token) == result
+
+        where:
+        token          || result
+        authtoken      || true
+        'random-token' || false
+    }
+
+    def "should get bit Mask user roles"() {
+        expect:
+        userService.getBitMask(role) == result
+
+        where:
+        role          | result
+        'public'      | 1
+        'user'        | 2
+        'manager'     | 4
+        'coordinator' | 8
+        'admin'       | 16
+
     }
 }

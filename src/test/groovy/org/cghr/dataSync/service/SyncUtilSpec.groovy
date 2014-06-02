@@ -2,6 +2,7 @@ package org.cghr.dataSync.service
 
 import org.cghr.GenericGroovyContextLoader
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 
@@ -29,19 +30,23 @@ class SyncUtilSpec extends Specification {
             getForObject('http://192.168.0.106:8080/hc/api/status/manager', Map.class) >> [status: false]
             getForObject('http://192.168.0.107:8080/hc/api/status/manager', Map.class) >> [status: false]
             getForObject('http://192.168.0.108:8080/hc/api/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.109:8080/hc/api/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.109:8080/hc/api/status/manager', Map.class) >> {
+                throw new RestClientException()
+            }
+
             getForObject('http://192.168.0.110:8080/hc/api/status/manager', Map.class) >> [status: true]
+
         }
         String baseIp = '192.168.0.'
         Integer startNode = 100
         Integer endNode = 120
         Integer port = 8080
         String pathToCheck = 'api/status/manager'
-        String appName='hc'
+        String appName = 'hc'
 
 
 
-        syncUtil = new SyncUtil(restTemplate, baseIp, startNode, endNode, port, pathToCheck,appName)
+        syncUtil = new SyncUtil(restTemplate, baseIp, startNode, endNode, port, pathToCheck, appName)
 
 
     }

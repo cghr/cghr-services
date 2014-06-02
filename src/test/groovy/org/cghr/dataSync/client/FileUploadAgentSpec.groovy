@@ -71,7 +71,17 @@ class FileUploadAgentSpec extends Specification {
 
     }
 
-    def "should get changelogs in chunks and post each chunk of data to the server and update the status"() {
+    def "should upload the files and update the status"() {
+
+        when:
+        fileUploadAgent.run()
+
+        then:
+        gSql.rows("select * from filechangelog where status is null").size() == 0
+
+    }
+
+    def "should not upload the files when there's and exception "() {
 
         when:
         fileUploadAgent.run()

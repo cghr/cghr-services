@@ -1,4 +1,5 @@
 package org.cghr.security.controller
+
 import org.cghr.security.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
@@ -39,10 +40,12 @@ class AuthInterceptorSpec extends Specification {
         HttpServletResponse response = new MockHttpServletResponse()
 
         expect:
-        authInterceptor.preHandle(request,response,new Object())==true
-        authInterceptor.preHandle(request,response,new Object())==false
-        response.status==HttpStatus.UNAUTHORIZED.value
+        authInterceptor.preHandle(request, response, new Object()) == true
+        response.status == HttpStatus.OK.value
+        authInterceptor.preHandle(request, response, new Object()) == false
+        response.status == HttpStatus.UNAUTHORIZED.value
 
 
     }
+
 }
