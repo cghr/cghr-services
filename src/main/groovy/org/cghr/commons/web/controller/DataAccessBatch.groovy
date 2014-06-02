@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 @RequestMapping("/data/dataAccessBatchService")
 class DataAccessBatch {
 
+
     @Autowired
     DbAccess dbAccess
 

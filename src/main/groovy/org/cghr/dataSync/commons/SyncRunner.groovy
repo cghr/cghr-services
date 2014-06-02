@@ -18,7 +18,7 @@ class SyncRunner {
         agents = agentProvider.provideAllAgents()
         agents.each {
             Agent agent ->
-            agent.run()
+                agent.run()
         }
     }
 }

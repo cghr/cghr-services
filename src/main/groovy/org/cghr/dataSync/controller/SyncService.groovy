@@ -17,9 +17,7 @@ class SyncService {
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
     String synchronize() {
-
         syncRunner.run()
-
     }
 
 }

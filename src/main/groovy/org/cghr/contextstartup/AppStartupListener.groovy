@@ -29,22 +29,6 @@ class AppStartupListener implements ServletContextListener {
         setUserHome(userHome)
         configureLogger(path)
 
-        // Get all AppStartupTasks and execute one by one
-        // ApplicationContext appContext = WebApplicationContextUtils
-        // .getWebApplicationContext(sce.getServletContext());
-        // List<String> startupTasks = (List<String>) appContext
-        // .getBean("startupTasks");
-        // for (String taskClass : startupTasks) {
-        // try {
-        // AppStartupTask task = (AppStartupTask) Class.forName(taskClass)
-        // .newInstance();
-        // task.doStartupTask();
-        // } catch (Exception e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // }
-
     }
 
     @Override

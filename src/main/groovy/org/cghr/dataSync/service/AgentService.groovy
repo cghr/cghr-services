@@ -17,6 +17,7 @@ import java.sql.Clob
  */
 class AgentService {
 
+    //Properties injected by Agent Provider
     Sql gSql
     DbAccess dbAccess
     DbStore dbStore
@@ -49,10 +50,7 @@ class AgentService {
 
     List<Map> getDownloadInfo() {
 
-        println 'sync server download info url '
-        println syncServerDownloadInfoUrl
-        List downloadInfo = restTemplate.getForObject(syncServerDownloadInfoUrl, List.class)
-        downloadInfo as List
+        restTemplate.getForObject(syncServerDownloadInfoUrl, List.class)
     }
 
 
@@ -71,14 +69,12 @@ class AgentService {
     void downloadAndImport(Map message) {
 
         String url = syncServerDownloadDataBatchUrl + message.datastore + '/' + message.ref + '/' + message.refId
-        List data = restTemplate.getForObject(url, List.class)
+        List list = restTemplate.getForObject(url, List.class)
 
-        List<Map<String, String>> list = data as List
-
-        List chagenlogs = list.collect {
+        List changelogs = list.collect {
             [datastore: message.datastore, data: it]
         }
-        dbStore.saveOrUpdateBatch(chagenlogs)
+        dbStore.saveOrUpdateBatch(changelogs)
     }
 
     void importSuccessful(Map message) {
@@ -98,12 +94,11 @@ class AgentService {
 
     void distributeSuccessful(Map message) {
         dbStore.saveOrUpdate([id: message.id, distStatus: 1], 'inbox')
-
     }
 
     Integer getDataChangelogChunks() {
 
-        Integer pendingLogs = (Integer) dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null", []).count
+        Integer pendingLogs = dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null", []).count
         Math.floor(pendingLogs / changelogChunkSize) + 1
 
     }

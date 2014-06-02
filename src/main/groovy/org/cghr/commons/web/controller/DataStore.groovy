@@ -1,5 +1,6 @@
 package org.cghr.commons.web.controller
 
+import com.google.gson.Gson
 import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbStore
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,24 +17,19 @@ class DataStore {
 
     @Autowired
     DbStore dbStore
+    Gson gson=new Gson()
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    String saveData(@RequestBody Map data) {
+    String saveData(@RequestBody String reqData) {
 
-        String dataStore = data.remove("datastore")
-        dbStore.saveOrUpdate(data, dataStore)
+        Map data=gson.fromJson(reqData,Map)
+        String datastore = data.remove("datastore")
+        dbStore.saveOrUpdate(data, datastore)
 
         //Create Changelogs
-        dbStore.createDataChangeLogs(data,dataStore)
+        dbStore.createDataChangeLogs(data,datastore)
     }
 
-    DataStore() {
 
-    }
-
-    DataStore(DbStore dbStore) {
-
-        this.dbStore = dbStore
-    }
 }

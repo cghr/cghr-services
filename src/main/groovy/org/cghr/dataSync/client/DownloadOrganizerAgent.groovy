@@ -7,8 +7,8 @@ import org.cghr.dataSync.service.AgentService
 @CompileStatic
 class DownloadOrganizerAgent implements Agent {
 
-
     AgentService agentService
+
     DownloadOrganizerAgent(AgentService agentService) {
         this.agentService = agentService
     }
