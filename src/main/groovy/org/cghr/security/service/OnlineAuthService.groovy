@@ -6,9 +6,8 @@ import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.converter.StringHttpMessageConverter
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
@@ -39,10 +38,8 @@ class OnlineAuthService {
         if (hostname == onlinAuthHostname && onlinAuthHostname != 'localhost')
             throw new ServerNotFoundException()
 
-
-        restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter())
-        restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-
+        //restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter())
+        //restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 
 
         HttpHeaders headers = new HttpHeaders()
@@ -62,10 +59,10 @@ class OnlineAuthService {
         catch (HttpClientErrorException ex) {
 
             def status = ex.statusCode
-            if (status == ex.statusCode.NOT_FOUND)
+            if (status == HttpStatus.NOT_FOUND)
                 throw new ServerNotFoundException()
 
-            else if (status == ex.statusCode.FORBIDDEN)
+            else if (status == HttpStatus.FORBIDDEN)
                 throw new NoSuchUserFound()
         }
         catch (ResourceAccessException ex) {

@@ -26,8 +26,8 @@ class DbImport {
         File[] sqlDir = new File(dbScriptsPath).listFiles()
         if (sqlDir == null)
             return
-        sqlDir = new File(dbScriptsPath).listFiles().sort() { File file -> file.name }
-        sqlDir.each() {
+        sqlDir = new File(dbScriptsPath).listFiles().sort() { File file -> file.name } // Sort files by name a.sql,b.sql....
+        sqlDir.each {
             File file ->
                 importSqlFile(file)
                 file.delete()
@@ -38,7 +38,6 @@ class DbImport {
     void importSqlFile(File file) {
 
         String[] sqls = file.text.split(";")
-        println sqls
         gSql.withBatch {
             stmt ->
                 sqls.each {

@@ -19,11 +19,10 @@ class DirCreator {
 
         dirs.each {
             String dir ->
-                File myDir = new File(dir)
-                println myDir
-                if (!myDir.exists()) {
-                    myDir.mkdirs()
-                    println 'create dir ' + myDir
+                File newDir = new File(dir)
+                if (!newDir.exists()) {
+                    newDir.mkdirs()
+                    println 'create dir ' + newDir
                 }
 
 

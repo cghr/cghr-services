@@ -1,4 +1,5 @@
 package org.cghr.dataViewModel
+
 import org.cghr.commons.db.DbAccess
 import org.cghr.test.db.MockData
 import spock.lang.Shared
@@ -20,7 +21,7 @@ class DataModelUtilSpec extends Specification {
     def invalidParamsMultipleRow = ['dummyContinent'];
 
     //General
-     def setupSpec() {
+    def setupSpec() {
 
 
         dataSet = new MockData().sampleData.get("country")
@@ -29,8 +30,8 @@ class DataModelUtilSpec extends Specification {
 
     def setup() {
         DhtmlxGridModelTransformer mockTransformer = Stub() {
-            getModel(multipleRowSql, validParamsMultipleRow) >> '{"rows":[{"id":1,"data":[1,"india","asia"]},{"id":2,"data":[2,"pakistan","asia"]},{"id":3,"data":[3,"srilanka","asia"]}]}'
-            getModel(multipleRowSql, invalidParamsMultipleRow) >> '{"rows":[]}'
+            getModel(multipleRowSql, validParamsMultipleRow) >> [rows: [[id: 1, data: [1, 'india', 'asia']], [id: 2, data: [2,'pakistan', 'asia']],[id: 3, data: [3, 'srilanka', 'asia']]]]
+            getModel(multipleRowSql, invalidParamsMultipleRow) >> [rows: []]
         }
 
         DbAccess mockDbAccess = Stub() {

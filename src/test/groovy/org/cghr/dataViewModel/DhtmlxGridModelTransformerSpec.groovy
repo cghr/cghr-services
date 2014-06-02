@@ -1,4 +1,6 @@
 package org.cghr.dataViewModel
+
+import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.GenericGroovyContextLoader
 import org.cghr.test.db.DbTester
@@ -44,13 +46,14 @@ class DhtmlxGridModelTransformerSpec extends Specification {
     }
 
     def "verify dhtmlxGrid transformer"() {
-
+        given:
+        Gson gson = new Gson()
         expect:
-        transformer.getModel(sql, params) == result
+        gson.toJson(transformer.getModel(sql, params)) == gson.toJson(result)
 
         where:
         sql            | params                   || result
-        multipleRowSql | validParamsMultipleRow   || '{"rows":[{"id":1,"data":[1,"india","asia"]},{"id":2,"data":[2,"pakistan","asia"]},{"id":3,"data":[3,"srilanka","asia"]}]}'
-        multipleRowSql | invalidParamsMultipleRow || '{"rows":[]}'
+        multipleRowSql | validParamsMultipleRow   || [rows: [[id: 1, data: [1, 'india', 'asia']], [id: 2, data: [2, 'pakistan', 'asia']], [id: 3, data: [3, 'srilanka', 'asia']]]]
+        multipleRowSql | invalidParamsMultipleRow || [rows: []]
     }
 }
