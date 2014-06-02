@@ -23,20 +23,16 @@ class DbAccess {
     }
 
     Map<String, String> getRowAsMap(String sql, List params = []) {
-
         List rows = gSql.rows(sql, params)
         rows.size() > 0 ? rows[0] : [:] //empty map
     }
 
-    List getRowsAsListOfMaps(String sql, List params = []) {
-
+    List<Map> getRowsAsListOfMaps(String sql, List params = []) {
         gSql.rows(sql, params)
     }
 
     String getRowAsJson(String sql, List params = []) {
-
-        Map row = getRowAsMap(sql, params)
-        gson.toJson(row)
+        gson.toJson(getRowAsMap(sql, params))
     }
 
     //overloaded
@@ -47,8 +43,7 @@ class DbAccess {
 
     String getRowsAsJsonArray(String sql, List params) {
 
-        def rows = gSql.rows(sql, params)
-        rows.isEmpty() ? '[]' : gson.toJson(rows)
+        gson.toJson(gSql.rows(sql, params))
     }
 
     //overloaded
@@ -61,7 +56,7 @@ class DbAccess {
     String getRowsAsJsonArrayOnlyValues(String sql, List params) {
 
         List rows = gSql.rows(sql, params)
-        rows.isEmpty() ? '[]' : gson.toJson(rows.collect { Map row -> row.values() })
+        gson.toJson(rows.collect { Map row -> row.values() })
     }
 
     String getColumnLabels(String sql, List params) {
@@ -88,8 +83,7 @@ class DbAccess {
     void removeData(List tables) {
 
         tables.each {
-            def sql = "truncate table $it".toString()
-            gSql.execute(sql)
+            gSql.execute("truncate table $it".toString())
         }
 
     }

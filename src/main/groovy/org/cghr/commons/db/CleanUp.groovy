@@ -1,11 +1,7 @@
 package org.cghr.commons.db
-
-import groovy.transform.CompileStatic
-
 /**
  * Created by ravitej on 9/5/14.
  */
-@CompileStatic
 class CleanUp {
 
     String excludedEntities
@@ -20,21 +16,13 @@ class CleanUp {
     void cleanupTables() {
 
         List exemptTables = excludedEntities.split(',') as List
-        List allTables = getAllTables()
-
-
-        exemptTables.each {
-            if (allTables.contains(it))
-                allTables.remove(it)
-        }
-        dbAccess.removeData(allTables)
+        dbAccess.removeData(getAllTables().findAll { !exemptTables.contains(it) })
     }
 
     List getAllTables() {
-        List<Map> rows = dbAccess.getRowsAsListOfMaps('show tables', [])
-        rows.collect {
-            Map row ->
-                row.values()[0]
+
+        dbAccess.getRowsAsListOfMaps('show tables', []).collect {
+            it.values()[0]
         }
     }
 }

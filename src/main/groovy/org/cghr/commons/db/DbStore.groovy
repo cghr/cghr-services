@@ -14,52 +14,42 @@ class DbStore {
         this.dataStoreFactory = dataStoreFactory
     }
 
-    void saveOrUpdate(Map data, String dataStore) {
+    void saveOrUpdate(Map data, String datastore) {
 
-        String keyField = dataStoreFactory.get(dataStore)
-        String keyFieldValue = data.get(keyField)
+        String keyField = dataStoreFactory."$datastore"
+        String keyFieldValue = data."$keyField"
+        def keysAndValues = data.collect { key, value -> "$key=?" }.join(",")
 
-        def keysAndValues = data.collect() { key, value -> "$key=?" }.join(",")
-
-        def sql = isNewData(dataStore, keyField, keyFieldValue) ?
-                "insert into $dataStore set $keysAndValues"
+        def sql = isNewData(datastore, keyField, keyFieldValue) ?
+                "insert into $datastore set $keysAndValues"
                 :
-                "update $dataStore set $keysAndValues where $keyField=$keyFieldValue"
-
+                "update $datastore set $keysAndValues where $keyField=$keyFieldValue"
         gSql.execute(sql, data.values() as List)
     }
+
 
     void execute(String sql, List params) {
         gSql.execute(sql, params)
     }
 
     void saveOrUpdateFromMapList(List<Map> list, String dataStore) {
-
-        for (Map<String, String> data : list)
-            saveOrUpdate(data, dataStore)
+        list.each { saveOrUpdate(it, dataStore) }
     }
 
     void saveOrUpdateBatch(List<Map> datachangelogs) {
 
-        datachangelogs.each {
-            Map log ->
-                saveOrUpdate((Map) log.get('data'), (String) log.get('datastore'))
-        }
-
-
+        datachangelogs.each { saveOrUpdate(it.data, it.datastore) }
     }
 
     boolean isNewData(String dataStore, String keyField, String keyFieldValue) {
 
-        List rows = gSql.rows("select * from $dataStore where $keyField=?", [keyFieldValue])
-        rows.size() == 0
+        gSql.rows("select * from $dataStore where $keyField=?", [keyFieldValue]).size() == 0
+
     }
 
     void createDataChangeLogs(Map data, String dataStore) {
-
-        def sql = "insert into datachangelog(log) values(?)".toString()
         Map log = [datastore: dataStore, data: data];
-        gSql.execute(sql, new Gson().toJson(log));
+        gSql.execute("insert into datachangelog(log) values(?)", new Gson().toJson(log));
 
     }
 }
