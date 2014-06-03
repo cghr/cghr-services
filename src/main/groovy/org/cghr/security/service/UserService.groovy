@@ -1,14 +1,11 @@
 package org.cghr.security.service
-
 import com.google.gson.Gson
-import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.security.exception.NoSuchUserFound
 import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
 
-@CompileStatic
 class UserService {
 
     DbAccess dbAccess
@@ -43,10 +40,8 @@ class UserService {
 
     boolean isValidLocalUser(User user) {
 
-        println 'inside is valid local user'
         Map userData = getUserAsMap(user)
         def isValid = userData.isEmpty() ? false : (userData.password == user.password)
-        println 'isvalid local user ' + isValid
         isValid
     }
 
@@ -70,14 +65,13 @@ class UserService {
 
     String getUserCookieJson(User user) {
 
-        Map<String, String> row = getUserAsMap(user)
+        Map row = getUserAsMap(user)
         def userMap = [id: row.id, username: row.username, password: row.password, role: [title: row.role, bitMask: getBitMask(row.get('role'))]]
         new Gson().toJson(userMap)
     }
 
     Integer getBitMask(String role) {
 
-        println 'role ' + role
 
         switch (role) {
 

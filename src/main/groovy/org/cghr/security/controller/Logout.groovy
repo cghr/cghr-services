@@ -32,8 +32,7 @@ class Logout {
         RequestParser parser = new RequestParser()
 
         deleteAuthToken(parser.getAuthTokenFromCookies(request))
-        //nullifyAllCookies(response)
-        eraseCookies(request,response)
+        eraseCookies(request, response)
         return null
     }
 
@@ -42,19 +41,16 @@ class Logout {
         dbAccess.removeData("authtoken", "token", authtoken)
     }
 
-    void nullifyAllCookies(HttpServletResponse response) {
-
-        response.addCookie(new Cookie("authtoken", null))
-        response.addCookie(new Cookie("user", null))
-    }
     void eraseCookies(HttpServletRequest req, HttpServletResponse resp) {
         Cookie[] cookies = req.getCookies();
+
         if (cookies != null)
-            for (int i = 0; i < cookies.length; i++) {
-                cookies[i].setValue("");
-                cookies[i].setPath("/");
-                cookies[i].setMaxAge(0);
-                resp.addCookie(cookies[i]);
+            for (Cookie cookie in req.getCookies()) {
+                cookie.setValue("")
+                cookie.setPath("/")
+                cookie.setMaxAge(0)
+                resp.addCookie(cookie)
             }
+
     }
 }

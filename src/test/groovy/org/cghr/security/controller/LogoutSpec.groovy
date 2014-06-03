@@ -60,20 +60,9 @@ class LogoutSpec extends Specification {
         logout.invalidateSession(request, response)
 
         then:
-        //response.getCookie("authtoken").getValue() == null
-        //response.getCookie("user").getValue() == null
+        response.getCookie("authtoken")?.getValue() == ""
+        //response.getCookie("user")?.getValue() == null
         gSql.rows("select * from authtoken").size() == 0
     }
-    def "should nullify all cookies"(){
-        given:
-        def response=new MockHttpServletResponse()
 
-        when:
-        logout.nullifyAllCookies(response)
-
-        then:
-        response.getCookie("authtoken")?.getValue()==null
-        response.getCookie("user")?.getValue()==null
-
-    }
 }

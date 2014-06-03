@@ -10,17 +10,16 @@ class DataModelUtil {
 
     GenericDataModelTransformer dataModelTransformer
     DbAccess dbAccess
-
-    Gson gson = new Gson()
-
+    
     DataModelUtil(GenericDataModelTransformer dataModelTransformer, DbAccess dbAccess) {
         this.dataModelTransformer = dataModelTransformer
         this.dbAccess = dbAccess
     }
+    Gson gson = new Gson()
+
 
     String constructJsonResponse(String sql, List params, String filters, String sortings) {
 
-        //JsonObject data = gson.fromJson(dataModelTransformer.getModel(sql, params), JsonObject)
         Map data = dataModelTransformer.getModel(sql, params)
         def headings = dbAccess.getColumnLabels(sql, params)
 

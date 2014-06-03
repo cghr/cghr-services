@@ -1,6 +1,5 @@
 package org.cghr.security.controller
 
-import groovy.transform.CompileStatic
 import org.cghr.security.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -20,14 +19,15 @@ class AuthInterceptor implements HandlerInterceptor {
     @Autowired
     RequestParser requestParser
 
-    AuthInterceptor() {
-
-    }
 
     AuthInterceptor(UserService userService, RequestParser requestParser) {
 
         this.userService = userService
         this.requestParser = requestParser
+    }
+
+    AuthInterceptor() {
+
     }
 
     @Override

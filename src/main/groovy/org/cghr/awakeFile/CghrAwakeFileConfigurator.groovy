@@ -1,15 +1,17 @@
 package org.cghr.awakeFile
+
 import org.awakefw.file.api.server.AwakeFileConfigurator
 
 import java.sql.Connection
 import java.sql.SQLException
+
 /**
  * Created by ravitej on 8/5/14.
  */
 
 class CghrAwakeFileConfigurator implements AwakeFileConfigurator {
 
-    String userHome=System.getProperty('user.home')
+    String userHome = System.getProperty('user.home')
 
     @Override
     File getServerRoot() {

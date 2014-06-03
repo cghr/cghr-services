@@ -5,12 +5,10 @@ import groovy.transform.CompileStatic
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 
-
 @CompileStatic
 class RequestParser {
 
     String getAuthTokenFromCookies(HttpServletRequest request) {
-
 
         for (Cookie cookie in request.getCookies()) {
             if ("authtoken" == cookie.getName())

@@ -11,6 +11,7 @@ import org.cghr.dataSync.service.SyncUtil
 import org.cghr.dataViewModel.DataModelUtil
 import org.cghr.dataViewModel.DhtmlxGridModelTransformer
 import org.cghr.security.controller.Auth
+import org.cghr.security.controller.PostAuth
 import org.cghr.security.service.OnlineAuthService
 import org.cghr.security.service.UserService
 import org.cghr.startupTasks.DbImport
@@ -80,6 +81,7 @@ beans {
     restTemplate(RestTemplate)
     onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
     userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService)
+    postAuth(PostAuth, userService = userService)
     auth(Auth)
 
     //Todo Startup Tasks
@@ -91,8 +93,8 @@ beans {
     ])
 
     //Todo Data Synchronization
-    String appName='hc'
-    syncUtil(SyncUtil, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/status/manager',appName=appName)
+    String appName = 'hc'
+    syncUtil(SyncUtil, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/status/manager', appName = appName)
     agentProvider(AgentProvider, gSql = gSql, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
             serverBaseUrl = 'http://demo1278634.mockable.io/',
             downloadInfoPath = 'api/sync/downloadInfo',

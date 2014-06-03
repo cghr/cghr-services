@@ -25,37 +25,23 @@ class OnlineAuthService {
 
     public Map authenticate(User user, String hostname) {
 
-
-        Gson gson = new Gson()
         Map serverRespUser
-
-
         String onlinAuthHostname = serverAuthUrl.toURL().getHost()
-
-        println "hostname $hostname"
-        println "Server auth host $onlinAuthHostname"
 
         if (hostname == onlinAuthHostname && onlinAuthHostname != 'localhost')
             throw new ServerNotFoundException()
 
-        //restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter())
-        //restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-
-
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
 
-
-
-        HttpEntity<String> request = new HttpEntity<String>(gson.toJson(user), headers)
-
+        HttpEntity<String> request = new HttpEntity<String>(new Gson().toJson(user), headers)
 
         try {
 
             serverRespUser = restTemplate.postForObject(serverAuthUrl, request, Map.class);
-            println 'Online Server Available'
             return serverRespUser
         }
+
         catch (HttpClientErrorException ex) {
 
             def status = ex.statusCode
