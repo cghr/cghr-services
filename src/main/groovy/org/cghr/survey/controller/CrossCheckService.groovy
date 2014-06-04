@@ -24,9 +24,9 @@ public class CrossCheckService {
     public String getCrossCheck(@RequestBody Map crossCheck) {
 
         def sql = "select $crossCheck.field from $crossCheck.entity where $crossCheck.ref=?".toString()
-        def value = dbAccess.getRowAsMap(sql, [crossCheck.refId])
-        def fieldValue = crossCheck.field
-        def dbValue = value.get(fieldValue)
+        def row = dbAccess.getRowAsMap(sql, [crossCheck.refId])
+        def field = crossCheck.field
+        def dbValue = row.get(field)
         dbValue = dbValue.isInteger() ? dbValue.toInteger() : dbValue
         return new Gson().toJson([value: dbValue])
 

@@ -40,12 +40,10 @@ class AuthInterceptor implements HandlerInterceptor {
         if (!isValidToken) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value)
             return false
-        } else {
-            response.setStatus(HttpStatus.OK.value)
-            return true
         }
-
-
+        response.setStatus(HttpStatus.OK.value)
+        return true
+        
     }
 
     @Override

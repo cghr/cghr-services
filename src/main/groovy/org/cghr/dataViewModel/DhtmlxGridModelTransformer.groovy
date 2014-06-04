@@ -24,6 +24,7 @@ class DhtmlxGridModelTransformer implements GenericDataModelTransformer {
         List rows = gSql.rows(sql, params).collect {
             [id: i++, data: it.values()]
         }
+
         [rows: rows]
     }
 }

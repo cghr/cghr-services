@@ -22,7 +22,7 @@ class DirCreator {
                 File newDir = new File(dir)
                 if (!newDir.exists()) {
                     newDir.mkdirs()
-                    println 'create dir ' + newDir
+                    println 'created dir ' + newDir
                 }
 
 
