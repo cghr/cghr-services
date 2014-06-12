@@ -23,7 +23,7 @@ class SyncStatus {
     @RequestMapping("/download")
     String downloadTotal() {
 
-        dbAccess.getRowAsMap("select count(*) count from inbox where impStatus is null", []).count
+        dbAccess.firstRow("select count(*) count from inbox where impStatus is null", []).count
 
     }
 
@@ -31,18 +31,18 @@ class SyncStatus {
     @RequestMapping("/upload")
     String uploadTotal() {
 
-        dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null", []).count
+        dbAccess.firstRow("select count(*) count from datachangelog where status is null", []).count
     }
     @RequestMapping("/fileupload")
     String fileUploadTotal() {
 
-        dbAccess.getRowAsMap("select count(*) count from filechangelog where status is null", []).count
+        dbAccess.firstRow("select count(*) count from filechangelog where status is null", []).count
     }
 
     @RequestMapping(value = "/manager",method = RequestMethod.GET ,produces = "application/json")
     Map isManager(HttpServletResponse response) {
 
-        String role = dbAccess.getRowAsMap("select role from authtoken order by id desc limit 1",[]).role
+        String role = dbAccess.firstRow("select role from authtoken order by id desc limit 1",[]).role
         role == 'manager' ? [status: true] : [status:false]
     }
 

@@ -37,7 +37,7 @@ class DataModelUtilSpec extends Specification {
         }
 
         DbAccess mockDbAccess = Stub() {
-            getColumnLabels(multipleRowSql, _) >> 'id,name,continent'
+            columns(multipleRowSql, _) >> ['id','name','continent']
         }
         dataModelUtil = new DataModelUtil(mockTransformer, mockDbAccess)
 

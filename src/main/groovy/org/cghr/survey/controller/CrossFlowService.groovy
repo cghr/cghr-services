@@ -28,7 +28,7 @@ public class CrossFlowService {
 
         crossFlows.each {
             def sql = "select $it.field from $it.entity where $it.ref=?"
-            def row = dbAccess.getRowAsMap(sql, [it.refId])
+            def row = dbAccess.firstRow(sql, [it.refId])
             def field = it.field
             def dbValue = row.get(field)
             dbValue = dbValue.isInteger() ? dbValue.toInteger() : dbValue

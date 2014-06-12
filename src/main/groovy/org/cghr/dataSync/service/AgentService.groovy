@@ -78,7 +78,7 @@ class AgentService {
 
     List<Map> getInboxMessagesToDistribute() {
 
-        dbAccess.getRowsAsListOfMaps("select * from inbox where impStatus is not null and distStatus is null", [])
+        dbAccess.rows("select * from inbox where impStatus is not null and distStatus is null", [])
     }
 
     void distributeMessage(Map message, String recipient) {
@@ -92,7 +92,7 @@ class AgentService {
 
     Integer getDataChangelogChunks() {
 
-        Integer pendingLogs = dbAccess.getRowAsMap("select count(*) count from datachangelog where status is null", []).count
+        Integer pendingLogs = dbAccess.firstRow("select count(*) count from datachangelog where status is null", []).count
         Math.floor(pendingLogs / changelogChunkSize) + 1
 
     }

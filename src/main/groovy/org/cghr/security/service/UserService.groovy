@@ -54,7 +54,7 @@ class UserService {
     String getUserJson(User user) {
 
 
-        dbAccess.getRowAsJson("select * from user where username=?", [user.username])
+        dbAccess.firstRow("select * from user where username=?", [user.username]).toJson()
     }
 
     String getId(User user) {
@@ -103,7 +103,7 @@ class UserService {
 
     Map getUserAsMap(User user) {
 
-        dbAccess.getRowAsMap("select * from user where username=?", [user.username])
+        dbAccess.firstRow("select * from user where username=?", [user.username])
     }
 
     boolean isValidToken(String token) {

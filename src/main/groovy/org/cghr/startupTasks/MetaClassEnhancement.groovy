@@ -17,6 +17,9 @@ class MetaClassEnhancement {
         def toJson = {
             gson.toJson(delegate)
         }
+        def toJsonOnlyValues={
+
+        }
         Map.metaClass.toJson = toJson
         List.metaClass.toJson = toJson
 

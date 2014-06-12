@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
-@CompileStatic
 @RestController
 @RequestMapping("/data/dataAccessService")
 class DataAccess {
@@ -20,7 +19,7 @@ class DataAccess {
     String getDataAsJson(
             @PathVariable final String dataStore, @PathVariable final String keyField, @PathVariable final String keyFieldValue) {
 
-        dbAccess.jsonRow(dataStore, keyField, keyFieldValue)
+        dbAccess.firstRow(dataStore, keyField, keyFieldValue).toJson()
     }
 
 }

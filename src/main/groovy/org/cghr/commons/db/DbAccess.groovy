@@ -17,87 +17,31 @@ class DbAccess {
         gSql.firstRow(sql, params) ? true : false
     }
 
-    Map<String, String> getRowAsMap(String sql, List params = []) {
-        List rows = gSql.rows(sql, params)
-        rows.size() > 0 ? rows[0] : [:] //empty map
-    }
-
     Map firstRow(String sql, List params = []) {
-
         Map row = gSql.firstRow(sql, params)
         row ? row : [:]
     }
 
-
-    List<Map> getRowsAsListOfMaps(String sql, List params = []) {
-        gSql.rows(sql, params)
+    Map firstRow(String dataStore, String keyField, String keyFieldValue) {
+        String sql = "select * from $dataStore where $keyField=?"
+        firstRow(sql, [keyFieldValue])
     }
 
     List<Map> rows(String sql, List params = []) {
         gSql.rows(sql, params)
     }
 
-    String getRowAsJson(String sql, List params = []) {
-        firstRow(sql, params).toJson()
-    }
-
-    String jsonRow(String sql, List params = []) {
-        firstRow(sql, params).toJson()
-    }
-
-    //overloaded
-    String getRowAsJson(String dataStore, String keyField, String keyFieldValue) {
-
+    List rows(String dataStore, String keyField, String keyFieldValue) {
         String sql = "select * from $dataStore where $keyField=?"
-        jsonRow(sql, [keyFieldValue])
-    }
-
-    String jsonRow(String dataStore, String keyField, String keyFieldValue) {
-        String sql = "select * from $dataStore where $keyField=?"
-        jsonRow(sql, [keyFieldValue])
-    }
-
-    String getRowsAsJsonArray(String sql, List params) {
-        gSql.rows(sql, params).toJson()
-    }
-
-    String rowsJsonArray(String sql, List params) {
-
-        gSql.rows(sql, params).toJson()
-    }
-
-    //overloaded
-    String getRowsAsJsonArray(String dataStore, String keyField, String keyFieldValue) {
-
-        String sql = "select * from $dataStore where $keyField=?"
-        getRowsAsJsonArray(sql, [keyFieldValue])
-    }
-
-    String rowsJsonArray(String dataStore, String keyField, String keyFieldValue) {
-
-        String sql = "select * from $dataStore where $keyField=?"
-        getRowsAsJsonArray(sql, [keyFieldValue])
+        rows(sql, [keyFieldValue])
     }
 
     String getRowsAsJsonArrayOnlyValues(String sql, List params) {
 
-        List list = gSql.rows(sql, params).collect {
+        gSql.rows(sql, params).collect {
             Map row -> row.values()
-        }
-        list.toJson()
+        }.toJson()
 
-    }
-
-    String getColumnLabels(String sql, List params) {
-
-        List columnLabels = []
-        gSql.rows(sql, params) { ResultSetMetaData metaData ->
-            (1..metaData.columnCount).each {
-                Integer i ->
-                    columnLabels.add(metaData.getColumnLabel(i))
-            }
-        }
-        columnLabels.join(",")
     }
 
     List columns(String sql, List params) {
@@ -134,7 +78,6 @@ class DbAccess {
         return result
 
     }
-
 
 
 }

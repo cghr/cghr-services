@@ -1,6 +1,5 @@
 package org.cghr.commons.db
 
-import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.GenericGroovyContextLoader
 import org.cghr.test.db.DbTester
@@ -87,7 +86,7 @@ class DbAccessSpec extends Specification {
     def "should get database row as a Map object"() {
 
         expect:
-        dbAccess.getRowAsMap(sql, params) == result
+        dbAccess.firstRow(sql, params) == result
 
         where:
         sql          | params                 || result
@@ -98,7 +97,7 @@ class DbAccessSpec extends Specification {
     def "should get database row as a Map object without params"() {
 
         expect:
-        dbAccess.getRowAsMap(sql) == result
+        dbAccess.firstRow(sql) == result
 
         where:
         sql                                        || result
@@ -108,7 +107,7 @@ class DbAccessSpec extends Specification {
 
     def "should get db rows as List of Map Objects"() {
         expect:
-        dbAccess.getRowsAsListOfMaps(sql, params) == result
+        dbAccess.rows(sql, params) == result
 
         where:
         sql            | params                   || result
@@ -120,64 +119,13 @@ class DbAccessSpec extends Specification {
 
     def "should get db rows as List of Map Objects without params"() {
         expect:
-        dbAccess.getRowsAsListOfMaps(sql) == result
+        dbAccess.rows(sql) == result
 
         where:
         sql                                             || result
         "select * from country where continent='asia'"  || dataSet
         "select * from country where continent='dummy'" || []
 
-
-    }
-
-
-    def "should get db row as a Json"() {
-
-        expect:
-        dbAccess.getRowAsJson(sql, params) == result
-
-        where:
-        sql          | params                 || result
-        singleRowSql | validParamsSingleRow   || new Gson().toJson(dataSet[0]).toString()
-        singleRowSql | invalidParamsSingleRow || '{}'
-
-    }
-
-    def "should get db row as a Json without params"() {
-
-        expect:
-        dbAccess.getRowAsJson(sql) == result
-
-        where:
-        sql                                        || result
-        "select * from country where name='india'" || new Gson().toJson(dataSet[0]).toString()
-        "select * from country where name='dummy'" || '{}'
-
-    }
-
-    def "should get db row as Json from dataStore,key,value"() {
-
-
-        expect:
-        dbAccess.getRowAsJson(dataStore, key, value) == result
-
-        where:
-        key  | value || result
-        'id' | '1'   || new Gson().toJson(dataSet[0]).toString()
-        'id' | '0'   || '{}'
-
-
-    }
-
-    def "should get db rows as JsonArray of Json Objects"() {
-
-        expect:
-        dbAccess.getRowsAsJsonArray(sql, params) == result
-
-        where:
-        sql            | params                   || result
-        multipleRowSql | validParamsMultipleRow   || new Gson().toJson(dataSet)
-        multipleRowSql | invalidParamsMultipleRow || '[]'
 
     }
 
@@ -196,7 +144,7 @@ class DbAccessSpec extends Specification {
     def "should get  column Labels for an sql"() {
 
         expect:
-        dbAccess.getColumnLabels(sql, params) == result
+        dbAccess.columns(sql, params).join(',') == result
 
         where:
         sql          | params               || result
