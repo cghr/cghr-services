@@ -100,7 +100,7 @@ class DbAccess {
         columnLabels.join(",")
     }
 
-    String columns(String sql, List params) {
+    List columns(String sql, List params) {
 
         List columnLabels = []
         gSql.rows(sql, params) { ResultSetMetaData metaData ->
@@ -109,7 +109,7 @@ class DbAccess {
                     columnLabels.add(metaData.getColumnLabel(i))
             }
         }
-        columnLabels.join(",")
+        columnLabels
     }
 
 
