@@ -5,7 +5,7 @@ import org.cghr.dataSync.service.AgentService
 
 class DownloadAgent implements Agent {
 
-    AgentService agentService
+    final AgentService agentService
 
     DownloadAgent(AgentService agentService) {
         this.agentService = agentService

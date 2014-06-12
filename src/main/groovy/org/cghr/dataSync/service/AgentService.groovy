@@ -1,6 +1,5 @@
 package org.cghr.dataSync.service
 
-import com.google.gson.Gson
 import groovy.sql.Sql
 import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
@@ -11,7 +10,6 @@ import org.springframework.http.MediaType
 import org.springframework.web.client.RestTemplate
 
 import java.sql.Clob
-
 /**
  * Created by ravitej on 3/2/14.
  */
@@ -30,7 +28,6 @@ class AgentService {
     Map fileStoreFactory
     String userHome
 
-    Gson gson = new Gson()
 
     AgentService(Sql gSql, DbAccess dbAccess, DbStore dbStore, String syncServerDownloadInfoUrl, String syncServerUploadUrl, RestTemplate restTemplate, Integer changelogChunkSize, String syncServerDownloadDataBatchUrl, AwakeFileSession awakeFileSession, Map fileStoreFactory, String userHome) {
         this.gSql = gSql
@@ -62,7 +59,7 @@ class AgentService {
 
     List<Map> getInboxMessagesToDownload() {
 
-        dbAccess.getRowsAsListOfMaps("select * from inbox where impStatus is null", [])
+        dbAccess.rows("select * from inbox where impStatus is null", [])
 
     }
 
@@ -70,12 +67,9 @@ class AgentService {
 
         String url = syncServerDownloadDataBatchUrl + message.datastore + '/' + message.ref + '/' + message.refId
         List list = restTemplate.getForObject(url, List.class)
-
-        List changelogs = list.collect {
-            [datastore: message.datastore, data: it]
-        }
-        dbStore.saveOrUpdateBatch(changelogs)
+        list.each { dbStore.saveOrUpdate(it, message.datastore) }
     }
+
 
     void importSuccessful(Map message) {
 
@@ -107,13 +101,13 @@ class AgentService {
 
         List logs = []
 
-        def sql = "select log from datachangelog where status is null limit $changelogChunkSize".toString()
+        def sql = "select log from datachangelog where status is null limit $changelogChunkSize"
         gSql.eachRow(sql) {
             row ->
 
-                if (row.log instanceof Clob)
+                if (row.log instanceof Clob) //For H2 like Database
                     logs << row.log.getAsciiStream().getText()
-                else
+                else                         //For Mysql like Database
                     logs << row.log
 
         }

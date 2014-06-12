@@ -11,7 +11,6 @@ class FileUploadAgent implements Agent {
     AgentService agentService
 
     FileUploadAgent(AgentService agentService) {
-
         this.agentService = agentService
     }
 
@@ -20,10 +19,9 @@ class FileUploadAgent implements Agent {
 
         List<Map> files = agentService.getFileChangelogs()
         files.each {
-            fileInfo ->
                 try {
-                    agentService.uploadFile(fileInfo)
-                    agentService.fileUploadSuccessful(fileInfo.id)
+                    agentService.uploadFile(it)
+                    agentService.fileUploadSuccessful(it.id)
                 }
                 catch (Exception e) {
                     e.printStackTrace();

@@ -1,5 +1,4 @@
 package org.cghr.commons.web.controller
-
 import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.GenericGroovyContextLoader
@@ -17,7 +16,6 @@ import spock.lang.Specification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-
 /**
  * Created by ravitej on 5/5/14.
  */
@@ -33,6 +31,8 @@ class DataAccessSpec extends Specification {
     def dataSet
     @Autowired
     Sql gSql
+    @Autowired
+    DbAccess dbAccess
 
 
     MockMvc mockMvc
@@ -46,11 +46,8 @@ class DataAccessSpec extends Specification {
 
         dt.cleanInsert('country')
         mockMvc = MockMvcBuilders.standaloneSetup(dataAccess).build()
-        DbAccess mockDbAccess =Stub(){
-            getRowAsJson('country','id','1') >> new Gson().toJson(dataSet[0]).toString()
-            getRowAsJson('country','id','999') >> "{}"
-        }
-        dataAccess.dbAccess=mockDbAccess
+
+        dataAccess.dbAccess=dbAccess
 
     }
 

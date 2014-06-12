@@ -24,7 +24,7 @@ class DataAccessBatch {
     String getDataAsJsonArray(
             @PathVariable String dataStore, @PathVariable String keyField, @PathVariable String keyFieldValue) {
 
-        dbAccess.getRowsAsJsonArray(dataStore, keyField, keyFieldValue)
+        dbAccess.rowsJsonArray(dataStore, keyField, keyFieldValue)
     }
 
 }

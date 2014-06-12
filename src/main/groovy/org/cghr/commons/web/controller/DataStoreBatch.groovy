@@ -22,7 +22,7 @@ class DataStoreBatch {
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    void saveData(@RequestBody Map[] data,HttpServletRequest request) {
+    void saveData(@RequestBody final Map[] data,HttpServletRequest request) {
 
         List<Map> changelogs = data as List
         dbStore.saveOrUpdateBatch(changelogs)

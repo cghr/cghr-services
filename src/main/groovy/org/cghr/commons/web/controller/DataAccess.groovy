@@ -18,9 +18,9 @@ class DataAccess {
 
     @RequestMapping(value = "/{dataStore}/{keyField}/{keyFieldValue}", method = RequestMethod.GET, produces = "application/json")
     String getDataAsJson(
-            @PathVariable String dataStore, @PathVariable String keyField, @PathVariable String keyFieldValue) {
+            @PathVariable final String dataStore, @PathVariable final String keyField, @PathVariable final String keyFieldValue) {
 
-        dbAccess.getRowAsJson(dataStore, keyField, keyFieldValue)
+        dbAccess.jsonRow(dataStore, keyField, keyFieldValue)
     }
 
 }

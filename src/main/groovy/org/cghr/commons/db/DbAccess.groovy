@@ -1,17 +1,12 @@
 package org.cghr.commons.db
 
-import com.google.gson.Gson
 import groovy.sql.Sql
-import groovy.transform.CompileStatic
 
 import java.sql.ResultSetMetaData
 
-@CompileStatic
 class DbAccess {
 
-    Sql gSql;
-    Gson gson = new Gson()
-
+    final Sql gSql
 
     DbAccess(Sql gSql) {
         this.gSql = gSql
@@ -19,7 +14,7 @@ class DbAccess {
 
     boolean hasRows(String sql, List params = []) {
 
-        gSql.rows(sql, params).size() > 0
+        gSql.firstRow(sql, params) ? true : false
     }
 
     Map<String, String> getRowAsMap(String sql, List params = []) {
@@ -27,23 +22,48 @@ class DbAccess {
         rows.size() > 0 ? rows[0] : [:] //empty map
     }
 
+    Map firstRow(String sql, List params = []) {
+
+        Map row = gSql.firstRow(sql, params)
+        row ? row : [:]
+    }
+
+
     List<Map> getRowsAsListOfMaps(String sql, List params = []) {
         gSql.rows(sql, params)
     }
 
+    List<Map> rows(String sql, List params = []) {
+        gSql.rows(sql, params)
+    }
+
     String getRowAsJson(String sql, List params = []) {
-        gson.toJson(getRowAsMap(sql, params))
+        firstRow(sql, params).toJson()
+    }
+
+    String jsonRow(String sql, List params = []) {
+        firstRow(sql, params).toJson()
     }
 
     //overloaded
     String getRowAsJson(String dataStore, String keyField, String keyFieldValue) {
-        def sql = "select * from $dataStore where $keyField=?"
-        getRowAsJson(sql, [keyFieldValue])
+
+        String sql = "select * from $dataStore where $keyField=?"
+        jsonRow(sql, [keyFieldValue])
+    }
+
+    String jsonRow(String dataStore, String keyField, String keyFieldValue) {
+        String sql = "select * from $dataStore where $keyField=?"
+        jsonRow(sql, [keyFieldValue])
     }
 
     String getRowsAsJsonArray(String sql, List params) {
+        gSql.rows(sql, params).toJson()
+    }
 
-        gson.toJson(gSql.rows(sql, params))
+    String rowsJsonArray(String sql, List params) {
+
+        gSql.rows(sql, params).toJson()
     }
 
     //overloaded
@@ -53,28 +73,48 @@ class DbAccess {
         getRowsAsJsonArray(sql, [keyFieldValue])
     }
 
+    String rowsJsonArray(String dataStore, String keyField, String keyFieldValue) {
+
+        String sql = "select * from $dataStore where $keyField=?"
+        getRowsAsJsonArray(sql, [keyFieldValue])
+    }
+
     String getRowsAsJsonArrayOnlyValues(String sql, List params) {
 
-        List rows = gSql.rows(sql, params)
-        gson.toJson(rows.collect { Map row -> row.values() })
+        List list = gSql.rows(sql, params).collect {
+            Map row -> row.values()
+        }
+        list.toJson()
+
     }
 
     String getColumnLabels(String sql, List params) {
+
         List columnLabels = []
-        def metaClosure = { ResultSetMetaData meta ->
-            (1..meta.columnCount).each {
+        gSql.rows(sql, params) { ResultSetMetaData metaData ->
+            (1..metaData.columnCount).each {
                 Integer i ->
-                    columnLabels.add(meta.getColumnLabel(i))
+                    columnLabels.add(metaData.getColumnLabel(i))
             }
         }
-
-        String sqlWithOneRow = sql + " LIMIT 1"
-        gSql.rows(sqlWithOneRow, params, metaClosure)
         columnLabels.join(",")
     }
 
+    String columns(String sql, List params) {
+
+        List columnLabels = []
+        gSql.rows(sql, params) { ResultSetMetaData metaData ->
+            (1..metaData.columnCount).each {
+                Integer i ->
+                    columnLabels.add(metaData.getColumnLabel(i))
+            }
+        }
+        columnLabels.join(",")
+    }
+
+
     void removeData(String table, String keyField, Object value) {
-        def sql = "delete from $table where $keyField=?".toString()
+        def sql = "delete from $table where $keyField=?"
         gSql.executeUpdate(sql, [value])
 
     }
@@ -94,5 +134,7 @@ class DbAccess {
         return result
 
     }
+
+
 
 }

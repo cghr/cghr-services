@@ -6,8 +6,8 @@ import groovy.sql.Sql
 class DbStore {
 
 
-    Map dataStoreFactory
-    Sql gSql
+    final Map dataStoreFactory
+    final Sql gSql
 
     DbStore(Sql gSql, Map dataStoreFactory) {
         this.gSql = gSql

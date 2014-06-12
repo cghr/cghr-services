@@ -89,14 +89,14 @@ class AgentProvider {
     }
 
     String syncServerBaseUrl() {
-        String role = dbAccess.getRowAsMap("select role from authtoken order by id desc limit 1", []).role
+        String role = dbAccess.firstRow("select role from authtoken order by id desc limit 1", []).role
         String url = (role == 'manager') ? serverBaseUrl : syncUtil.getLocalServerBaseUrl()
         return url
     }
 
     String getRecipientId() {
-        String username = dbAccess.getRowAsMap("select username from authtoken order by id desc limit 1", []).username
-        dbAccess.getRowAsMap("select id from user where username=?", [username]).id
+        String username = dbAccess.firstRow("select username from authtoken order by id desc limit 1", []).username
+        dbAccess.firstRow("select id from user where username=?", [username]).id
     }
 
     void buildAwakeFileSession() {

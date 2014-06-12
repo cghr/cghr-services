@@ -1,17 +1,15 @@
 package org.cghr.dataViewModel
 
-import com.google.gson.Gson
-import groovy.sql.Sql
+import org.cghr.commons.db.DbAccess
 
 class DhtmlxGridModelTransformer implements GenericDataModelTransformer {
 
 
-    Sql gSql
+    DbAccess dbAccess
 
-    DhtmlxGridModelTransformer(Sql gSql) {
-        this.gSql = gSql
+    DhtmlxGridModelTransformer(DbAccess dbAccess) {
+        this.dbAccess=dbAccess
     }
-    Gson gson = new Gson()
 
     /*
      * json format expected by dhtmlx client library { "rows":[
@@ -20,11 +18,11 @@ class DhtmlxGridModelTransformer implements GenericDataModelTransformer {
      */
 
     Map getModel(String sql, List params) {
+
         int i = 1
-        List rows = gSql.rows(sql, params).collect {
+        List rows = dbAccess.rows(sql, params).collect {
             [id: i++, data: it.values()]
         }
-
         [rows: rows]
     }
 }

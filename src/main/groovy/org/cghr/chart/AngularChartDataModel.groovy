@@ -1,15 +1,12 @@
 package org.cghr.chart
 
-import com.google.gson.Gson
 import org.cghr.commons.db.DbAccess
-
 /**
  * Created by ravitej on 8/5/14.
  */
 class AngularChartDataModel implements ChartDataModel {
 
-    DbAccess dbAccess
-    Gson gson = new Gson()
+    final DbAccess dbAccess
 
     AngularChartDataModel(DbAccess dbAccess) {
         this.dbAccess = dbAccess
@@ -19,14 +16,13 @@ class AngularChartDataModel implements ChartDataModel {
     Data Format expected by Javascript Angular Chart
     {"series":["total","month"],"data":[{"x":"india","y":[100,20]},{"x":"pakistan","y":[80,10]},{"x":"srilanka","y":[40,20]}]}
     */
-
     @Override
     String getChartDataModel(String sql, List params) {
 
         Map model = [series: [], data: []]
 
-        List<Map> rows = dbAccess.getRowsAsListOfMaps(sql, params)
-        String columns = dbAccess.getColumnLabels(sql, params)
+        def rows = dbAccess.rows(sql, params)
+        def columns = dbAccess.columns(sql, params)
 
         List cols = columns.split(',') as List
         cols.remove(0) // Remove First column name
@@ -40,6 +36,6 @@ class AngularChartDataModel implements ChartDataModel {
                 Map rowData = [x: label, y: values]
 
         }
-        return gson.toJson(model)
+        return model.toJson()
     }
 }

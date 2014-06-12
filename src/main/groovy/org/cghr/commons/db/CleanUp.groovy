@@ -21,7 +21,7 @@ class CleanUp {
 
     List getAllTables() {
 
-        dbAccess.getRowsAsListOfMaps('show tables', []).collect {
+        dbAccess.rows('show tables', []).collect {
             it.values()[0]
         }
     }

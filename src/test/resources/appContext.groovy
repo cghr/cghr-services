@@ -16,6 +16,7 @@ import org.cghr.security.service.OnlineAuthService
 import org.cghr.security.service.UserService
 import org.cghr.startupTasks.DbImport
 import org.cghr.startupTasks.DirCreator
+import org.cghr.startupTasks.MetaClassEnhancement
 import org.cghr.test.db.DbTester
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
@@ -72,7 +73,7 @@ beans {
     dt(DbTester, dataSource = dataSource) //Todo Only For unit Testing
 
     //Data Model for reports
-    transformer(DhtmlxGridModelTransformer, gSql = gSql)
+    transformer(DhtmlxGridModelTransformer, dbAccess = dbAccess)
     dataModelUtil(DataModelUtil, transformer = transformer, dbAccess = dbAccess)
 
     //Todo Security
@@ -85,6 +86,7 @@ beans {
     auth(Auth)
 
     //Todo Startup Tasks
+    metaClassEnhancement(MetaClassEnhancement)
     dbImport(DbImport, sqlDir = appPath + 'sqlImport', gSql = gSql)
     dirCreator(DirCreator, [
             appPath + 'repo/images/consent',
