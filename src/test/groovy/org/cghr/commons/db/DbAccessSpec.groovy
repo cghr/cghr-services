@@ -56,33 +56,6 @@ class DbAccessSpec extends Specification {
 
     }
 
-
-    def "should have rows for a valid sql and no rows for an invalid sql"() {
-
-
-        expect:
-        dbAccess.hasRows(sql, params) == result
-
-
-        where:
-        sql          | params                 || result
-        singleRowSql | validParamsSingleRow   || true
-        singleRowSql | invalidParamsSingleRow || false
-
-    }
-
-    def "should have rows for a valid sql and no rows for an invalid sql without params"() {
-
-        expect:
-        dbAccess.hasRows(sql) == result
-
-        where:
-        sql                                        || result
-        "select * from country where name='india'" || true
-        "select * from country where name='dummy'" || false
-
-    }
-
     def "should get database row as a Map object"() {
 
         expect:
@@ -129,17 +102,6 @@ class DbAccessSpec extends Specification {
 
     }
 
-    def "should get db rows as JsonArray of Json Objects With Only Values No Column Names (keys)"() {
-
-        expect:
-        dbAccess.getRowsAsJsonArrayOnlyValues(sql, params) == result
-
-        where:
-        sql            | params                   || result
-        multipleRowSql | validParamsMultipleRow   || '[[1,"india","asia"],[2,"pakistan","asia"],[3,"srilanka","asia"]]'
-        multipleRowSql | invalidParamsMultipleRow || '[]'
-
-    }
 
     def "should get  column Labels for an sql"() {
 
@@ -168,22 +130,5 @@ class DbAccessSpec extends Specification {
 
     }
 
-    def "should process the closure for each row"() {
 
-        given:
-        List result = []
-        Closure closure = {
-            row ->
-                result << row.name
-        }
-
-
-        when:
-        dbAccess.eachRow(multipleRowSql, validParamsMultipleRow, result, closure)
-
-        then:
-        result == ['india', 'pakistan', 'srilanka']
-
-
-    }
 }

@@ -108,6 +108,6 @@ class UserService {
 
     boolean isValidToken(String token) {
 
-        dbAccess.hasRows("select * from authtoken where token=?", [token])
+        dbAccess.firstRow("select * from authtoken where token=?", [token]) ? true : false
     }
 }

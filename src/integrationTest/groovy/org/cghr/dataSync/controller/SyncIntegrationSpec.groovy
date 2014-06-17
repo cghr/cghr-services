@@ -1,6 +1,7 @@
 package org.cghr.dataSync.controller
 import groovy.sql.Sql
 import org.cghr.GenericGroovyContextLoader
+import org.cghr.commons.db.DbAccess
 import org.cghr.dataSync.service.SyncUtil
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
@@ -20,6 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
 class SyncIntegrationSpec extends Specification {
 
+    @Autowired
+    DbAccess dbAccess
     @Autowired
     Sql gSql
     @Autowired
@@ -80,9 +83,9 @@ class SyncIntegrationSpec extends Specification {
 
         String pathToCheck = 'status/manager'
         String appName='app'
-        SyncUtil syncUtil = new SyncUtil(restTemplate, baseIp, startNode, endNode, port, pathToCheck,appName)
-        syncService.syncRunner.agentProvider.syncUtil = syncUtil
-        syncService.syncRunner.agentProvider.restTemplate = restTemplate
+        SyncUtil syncUtil = new SyncUtil(dbAccess,restTemplate, baseIp, startNode, endNode, port, pathToCheck,appName)
+        syncService.syncRunner.agentProvider.agentServiceProvider.syncUtil = syncUtil
+        syncService.syncRunner.agentProvider.agentServiceProvider.restTemplate = restTemplate
 
         gSql.execute("insert into user(id,username,password,role) values(?,?,?,?)", [15, 'user1', 'password', 'user'])
         //Make an entry in authtoken as User

@@ -1,13 +1,11 @@
 package org.cghr.commons.db
 
-import com.google.gson.Gson
 import groovy.sql.Sql
 
 class DbStore {
 
-
-    final Map dataStoreFactory
-    final Sql gSql
+    Map dataStoreFactory
+    Sql gSql
 
     DbStore(Sql gSql, Map dataStoreFactory) {
         this.gSql = gSql
@@ -36,20 +34,25 @@ class DbStore {
         list.each { saveOrUpdate(it, dataStore) }
     }
 
-    void saveOrUpdateBatch(List<Map> datachangelogs) {
+    void saveOrUpdateBatch(List datachangelogs) {
 
         datachangelogs.each { saveOrUpdate(it.data, it.datastore) }
     }
 
     boolean isNewData(String dataStore, String keyField, String keyFieldValue) {
 
-        gSql.rows("select * from $dataStore where $keyField=?", [keyFieldValue]).size() == 0
+        gSql.firstRow("select * from $dataStore where $keyField=?", [keyFieldValue]) ? false : true
 
     }
 
     void createDataChangeLogs(Map data, String dataStore) {
-        Map log = [datastore: dataStore, data: data];
-        gSql.execute("insert into datachangelog(log) values(?)", new Gson().toJson(log));
 
+        Map log = [datastore: dataStore, data: data]
+        gSql.execute("insert into datachangelog(log) values(?)", log.toJson())
+    }
+
+    void eachRow(String sql, List params, Closure closure) {
+
+        gSql.eachRow(sql, params, closure)
     }
 }

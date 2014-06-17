@@ -1,14 +1,10 @@
 package org.cghr.dataSync.controller
-
 import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-
-import javax.servlet.http.HttpServletResponse
-
 /**
  * Created by ravitej on 4/5/14.
  */
@@ -22,28 +18,29 @@ class SyncStatus {
 
     @RequestMapping("/download")
     String downloadTotal() {
-
-        dbAccess.firstRow("select count(*) count from inbox where impStatus is null", []).count
-
+        getCount("select count(*) count from inbox where impStatus is null")
     }
-
 
     @RequestMapping("/upload")
     String uploadTotal() {
-
-        dbAccess.firstRow("select count(*) count from datachangelog where status is null", []).count
+        getCount("select count(*) count from datachangelog where status is null")
     }
+
     @RequestMapping("/fileupload")
     String fileUploadTotal() {
-
-        dbAccess.firstRow("select count(*) count from filechangelog where status is null", []).count
+        getCount("select count(*) count from filechangelog where status is null")
     }
 
-    @RequestMapping(value = "/manager",method = RequestMethod.GET ,produces = "application/json")
-    Map isManager(HttpServletResponse response) {
+    @RequestMapping(value = "/manager", method = RequestMethod.GET, produces = "application/json")
+    Map isManager() {
 
-        String role = dbAccess.firstRow("select role from authtoken order by id desc limit 1",[]).role
-        role == 'manager' ? [status: true] : [status:false]
+        String role = dbAccess.firstRow("select role from authtoken order by id desc limit 1", []).role
+        role == 'manager' ? [status: true] : [status: false]
+    }
+
+    String getCount(String sql) {
+
+        dbAccess.firstRow(sql, []).count
     }
 
 

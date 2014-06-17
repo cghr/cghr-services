@@ -7,6 +7,7 @@ import org.cghr.commons.db.DbStore
 import org.cghr.commons.file.FileSystemStore
 import org.cghr.dataSync.commons.AgentProvider
 import org.cghr.dataSync.commons.SyncRunner
+import org.cghr.dataSync.service.AgentServiceProvider
 import org.cghr.dataSync.service.SyncUtil
 import org.cghr.dataViewModel.DataModelUtil
 import org.cghr.dataViewModel.DhtmlxGridModelTransformer
@@ -96,8 +97,8 @@ beans {
 
     //Todo Data Synchronization
     String appName = 'hc'
-    syncUtil(SyncUtil, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/status/manager', appName = appName)
-    agentProvider(AgentProvider, gSql = gSql, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
+    syncUtil(SyncUtil, dbAccess = dbAccess, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/status/manager', appName = appName)
+    agentServiceProvider(AgentServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
             serverBaseUrl = 'http://demo1278634.mockable.io/',
             downloadInfoPath = 'api/sync/downloadInfo',
             downloadDataBatchPath = 'api/data/dataAccessBatchService/',
@@ -106,6 +107,7 @@ beans {
             fileStoreFactory = fileStoreFactory,
             userHome = userHome,
             syncUtil = syncUtil)
+    agentProvider(AgentProvider, agentServiceProvider = agentServiceProvider)
     syncRunner(SyncRunner, agentProvider = agentProvider)
 
     //Chart Data Model Services

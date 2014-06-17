@@ -12,8 +12,8 @@ class MsgDistAgent implements Agent {
 
     public void run() {
 
-        List distFiles = agentService.getInboxMessagesToDistribute()
-        distributeMessages(distFiles)
+        List messages = agentService.getInboxMessagesToDistribute()
+        distributeMessages(messages)
 
     }
 
@@ -21,9 +21,11 @@ class MsgDistAgent implements Agent {
 
         messages.each {
             Map message ->
-                if (message.distList == null) return
+                if (!message.distList) return
+
                 List<String> recepients = message.distList.split(",") as List
                 recepients.each { agentService.distributeMessage(message, it) }
+
                 agentService.distributeSuccessful(message);
         }
 

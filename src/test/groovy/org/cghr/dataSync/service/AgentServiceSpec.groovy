@@ -73,7 +73,7 @@ class AgentServiceSpec extends Specification {
 
         }
         String userHome=''
-        agentService = new AgentService(gSql, dbAccess, dbStore, dwnldInfoUrl, upldUrl, restTemplate, changelogChunk, dataBatchUrl, awakeFileSession,fileStoreFactory,userHome)
+        agentService = new AgentService(dbAccess, dbStore, dwnldInfoUrl, upldUrl, restTemplate, changelogChunk, dataBatchUrl, awakeFileSession,fileStoreFactory,userHome)
 
     }
 

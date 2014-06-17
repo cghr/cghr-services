@@ -21,14 +21,11 @@ class AngularChartDataModel implements ChartDataModel {
     @Override
     String getChartDataModel(String sql, List params) {
 
-        Map chartModel = [series: [], data: []]
-
         def rows = dbAccess.rows(sql, params)
-        List columns = dbAccess.columns(sql, params)
+        List columnLabels = dbAccess.columns(sql, params)
 
-        [series: columns - columns.first(),
-                data: transformToChartModel(rows)
-        ].toJson()
+        [series: columnLabels - columnLabels.first(),
+                data: transformToChartModel(rows)].toJson()
     }
 
     List transformToChartModel(List rows) {

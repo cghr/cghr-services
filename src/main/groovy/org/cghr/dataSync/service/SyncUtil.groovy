@@ -1,5 +1,6 @@
 package org.cghr.dataSync.service
 
+import org.cghr.commons.db.DbAccess
 import org.springframework.web.client.RestTemplate
 
 /**
@@ -8,6 +9,7 @@ import org.springframework.web.client.RestTemplate
 class SyncUtil {
 
 
+    DbAccess dbAccess
     RestTemplate restTemplate
     String baseIp
     Integer startNode
@@ -17,7 +19,8 @@ class SyncUtil {
     String appName
 
 
-    SyncUtil(RestTemplate restTemplate, String baseIp, Integer startNode, Integer endNode, Integer port, String pathToCheck,String appName) {
+    SyncUtil(DbAccess dbAccess,RestTemplate restTemplate, String baseIp, Integer startNode, Integer endNode, Integer port, String pathToCheck,String appName) {
+        this.dbAccess=dbAccess
         this.restTemplate = restTemplate
         this.baseIp = baseIp
         this.startNode = startNode
@@ -25,6 +28,12 @@ class SyncUtil {
         this.port = port
         this.pathToCheck = pathToCheck
         this.appName=appName
+    }
+
+    String syncServerBaseUrl(String serverBaseUrl) {
+        String role = dbAccess.firstRow("select role from authtoken order by id desc limit 1", []).role
+        String url = (role == 'manager') ? serverBaseUrl : getLocalServerBaseUrl()
+        return url
     }
 
     String getLocalServerBaseUrl() {
@@ -37,6 +46,11 @@ class SyncUtil {
             }
         }
 
+    }
+
+    String getRecipientId() {
+        String username = dbAccess.firstRow("select username from authtoken order by id desc limit 1", []).username
+        dbAccess.firstRow("select id from user where username=?", [username]).id
     }
 
     boolean isValidSyncServer(String url) {

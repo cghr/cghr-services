@@ -1,6 +1,5 @@
 package org.cghr.dataSync.service
 
-import groovy.sql.Sql
 import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -15,8 +14,7 @@ import java.sql.Clob
  */
 class AgentService {
 
-    //Properties injected by Agent Provider
-    Sql gSql
+    //Properties injected by AgentService Provider
     DbAccess dbAccess
     DbStore dbStore
     String syncServerDownloadInfoUrl
@@ -29,8 +27,7 @@ class AgentService {
     String userHome
 
 
-    AgentService(Sql gSql, DbAccess dbAccess, DbStore dbStore, String syncServerDownloadInfoUrl, String syncServerUploadUrl, RestTemplate restTemplate, Integer changelogChunkSize, String syncServerDownloadDataBatchUrl, AwakeFileSession awakeFileSession, Map fileStoreFactory, String userHome) {
-        this.gSql = gSql
+    AgentService(DbAccess dbAccess, DbStore dbStore, String syncServerDownloadInfoUrl, String syncServerUploadUrl, RestTemplate restTemplate, Integer changelogChunkSize, String syncServerDownloadDataBatchUrl, AwakeFileSession awakeFileSession, Map fileStoreFactory, String userHome) {
         this.dbAccess = dbAccess
         this.dbStore = dbStore
         this.restTemplate = restTemplate
@@ -102,10 +99,11 @@ class AgentService {
         List logs = []
 
         def sql = "select log from datachangelog where status is null limit $changelogChunkSize"
-        gSql.eachRow(sql) {
+
+        dbStore.eachRow(sql, []) {
             row ->
 
-                if (row.log instanceof Clob) //For H2 like Database
+            if (row.log instanceof Clob) //For H2 like Database
                     logs << row.log.getAsciiStream().getText()
                 else                         //For Mysql like Database
                     logs << row.log
@@ -123,12 +121,12 @@ class AgentService {
 
     void postBatchSuccessful() {
 
-        gSql.executeUpdate("update datachangelog set status=1 where status is null limit $changelogChunkSize")
+        dbStore.execute("update datachangelog set status=1 where status is null limit $changelogChunkSize", [])
     }
 
     List getFileChangelogs() {
 
-        gSql.rows("select * from filechangelog where status is null")
+        dbAccess.rows("select * from filechangelog where status is null", [])
     }
 
     void fileUploadSuccessful(Integer id) {

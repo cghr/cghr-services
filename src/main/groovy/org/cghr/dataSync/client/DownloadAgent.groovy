@@ -13,7 +13,6 @@ class DownloadAgent implements Agent {
 
     public void run() {
         downloadAndImportMessages(agentService.getInboxMessagesToDownload())
-
     }
 
     void downloadAndImportMessages(List<Map> messages) {

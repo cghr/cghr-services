@@ -11,22 +11,17 @@ class DirCreator {
 
     DirCreator(List<String> dirs) {
         this.dirs = dirs
-
     }
 
     @PostConstruct
     void create() {
+        dirs.each { createDir(new File(it)) }
+    }
 
-        dirs.each {
-            String dir ->
-                File newDir = new File(dir)
-                if (!newDir.exists()) {
-                    newDir.mkdirs()
-                    println 'created dir ' + newDir
-                }
+    void createDir(File dir) {
 
-
-        }
+        if (!dir.exists())
+            dir.mkdirs()
 
     }
 

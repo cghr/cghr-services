@@ -4,17 +4,16 @@ import groovy.sql.Sql
 
 import java.sql.ResultSetMetaData
 
+/*
+Wrapper Class for Groovy Sql for Database Access
+ */
+
 class DbAccess {
 
-    final Sql gSql
+    Sql gSql
 
-    DbAccess(Sql gSql) {
+    DbAccess(final Sql gSql) {
         this.gSql = gSql
-    }
-
-    boolean hasRows(String sql, List params = []) {
-
-        gSql.firstRow(sql, params) ? true : false
     }
 
     Map firstRow(String sql, List params = []) {
@@ -22,26 +21,20 @@ class DbAccess {
         row ? row : [:]
     }
 
+    //Overloaded
     Map firstRow(String dataStore, String keyField, String keyFieldValue) {
         String sql = "select * from $dataStore where $keyField=?"
         firstRow(sql, [keyFieldValue])
     }
 
-    List<Map> rows(String sql, List params = []) {
+    List rows(String sql, List params = []) {
         gSql.rows(sql, params)
     }
 
+    //Overloaded
     List rows(String dataStore, String keyField, String keyFieldValue) {
         String sql = "select * from $dataStore where $keyField=?"
         rows(sql, [keyFieldValue])
-    }
-
-    String getRowsAsJsonArrayOnlyValues(String sql, List params) {
-
-        gSql.rows(sql, params).collect {
-            Map row -> row.values()
-        }.toJson()
-
     }
 
     List columns(String sql, List params) {
@@ -49,8 +42,7 @@ class DbAccess {
         List columnLabels = []
         gSql.rows(sql, params) { ResultSetMetaData metaData ->
             (1..metaData.columnCount).each {
-                Integer i ->
-                    columnLabels.add(metaData.getColumnLabel(i))
+                columnLabels << metaData.getColumnLabel(it)
             }
         }
         columnLabels
@@ -58,25 +50,16 @@ class DbAccess {
 
 
     void removeData(String table, String keyField, Object value) {
-        def sql = "delete from $table where $keyField=?"
-        gSql.executeUpdate(sql, [value])
+
+        gSql.executeUpdate("delete from $table where $keyField=?", [value])
 
     }
 
     //Overloaded
     void removeData(List tables) {
-
         tables.each {
-            gSql.execute("truncate table $it".toString())
+            gSql.executeUpdate("truncate table $it",[])
         }
-
-    }
-
-    List eachRow(String sql, List params, List result, Closure closure) {
-
-        gSql.eachRow(sql, params, closure)
-        return result
-
     }
 
 

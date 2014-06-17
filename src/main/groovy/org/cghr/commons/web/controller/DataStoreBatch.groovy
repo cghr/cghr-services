@@ -2,15 +2,14 @@ package org.cghr.commons.web.controller
 
 import org.cghr.commons.db.DbStore
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.RestController
 
 import javax.servlet.http.HttpServletRequest
 
-@Controller
+@RestController
 @RequestMapping("/data/dataStoreBatchService")
 class DataStoreBatch {
 
@@ -21,23 +20,34 @@ class DataStoreBatch {
 
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
-    @ResponseBody
-    void saveData(@RequestBody final Map[] data,HttpServletRequest request) {
+    void saveData(@RequestBody final Map[] data, HttpServletRequest request) {
 
-        List<Map> changelogs = data as List
+        List changelogs = data.toList()
         dbStore.saveOrUpdateBatch(changelogs)
 
-        String requestHost=request.getRequestURL().toURL().getHost()
-        String serverHost=serverBaseUrl.toURL().getHost()
+        String requestHost = getRequestHost(request)
+        if (isNotSeverHost(requestHost))
+            generateChangelogs(changelogs)
 
-        //Don't create changelogs for server
-        if(requestHost==serverHost && requestHost!='localhost')
-            return;
+    }
 
-        //Create Changelogs
+    void generateChangelogs(List changelogs) {
         changelogs.each {
-            dbStore.createDataChangeLogs(it.data,it.datastore)
+            dbStore.createDataChangeLogs(it.data, it.datastore)
         }
     }
+
+    String getRequestHost(HttpServletRequest request) {
+        request.getRequestURL().toURL().getHost()
+    }
+
+    String getServerHost() {
+        serverBaseUrl.toURL().getHost()
+    }
+
+    boolean isNotSeverHost(String requestHost) {
+        !(requestHost == serverHost && requestHost != 'localhost')
+    }
+
 
 }

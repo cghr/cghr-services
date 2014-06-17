@@ -15,8 +15,15 @@ class CleanUp {
 
     void cleanupTables() {
 
-        List exemptTables = excludedEntities.split(',') as List
-        dbAccess.removeData(getAllTables().findAll { !exemptTables.contains(it) })
+        dbAccess.removeData filteredTables(excludedTables())
+    }
+
+    List excludedTables() {
+        excludedEntities.split(',') as List
+    }
+
+    List filteredTables(List excludedTables) {
+        getAllTables().findAll { !excludedTables.contains(it) }
     }
 
     List getAllTables() {

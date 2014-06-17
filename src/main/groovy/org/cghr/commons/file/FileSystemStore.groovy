@@ -1,9 +1,7 @@
 package org.cghr.commons.file
 
-import com.google.gson.Gson
 import org.apache.commons.fileupload.FileItem
 import org.cghr.commons.db.DbStore
-
 /**
  * Created by ravitej on 24/4/14.
  */
@@ -17,16 +15,15 @@ class FileSystemStore {
         this.fileStoreFactory = fileStoreFactory
         this.dbStore = dbStore
     }
-    Gson gson = new Gson()
 
     void saveOrUpdate(Map formData, String fileStore, FileItem file) {
 
-        Map data = (HashMap) formData.clone()
+        Map data = formData.subMap(formData.keySet().toList() - ['filename','category'])
 
-        String fileName = data.remove("filename")
-        String category = data.remove('category')
+        def fileName = formData.filename
+        def category = formData.category
 
-        String fullPath = ((Map) fileStoreFactory.get(fileStore)).get(category)
+        String fullPath =  (fileStoreFactory."$fileStore")."$category"
 
         //Save file to Disk
         File newFile = getNewFile(fullPath, fileName)

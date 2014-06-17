@@ -24,8 +24,8 @@ class Auth {
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     String authenticate(@RequestBody User user, HttpServletResponse response, HttpServletRequest request) {
 
-        String hostname = request.getRequestURL().toURL().getHost()
-        def isValidUser = userService.isValid(user, hostname)
+        String hostname = getHostName(request)
+        def isValidUser = isValidUser(user, hostname)
         def httpStatus = isValidUser ? HttpStatus.OK.value : HttpStatus.FORBIDDEN.value
         response.setStatus(httpStatus)
 
@@ -45,6 +45,15 @@ class Auth {
         //Log Auth Status
         userService.logUserAuthStatus(user, "success")
         return userService.getUserCookieJson(user)
+
+    }
+
+    boolean isValidUser(User user, String hostname) {
+        userService.isValid(user, hostname)
+    }
+
+    String getHostName(HttpServletRequest request) {
+        request.getRequestURL().toURL().getHost()
 
     }
 

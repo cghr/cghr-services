@@ -31,33 +31,43 @@ class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response, Object handler) throws Exception {
+    boolean preHandle(HttpServletRequest request,
+                      HttpServletResponse response, Object handler) throws Exception {
 
-        def token = requestParser.getAuthTokenFromCookies(request)
-        boolean isValidToken = (token == null) ? false : (userService.isValidToken(token))
+        def token = getAuthToken(request)
 
-        if (!isValidToken) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value)
+        if (!isValidToken(token)) {
+            UNAUTHORISED(response)
             return false
         }
-        response.setStatus(HttpStatus.OK.value)
         return true
-        
+    }
+
+    String getAuthToken(HttpServletRequest request) {
+        requestParser.getAuthTokenFromCookies(request)
+    }
+
+    boolean isValidToken(String token) {
+
+        (token == null) ? false : (userService.isValidToken(token))
+    }
+
+
+    void UNAUTHORISED(HttpServletResponse response) {
+        response.setStatus(HttpStatus.UNAUTHORIZED.value)
+    }
+
+
+    @Override
+    void postHandle(HttpServletRequest request,
+                    HttpServletResponse response, Object handler,
+                    ModelAndView modelAndView) throws Exception {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request,
-                           HttpServletResponse response, Object handler,
-                           ModelAndView modelAndView) throws Exception {
-        //System.out.println("Post-handle");
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request,
-                                HttpServletResponse response, Object handler, Exception ex)
+    void afterCompletion(HttpServletRequest request,
+                         HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
-        //System.out.println("After completion handle");
     }
 
 

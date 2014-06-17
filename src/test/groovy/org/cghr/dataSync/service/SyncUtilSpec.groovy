@@ -1,6 +1,8 @@
 package org.cghr.dataSync.service
 
 import org.cghr.GenericGroovyContextLoader
+import org.cghr.commons.db.DbAccess
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
@@ -13,6 +15,8 @@ import spock.lang.Specification
 class SyncUtilSpec extends Specification {
 
     SyncUtil syncUtil
+    @Autowired
+    DbAccess dbAccess
 
     def setupSpec() {
 
@@ -46,7 +50,7 @@ class SyncUtilSpec extends Specification {
 
 
 
-        syncUtil = new SyncUtil(restTemplate, baseIp, startNode, endNode, port, pathToCheck, appName)
+        syncUtil = new SyncUtil(dbAccess,restTemplate, baseIp, startNode, endNode, port, pathToCheck, appName)
 
 
     }
