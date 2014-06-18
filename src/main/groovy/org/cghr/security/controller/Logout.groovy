@@ -1,6 +1,5 @@
 package org.cghr.security.controller
 
-import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -11,7 +10,6 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-@CompileStatic
 @Controller
 @RequestMapping("/security/logout")
 class Logout {
@@ -29,11 +27,15 @@ class Logout {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     String invalidateSession(HttpServletRequest request, HttpServletResponse response) {
-        RequestParser parser = new RequestParser()
 
-        deleteAuthToken(parser.getAuthTokenFromCookies(request))
-        eraseCookies(request, response)
+        deleteAuthToken(getAuthToken(request))
+        eraseCookies(request.getCookies(), response)
         return null
+    }
+
+    String getAuthToken(HttpServletRequest request) {
+
+        new RequestParser().getAuthTokenFromCookies(request)
     }
 
     void deleteAuthToken(String authtoken) {
@@ -41,16 +43,15 @@ class Logout {
         dbAccess.removeData("authtoken", "token", authtoken)
     }
 
-    void eraseCookies(HttpServletRequest req, HttpServletResponse resp) {
-        Cookie[] cookies = req.getCookies();
+    void eraseCookies(Cookie[] cookies, HttpServletResponse response) {
 
-        if (cookies != null)
-            for (Cookie cookie in req.getCookies()) {
-                cookie.setValue("")
-                cookie.setPath("/")
-                cookie.setMaxAge(0)
-                resp.addCookie(cookie)
-            }
+        cookies.each {
+            Cookie cookie ->
+                cookie.with {
+                    setValue(""); setPath(""); setMaxAge(0)
+                    response.addCookie(delegate)
+                }
 
+        }
     }
 }

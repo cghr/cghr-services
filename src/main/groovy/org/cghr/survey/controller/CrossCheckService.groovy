@@ -24,13 +24,12 @@ public class CrossCheckService {
         def crossCheckValue = dbValue.isInteger() ? dbValue.toInteger() : dbValue
 
         [value: crossCheckValue].toJson()
-
     }
 
-    String getCrossCheckValue(Map crossCheck) {
+    String getCrossCheckValue(Map metadata) {
 
-        def sql = "select $crossCheck.field crossCheck from $crossCheck.entity where $crossCheck.ref=?"
-        dbAccess.firstRow(sql, [crossCheck.refId]).crossCheck
+        def sql = "select $metadata.field crossCheck from $metadata.entity where $metadata.ref=?"
+        dbAccess.firstRow(sql, [metadata.refId]).crossCheck
 
     }
 

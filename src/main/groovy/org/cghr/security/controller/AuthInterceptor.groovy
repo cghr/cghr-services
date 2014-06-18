@@ -35,11 +35,9 @@ class AuthInterceptor implements HandlerInterceptor {
                       HttpServletResponse response, Object handler) throws Exception {
 
         def token = getAuthToken(request)
+        if (isInvalidToken(token))
+            return UNAUTHORISED(response)
 
-        if (!isValidToken(token)) {
-            UNAUTHORISED(response)
-            return false
-        }
         return true
     }
 
@@ -47,14 +45,15 @@ class AuthInterceptor implements HandlerInterceptor {
         requestParser.getAuthTokenFromCookies(request)
     }
 
-    boolean isValidToken(String token) {
+    boolean isInvalidToken(String token) {
 
-        (token == null) ? false : (userService.isValidToken(token))
+        (token == null) ? true : !(userService.isValidToken(token))
     }
 
 
-    void UNAUTHORISED(HttpServletResponse response) {
+    boolean UNAUTHORISED(HttpServletResponse response) {
         response.setStatus(HttpStatus.UNAUTHORIZED.value)
+        return false
     }
 
 

@@ -17,22 +17,18 @@ class MetaClassEnhancement {
         def toJson = {
             gson.toJson(delegate)
         }
-        def toJsonArrayValues={
-            it.values()
-        }
         Map.metaClass.toJson = toJson
         List.metaClass.toJson = toJson
-        List.metaClass.toJsonArrayValues=toJsonArrayValues
 
     }
 
     @PostConstruct
     void fromJsonConversions() {
 
-        def fromJson={
-            gson.fromJson(delegate,Map)
+        def fromJson = {
+            gson.fromJson(delegate, Map)
         }
-        String.metaClass.jsonToMap=fromJson
+        String.metaClass.jsonToMap = fromJson
     }
 
 }

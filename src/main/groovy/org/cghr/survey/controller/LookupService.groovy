@@ -20,7 +20,7 @@ public class LookupService {
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public String getLookupData(@RequestBody Map lookup) {
 
-        def sql = "select $lookup.field text,$lookup.field value from $lookup.entity  where $lookup.ref=?".toString()
+        String sql = "select $lookup.field text,$lookup.field value from $lookup.entity  where $lookup.ref=?"
         dbAccess.rows(sql, [lookup.refId]).toJson()
 
     }

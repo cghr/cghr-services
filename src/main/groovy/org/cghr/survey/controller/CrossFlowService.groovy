@@ -21,24 +21,33 @@ public class CrossFlowService {
     DbAccess dbAccess
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public Map getCrossFlowCheck(@RequestBody Map[] crossFlowsJson, HttpServletResponse response) {
+    public Map getCrossFlowCheck(@RequestBody Map[] crossFlowMetadata, HttpServletResponse response) {
 
-        List crossFlows = crossFlowsJson as List
-        boolean isConditionFailing = false;
+        isAllCrossFlowConditionsPassing(crossFlowMetadata as List) ? [check: true] : [check: false]
+    }
+
+    boolean isAllCrossFlowConditionsPassing(List crossFlows) {
+        boolean isConditionPassing = true
 
         crossFlows.each {
-            def sql = "select $it.field from $it.entity where $it.ref=?"
-            def row = dbAccess.firstRow(sql, [it.refId])
-            def field = it.field
-            def dbValue = row.get(field)
-            dbValue = dbValue.isInteger() ? dbValue.toInteger() : dbValue
-
-            if (!Eval.me(it.field, dbValue, it.condition)) {
-                isConditionFailing = true
-                return;
-
+            if (isConditionFailing(it, crossFlowValue(it))) {
+                isConditionPassing = false
+                return
             }
         }
-        isConditionFailing ? [check: false] : [check: true]
+        isConditionPassing
     }
+
+    boolean isConditionFailing(Map crossCheckMetadata, Object crossCheckValue) {
+
+        !Eval.me(crossCheckMetadata.field, crossCheckValue, crossCheckMetadata.condition)
+    }
+
+    String crossFlowValue(Map metaData) {
+
+        String sql = "select $metaData.field crossCheck from $metaData.entity where $metaData.ref=?"
+        String dbValue = dbAccess.firstRow(sql, [metaData.refId]).crossCheck
+        dbValue.isInteger() ? dbValue.toInteger() : dbValue
+    }
+
 }

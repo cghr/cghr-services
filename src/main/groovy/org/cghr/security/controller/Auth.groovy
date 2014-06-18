@@ -25,31 +25,56 @@ class Auth {
     String authenticate(@RequestBody User user, HttpServletResponse response, HttpServletRequest request) {
 
         String hostname = getHostName(request)
-        def isValidUser = isValidUser(user, hostname)
-        def httpStatus = isValidUser ? HttpStatus.OK.value : HttpStatus.FORBIDDEN.value
-        response.setStatus(httpStatus)
 
-        if (!isValidUser) {
-            userService.logUserAuthStatus(user, "fail")
-            return '{}'
-        }
-        String authtoken = UUID.randomUUID().toString()
-        userService.saveAuthToken(authtoken, user)
+        if (isInvalidUser(user, hostname))
+            return authFailure(user, response)
 
-        //Set Cookies
-        postAuth.addCookie("authtoken", authtoken, response)
-        postAuth.addCookie("user", userService.getUserCookieJson(user), response)
-        postAuth.addCookie("username", user.username, response)
-        postAuth.addCookie("userid", userService.getId(user), response)
+        String authtoken = generateAuthToken()
 
-        //Log Auth Status
-        userService.logUserAuthStatus(user, "success")
-        return userService.getUserCookieJson(user)
+        saveAuthToken(authtoken, user)
+        addCookies(user, authtoken, response)
+
+        return authSuccessful(user)
 
     }
 
-    boolean isValidUser(User user, String hostname) {
-        userService.isValid(user, hostname)
+
+    String generateAuthToken() {
+        UUID.randomUUID().toString()
+    }
+
+    String authSuccessful(User user) {
+        userService.logUserAuthStatus(user, "success")
+        return getUserJson(user)
+    }
+
+    String authFailure(User user, HttpServletResponse response) {
+        response.setStatus(HttpStatus.FORBIDDEN.value)
+        userService.logUserAuthStatus(user, "fail")
+        return '{}'
+    }
+
+    void saveAuthToken(String authtoken, User user) {
+        userService.saveAuthToken(authtoken, user)
+    }
+
+    String getUserJson(User user) {
+        userService.getUserCookieJson(user)
+    }
+
+    void addCookies(User user, String authtoken, HttpServletResponse response) {
+
+        postAuth.with {
+            addCookie("authtoken", authtoken, response)
+            addCookie("user", userService.getUserCookieJson(user), response)
+            addCookie("username", user.username, response)
+            addCookie("userid", userService.getId(user), response)
+        }
+    }
+
+
+    boolean isInvalidUser(User user, String hostname) {
+        !userService.isValid(user, hostname)
     }
 
     String getHostName(HttpServletRequest request) {
