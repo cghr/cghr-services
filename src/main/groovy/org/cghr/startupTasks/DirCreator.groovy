@@ -19,10 +19,7 @@ class DirCreator {
     }
 
     void createDir(File dir) {
-
-        if (!dir.exists())
-            dir.mkdirs()
-
+        dir.mkdirs()
     }
 
 

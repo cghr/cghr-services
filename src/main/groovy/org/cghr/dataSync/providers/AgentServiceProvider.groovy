@@ -1,8 +1,10 @@
-package org.cghr.dataSync.service
+package org.cghr.dataSync.providers
 
 import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
+import org.cghr.dataSync.service.AgentService
+import org.cghr.dataSync.service.SyncUtil
 import org.springframework.web.client.RestTemplate
 
 /**

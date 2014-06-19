@@ -31,10 +31,7 @@ class DbImport {
 
     void importAndDeleteFiles(List files) {
 
-        files.each {
-            importSqlFile(it)
-            deleteFile(it)
-        }
+        files.each { importSqlFile(it); deleteFile(it) }
     }
 
 
@@ -52,9 +49,7 @@ class DbImport {
 
         gSql.withBatch {
             stmt ->
-                sqls.each {
-                    stmt.addBatch(it)
-                }
+                sqls.each { String sql -> stmt.addBatch(sql) }
         }
 
     }

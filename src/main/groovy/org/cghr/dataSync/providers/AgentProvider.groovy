@@ -1,11 +1,12 @@
-package org.cghr.dataSync.commons
+package org.cghr.dataSync.providers
 
 import org.cghr.dataSync.client.DownloadAgent
 import org.cghr.dataSync.client.DownloadOrganizerAgent
 import org.cghr.dataSync.client.FileUploadAgent
 import org.cghr.dataSync.client.UploadAgent
+import org.cghr.dataSync.commons.Agent
+import org.cghr.dataSync.commons.MsgDistAgent
 import org.cghr.dataSync.service.AgentService
-import org.cghr.dataSync.service.AgentServiceProvider
 
 class AgentProvider {
 

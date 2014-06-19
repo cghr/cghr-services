@@ -5,9 +5,9 @@ import org.cghr.commons.db.CleanUp
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.commons.file.FileSystemStore
-import org.cghr.dataSync.commons.AgentProvider
+import org.cghr.dataSync.providers.AgentProvider
 import org.cghr.dataSync.commons.SyncRunner
-import org.cghr.dataSync.service.AgentServiceProvider
+import org.cghr.dataSync.providers.AgentServiceProvider
 import org.cghr.dataSync.service.SyncUtil
 import org.cghr.dataViewModel.DataModelUtil
 import org.cghr.dataViewModel.DhtmlxGridModelTransformer

@@ -21,27 +21,26 @@ class OnlineAuthService {
         this.serverAuthUrl = serverAuthUrl
         this.restTemplate = restTemplate
     }
-
+    Gson gson = new Gson()
 
     public Map authenticate(User user, String hostname) {
 
-        Map serverRespUser
-        String onlinAuthHostname = serverAuthUrl.toURL().getHost()
+        Map serverResponse
 
-        if (hostname == onlinAuthHostname && onlinAuthHostname != 'localhost')
+        if (isServerHost(hostname))
             throw new ServerNotFoundException()
 
-        HttpHeaders headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
+        HttpEntity<String> request = constructJsonRequest(user)
+        postRequest(request)
 
-        HttpEntity<String> request = new HttpEntity<String>(new Gson().toJson(user), headers)
+    }
 
+    Map postRequest(HttpEntity<String> request) {
+
+        Map response
         try {
-
-            serverRespUser = restTemplate.postForObject(serverAuthUrl, request, Map.class);
-            return serverRespUser
+            response = restTemplate.postForObject(serverAuthUrl, request, Map.class)
         }
-
         catch (HttpClientErrorException ex) {
 
             def status = ex.statusCode
@@ -54,6 +53,22 @@ class OnlineAuthService {
         catch (ResourceAccessException ex) {
             throw new ServerNotFoundException()
         }
+    }
 
+    HttpEntity<String> constructJsonRequest(User user) {
+
+        HttpHeaders headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        new HttpEntity<String>(gson.toJson(user), headers)
+    }
+
+    boolean isServerHost(String hostname) {
+
+        String serverHost = getServerHostName()
+        hostname == serverHost && serverHost != 'localhost'
+    }
+
+    String getServerHostName() {
+        serverAuthUrl.toURL().host
     }
 }

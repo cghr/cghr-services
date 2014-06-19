@@ -1,4 +1,5 @@
 package org.cghr.security.service
+
 import com.google.gson.Gson
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -17,6 +18,7 @@ class UserService {
         this.dbStore = dbStore
         this.onlineAuthService = onlineAuthService
     }
+    Gson gson = new Gson()
 
 
     boolean isValid(User user, String hostname) {
@@ -58,16 +60,14 @@ class UserService {
     }
 
     String getId(User user) {
-
-        def row = getUserAsMap(user)
-        row.id
+        getUserAsMap(user).id
     }
 
     String getUserCookieJson(User user) {
 
         Map row = getUserAsMap(user)
         def userMap = [id: row.id, username: row.username, password: row.password, role: [title: row.role, bitMask: getBitMask(row.get('role'))]]
-        new Gson().toJson(userMap)
+        userMap.toJson()
     }
 
     Integer getBitMask(String role) {

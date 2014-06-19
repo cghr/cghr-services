@@ -1,5 +1,6 @@
 package org.cghr.dataSync.commons
 
+import org.cghr.dataSync.providers.AgentProvider
 import org.springframework.beans.factory.annotation.Autowired
 
 class SyncRunner {
