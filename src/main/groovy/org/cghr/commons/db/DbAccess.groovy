@@ -18,7 +18,7 @@ class DbAccess {
 
     Map firstRow(String sql, List params = []) {
         Map row = gSql.firstRow(sql, params)
-        row ? row : [:]
+        row ?: [:]
     }
 
     //Overloaded
@@ -26,6 +26,8 @@ class DbAccess {
         String sql = "select * from $dataStore where $keyField=?"
         firstRow(sql, [keyFieldValue])
     }
+
+
 
     List rows(String sql, List params = []) {
         gSql.rows(sql, params)
@@ -41,11 +43,11 @@ class DbAccess {
 
         List columnLabels = []
         gSql.rows(sql, params) { ResultSetMetaData metaData ->
-            (1..metaData.columnCount).each {
-                columnLabels << metaData.getColumnLabel(it)
+            columnLabels = (1..metaData.columnCount).collect {
+                metaData.getColumnLabel(it)
             }
         }
-        columnLabels
+        return columnLabels
     }
 
 
@@ -58,7 +60,7 @@ class DbAccess {
     //Overloaded
     void removeData(List tables) {
         tables.each {
-            gSql.executeUpdate("truncate table $it",[])
+            gSql.executeUpdate("truncate table $it", [])
         }
     }
 

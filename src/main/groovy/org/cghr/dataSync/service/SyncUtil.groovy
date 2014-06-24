@@ -19,15 +19,15 @@ class SyncUtil {
     String appName
 
 
-    SyncUtil(DbAccess dbAccess,RestTemplate restTemplate, String baseIp, Integer startNode, Integer endNode, Integer port, String pathToCheck,String appName) {
-        this.dbAccess=dbAccess
+    SyncUtil(DbAccess dbAccess, RestTemplate restTemplate, String baseIp, Integer startNode, Integer endNode, Integer port, String pathToCheck, String appName) {
+        this.dbAccess = dbAccess
         this.restTemplate = restTemplate
         this.baseIp = baseIp
         this.startNode = startNode
         this.endNode = endNode
         this.port = port
         this.pathToCheck = pathToCheck
-        this.appName=appName
+        this.appName = appName
     }
 
     String syncServerBaseUrl(String serverBaseUrl) {
@@ -57,7 +57,7 @@ class SyncUtil {
 
         try {
 
-            println 'checking for valid sync server '+url
+            println 'checking for valid sync server ' + url
             Map response = restTemplate.getForObject(url, Map.class)
             return response.status
 

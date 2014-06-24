@@ -16,18 +16,14 @@ class AppStartupListener implements ServletContextListener {
     @Override
     void contextInitialized(ServletContextEvent sce) {
 
-        ServletContext sc = sce.getServletContext();
-        String path = sc.getRealPath("/");
-        if (!path.endsWith("/")) {
-            path = path + '/'
-        }
-        String userHome=System.getProperty('user.home')
-        if(!userHome.endsWith('/'))
-            userHome=userHome+'/'
+        ServletContext servletContext = sce.getServletContext();
+        String basepath = getRealPath(servletContext)
 
-        setBasePath(path)
+        String userHome = getUserHome()
+
+        setBasePath(basepath)
         setUserHome(userHome)
-        configureLogger(path)
+        configureLogger(basepath)
 
     }
 
@@ -35,12 +31,25 @@ class AppStartupListener implements ServletContextListener {
     void contextDestroyed(ServletContextEvent sce) {
     }
 
+    String getRealPath(ServletContext servletContext) {
+
+        String path = servletContext.getRealPath("/")
+        String realPath = path.endsWith("/") ? path : path + "/"
+
+    }
+
+    String getUserHome() {
+        String path = System.getProperty("user.home")
+        path.endsWith("/") ? path : path + '/'
+    }
+
     void setBasePath(String path) {
         System.setProperty("basePath", path);
 
     }
-    void setUserHome(String path){
-        System.setProperty("userHome",path);
+
+    void setUserHome(String path) {
+        System.setProperty("userHome", path);
     }
 
     void configureLogger(String path) {

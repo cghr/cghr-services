@@ -14,15 +14,29 @@ class DbStore {
 
     void saveOrUpdate(Map data, String datastore) {
 
-        String keyField = dataStoreFactory."$datastore"
-        String keyFieldValue = data."$keyField"
-        def keysAndValues = data.collect { key, value -> "$key=?" }.join(",")
+        String keyField = getKeyField(datastore)
+        String keyFieldValue = getKeyFieldValue(data, keyField)
+        String keysAndValues = getKeysAndValues(data)
+        List valueList = data.values() as List
 
         def sql = isNewData(datastore, keyField, keyFieldValue) ?
                 "insert into $datastore set $keysAndValues"
                 :
                 "update $datastore set $keysAndValues where $keyField=$keyFieldValue"
-        gSql.execute(sql, data.values() as List)
+        gSql.execute(sql, valueList)
+    }
+
+
+    String getKeyField(String datastore) {
+        dataStoreFactory."$datastore"
+    }
+
+    String getKeyFieldValue(Map data, String keyField) {
+        data."$keyField"
+    }
+
+    String getKeysAndValues(Map data) {
+        data.collect { key, value -> "$key=?" }.join(",")
     }
 
 
