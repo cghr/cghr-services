@@ -18,7 +18,6 @@ class SyncUtil {
     String pathToCheck
     String appName
 
-
     SyncUtil(DbAccess dbAccess, RestTemplate restTemplate, String baseIp, Integer startNode, Integer endNode, Integer port, String pathToCheck, String appName) {
         this.dbAccess = dbAccess
         this.restTemplate = restTemplate
@@ -30,22 +29,17 @@ class SyncUtil {
         this.appName = appName
     }
 
-    String syncServerBaseUrl(String serverBaseUrl) {
-        String role = dbAccess.firstRow("select role from authtoken order by id desc limit 1", []).role
-        String url = (role == 'manager') ? serverBaseUrl : getLocalServerBaseUrl()
-        return url
+    String syncServerBaseUrl(String mainServerBaseUrl) {
+        userRole == 'manager' ? mainServerBaseUrl : getLocalServerBaseUrl()
+    }
+
+    String getUserRole() {
+        dbAccess.firstRow("select role from authtoken order by id desc limit 1", []).role
     }
 
     String getLocalServerBaseUrl() {
-
-        List possibleIps = []
-        for (Integer node = startNode; node <= endNode; node++) {
-            String baseUrl = constructHttpUrl(baseIp + node)
-            if (isValidSyncServer(baseUrl + pathToCheck)) {
-                return baseUrl
-            }
-        }
-
+        int syncServerNode = (startNode..endNode).find { isValidSyncServer(it) }
+        return constructHttpUrl(baseIp + syncServerNode)
     }
 
     String getRecipientId() {
@@ -53,25 +47,27 @@ class SyncUtil {
         dbAccess.firstRow("select id from user where username=?", [username]).id
     }
 
-    boolean isValidSyncServer(String url) {
+    boolean isValidSyncServer(int node) {
+
+        String url = constructStatusCheckUrl(node)
 
         try {
-
             println 'checking for valid sync server ' + url
             Map response = restTemplate.getForObject(url, Map.class)
             return response.status
-
         }
         catch (Exception e) {
             println 'exception while accessing'
             return false
         }
-
-
     }
 
     String constructHttpUrl(String ip) {
-        return "http://${ip}:${port}/${appName}/"
+        return "http://$ip:$port/$appName/"
+    }
+
+    String constructStatusCheckUrl(int node) {
+        constructHttpUrl(baseIp + node) + pathToCheck
     }
 
 
