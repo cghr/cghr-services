@@ -1,13 +1,10 @@
 package org.cghr.chart
 
-import com.google.gson.Gson
 import org.cghr.GenericGroovyContextLoader
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
-
-
 /**
  * Created by ravitej on 9/5/14.
  */
@@ -33,7 +30,7 @@ class AngularChartDataModelSpec extends Specification {
                 [x: 'srilanka', y: [40, 20]],
         ]]
         expect:
-        angularChartDataModel.getChartDataModel("select * from sales",[])==new Gson().toJson(model)
+        angularChartDataModel.getChartDataModel("select * from sales",[])==model.toJson()
 
 
     }

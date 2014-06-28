@@ -19,7 +19,7 @@ class CleanupSpec extends Specification {
     @Autowired
     DbTester dbTester
     @Autowired
-    Sql  gSql
+    Sql gSql
 
 
     def setup() {
@@ -33,9 +33,14 @@ class CleanupSpec extends Specification {
         cleanUp.cleanupTables()
 
         then:
-        gSql.rows('select * from user').size()==5
-        gSql.rows('select * from sales').size()==0
-        gSql.rows('select * from country').size()==0
+        String sql = "select * from $table"
+        gSql.rows(sql).size() == result
+
+        where:
+        table     || result
+        "user"    || 5
+        "sales"   || 0
+        "country" || 0
 
     }
 

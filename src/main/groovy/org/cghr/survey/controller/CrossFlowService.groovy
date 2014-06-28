@@ -23,19 +23,13 @@ public class CrossFlowService {
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public Map getCrossFlowCheck(@RequestBody Map[] crossFlowMetadata, HttpServletResponse response) {
 
-        isAllCrossFlowConditionsPassing(crossFlowMetadata as List) ? [check: true] : [check: false]
+        isAnyConditionFailing(crossFlowMetadata as List) ? [check: false] : [check: true]
     }
 
-    boolean isAllCrossFlowConditionsPassing(List crossFlows) {
-        boolean isConditionPassing = true
+    boolean isAnyConditionFailing(List crossFlows) {
 
-        crossFlows.each {
-            if (isConditionFailing(it, crossFlowValue(it))) {
-                isConditionPassing = false
-                return
-            }
-        }
-        isConditionPassing
+        Map failingCondition = crossFlows.find { isConditionFailing(it, crossFlowValue(it)) }
+        failingCondition
     }
 
     boolean isConditionFailing(Map crossCheckMetadata, Object crossCheckValue) {

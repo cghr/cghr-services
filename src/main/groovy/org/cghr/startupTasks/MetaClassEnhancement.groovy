@@ -23,6 +23,18 @@ class MetaClassEnhancement {
     }
 
     @PostConstruct
+    void collectWithIndex() {
+        List.metaClass.collectWithIndex = { closure ->
+            def index = 0;
+            def list = [];
+            delegate.each { obj ->
+                list << closure(obj, index++)
+            }
+            return list
+        }
+    }
+
+    @PostConstruct
     void fromJsonConversions() {
 
         def fromJson = {

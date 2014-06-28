@@ -71,21 +71,8 @@ class UserService {
     }
 
     Integer getBitMask(String role) {
-
-
-        switch (role) {
-
-            case 'public':
-                return 1;
-            case 'user':
-                return 2;
-            case 'manager':
-                return 4;
-            case 'coordinator':
-                return 8;
-            case 'admin':
-                return 16;
-        }
+        Map bitMasks = [public: 1, user: 2, manager: 4, coordinator: 8, admin: 16]
+        bitMasks."$role"
     }
 
     void saveAuthToken(String authtoken, User user) {

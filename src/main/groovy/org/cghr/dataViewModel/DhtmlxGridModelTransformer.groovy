@@ -19,9 +19,8 @@ class DhtmlxGridModelTransformer implements GenericDataModelTransformer {
 
     Map getModel(String sql, List params) {
 
-        int index = 1
-        List rows = dbAccess.rows(sql, params).collect {
-            [id: index++, data: it.values()]
+        List rows = dbAccess.rows(sql, params).collectWithIndex { row, index ->
+            [id: (index + 1), data: row.values()]
         }
         [rows: rows]
     }

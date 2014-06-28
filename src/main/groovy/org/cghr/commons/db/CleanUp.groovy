@@ -14,19 +14,11 @@ class CleanUp {
     }
 
     void cleanupTables() {
-
-        dbAccess.removeData tableListToCleanup
+        dbAccess.removeData filteredTables()
     }
 
-    List getTableListToCleanup() {
-        filteredTables(excludedTables())
-    }
-
-    List excludedTables() {
-        excludedEntities.split(',') as List
-    }
-
-    List filteredTables(List excludedTables) {
+    List filteredTables() {
+        List excludedTables = excludedEntities.split(",") as List
         getAllTables().findAll { !(it in excludedTables) }
     }
 
