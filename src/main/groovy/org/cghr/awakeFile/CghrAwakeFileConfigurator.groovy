@@ -10,7 +10,6 @@ import java.sql.SQLException
  */
 class CghrAwakeFileConfigurator implements AwakeFileConfigurator {
 
-
     @Override
     File getServerRoot() {
         return new File(System.getProperty('user.home'))

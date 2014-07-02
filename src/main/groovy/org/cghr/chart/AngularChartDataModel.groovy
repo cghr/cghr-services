@@ -37,6 +37,8 @@ class AngularChartDataModel implements ChartDataModel {
                 [x: values.first(),
                         y: values - values.first()]
         }
+
+
     }
 
 

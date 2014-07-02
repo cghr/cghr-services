@@ -72,9 +72,10 @@ class AgentServiceSpec extends Specification {
         Map fileStoreFactory = Stub() {
 
         }
-        String userHome=''
-        agentService = new AgentService(dbAccess, dbStore, dwnldInfoUrl, upldUrl, restTemplate, changelogChunk, dataBatchUrl, awakeFileSession,fileStoreFactory,userHome)
-
+        String userHome = ''
+        AgentDownloadService agentDownloadService = new AgentDownloadService(dbAccess, dbStore, dwnldInfoUrl, dataBatchUrl, restTemplate)
+        AgentUploadService agentUploadService = new AgentUploadService(dbAccess, dbStore, upldUrl, restTemplate, changelogChunk, awakeFileSession, fileStoreFactory)
+        agentService = new AgentService(agentDownloadService, agentUploadService)
     }
 
 

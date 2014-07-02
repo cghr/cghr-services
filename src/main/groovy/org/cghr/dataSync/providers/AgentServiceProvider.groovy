@@ -3,7 +3,9 @@ package org.cghr.dataSync.providers
 import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
+import org.cghr.dataSync.service.AgentDownloadService
 import org.cghr.dataSync.service.AgentService
+import org.cghr.dataSync.service.AgentUploadService
 import org.cghr.dataSync.service.SyncUtil
 import org.springframework.web.client.RestTemplate
 
@@ -45,12 +47,19 @@ class AgentServiceProvider {
     String syncServerDownloadDataBatchUrl
     AwakeFileSession awakeFileSession
 
+    AgentDownloadService agentDownloadService
+    AgentUploadService agentUploadService
+
     AgentService provide() {
 
         createDynamicSyncServerUrls()
         buildAwakeFileSession()
 
-        new AgentService(dbAccess, dbStore, syncServerDownloadInfoUrl, syncServerUploadUrl, restTemplate, changelogChunkSize, syncServerDownloadDataBatchUrl, awakeFileSession, fileStoreFactory, userHome)
+        agentDownloadService = new AgentDownloadService(dbAccess, dbStore, syncServerDownloadInfoUrl, syncServerDownloadDataBatchUrl, restTemplate)
+        agentUploadService = new AgentUploadService(dbAccess, dbStore, syncServerUploadUrl, restTemplate, changelogChunkSize, awakeFileSession, fileStoreFactory);
+
+        new AgentService(agentDownloadService, agentUploadService)
+//new AgentService(dbAccess, dbStore, syncServerDownloadInfoUrl, syncServerUploadUrl, restTemplate, changelogChunkSize, syncServerDownloadDataBatchUrl, awakeFileSession, fileStoreFactory, userHome)
 
     }
 

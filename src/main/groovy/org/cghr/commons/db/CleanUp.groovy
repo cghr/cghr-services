@@ -14,10 +14,10 @@ class CleanUp {
     }
 
     void cleanupTables() {
-        dbAccess.removeData filteredTables()
+        dbAccess.removeData tableListForCleanup
     }
 
-    List filteredTables() {
+    List getTableListForCleanup() {
         List excludedTables = excludedEntities.split(",") as List
         getAllTables().findAll { !(it in excludedTables) }
     }

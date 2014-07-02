@@ -27,8 +27,6 @@ class DbAccess {
         firstRow(sql, [keyFieldValue])
     }
 
-
-
     List rows(String sql, List params = []) {
         gSql.rows(sql, params)
     }
