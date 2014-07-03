@@ -41,11 +41,16 @@ class AgentDownloadService {
 
     }
 
-    void downloadAndImport(Map message) {
+    void downloadAndImport(Map<String, String> message) {
 
         String url = syncServerDownloadDataBatchUrl + message.datastore + '/' + message.ref + '/' + message.refId
-        List list = restTemplate.getForObject(url, List.class)
-        list.each { dbStore.saveOrUpdate(it, message.datastore) }
+        List data = restTemplate.getForObject(url, List.class)
+        importData(data, message.datastore)
+    }
+
+    void importData(List list, String datastore) {
+
+        list.each { dbStore.saveOrUpdate(it, datastore) }
     }
 
 
@@ -54,5 +59,5 @@ class AgentDownloadService {
         dbStore.saveOrUpdate([id: message.id, impStatus: 1], 'inbox')
     }
 
-    
+
 }
