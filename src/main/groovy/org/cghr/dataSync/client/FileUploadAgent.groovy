@@ -17,23 +17,28 @@ class FileUploadAgent implements Agent {
     @Override
     void run() {
 
-        List<Map> files = agentService.getFileChangelogs()
-        uploadFiles(files)
+        List<Map> fileChangelogs = agentService.getFileChangelogs()
+        uploadFiles(fileChangelogs)
     }
 
-    void uploadFiles(List<Map> files) {
+    void uploadFiles(List<Map> fileChangelogs) {
 
-        files.each {
-            try {
-                agentService.uploadFile(it)
-                agentService.fileUploadSuccessful(it.id)
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                println 'error  uploading the file'
-            }
+        fileChangelogs.each { uploadAFile(it) }
 
+    }
 
+    void uploadAFile(Map fileInfo) {
+
+        try {
+            agentService.uploadFile(fileInfo)
+            agentService.fileUploadSuccessful(fileInfo.id)
         }
+        catch (Exception e) {
+            e.printStackTrace();
+            println 'error  uploading the file'
+        }
+
+
     }
+
 }

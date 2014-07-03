@@ -5,14 +5,15 @@ package org.cghr.dataSync.service
 class AgentService {
 
     @Delegate
-    AgentUploadService agentUploadService
-
-    @Delegate
     AgentDownloadService agentDownloadService
+    @Delegate
+    AgentUploadService agentUploadService
+    @Delegate
+    AgentMsgDistService agentMsgDistService
 
-    AgentService(AgentDownloadService agentDownloadService, AgentUploadService agentUploadService) {
-        this.agentUploadService = agentUploadService
+    AgentService(AgentDownloadService agentDownloadService, AgentUploadService agentUploadService, AgentMsgDistService agentMsgDistService) {
         this.agentDownloadService = agentDownloadService
+        this.agentUploadService = agentUploadService
+        this.agentMsgDistService = agentMsgDistService
     }
-
 }

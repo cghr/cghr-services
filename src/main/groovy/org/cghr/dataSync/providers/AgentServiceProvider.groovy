@@ -3,10 +3,7 @@ package org.cghr.dataSync.providers
 import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
-import org.cghr.dataSync.service.AgentDownloadService
-import org.cghr.dataSync.service.AgentService
-import org.cghr.dataSync.service.AgentUploadService
-import org.cghr.dataSync.service.SyncUtil
+import org.cghr.dataSync.service.*
 import org.springframework.web.client.RestTemplate
 
 /**
@@ -49,18 +46,34 @@ class AgentServiceProvider {
 
     AgentDownloadService agentDownloadService
     AgentUploadService agentUploadService
+    AgentMsgDistService agentMsgDistService
 
     AgentService provide() {
 
         createDynamicSyncServerUrls()
         buildAwakeFileSession()
 
-        agentDownloadService = new AgentDownloadService(dbAccess, dbStore, syncServerDownloadInfoUrl, syncServerDownloadDataBatchUrl, restTemplate)
-        agentUploadService = new AgentUploadService(dbAccess, dbStore, syncServerUploadUrl, restTemplate, changelogChunkSize, awakeFileSession, fileStoreFactory);
+        agentDownloadService = getAgentDownloadService()
+        agentUploadService = getAgentUploadService()
+        agentMsgDistService = getAgentMsgDistService()
 
-        new AgentService(agentDownloadService, agentUploadService)
-//new AgentService(dbAccess, dbStore, syncServerDownloadInfoUrl, syncServerUploadUrl, restTemplate, changelogChunkSize, syncServerDownloadDataBatchUrl, awakeFileSession, fileStoreFactory, userHome)
 
+        new AgentService(agentDownloadService, agentUploadService, agentMsgDistService)
+
+    }
+
+    AgentUploadService getAgentUploadService() {
+        new AgentUploadService(dbAccess, dbStore, syncServerUploadUrl, restTemplate, changelogChunkSize, awakeFileSession, fileStoreFactory);
+
+    }
+
+    AgentDownloadService getAgentDownloadService() {
+
+        new AgentDownloadService(dbAccess, dbStore, syncServerDownloadInfoUrl, syncServerDownloadDataBatchUrl, restTemplate)
+    }
+
+    AgentMsgDistService getAgentMsgDistService() {
+        new AgentMsgDistService(dbStore, dbAccess)
     }
 
     void createDynamicSyncServerUrls() {

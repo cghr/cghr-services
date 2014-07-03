@@ -75,7 +75,8 @@ class AgentServiceSpec extends Specification {
         String userHome = ''
         AgentDownloadService agentDownloadService = new AgentDownloadService(dbAccess, dbStore, dwnldInfoUrl, dataBatchUrl, restTemplate)
         AgentUploadService agentUploadService = new AgentUploadService(dbAccess, dbStore, upldUrl, restTemplate, changelogChunk, awakeFileSession, fileStoreFactory)
-        agentService = new AgentService(agentDownloadService, agentUploadService)
+        AgentMsgDistService agentMsgDistService = new AgentMsgDistService(dbStore, dbAccess)
+        agentService = new AgentService(agentDownloadService, agentUploadService, agentMsgDistService)
     }
 
 
