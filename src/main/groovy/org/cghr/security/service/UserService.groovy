@@ -1,24 +1,18 @@
 package org.cghr.security.service
 
-import com.google.gson.Gson
+import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.security.exception.NoSuchUserFound
 import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
 
+@TupleConstructor
 class UserService {
 
     DbAccess dbAccess
     DbStore dbStore
     OnlineAuthService onlineAuthService
-
-    UserService(DbAccess dbAccess, DbStore dbStore, OnlineAuthService onlineAuthService) {
-        this.dbAccess = dbAccess
-        this.dbStore = dbStore
-        this.onlineAuthService = onlineAuthService
-    }
-    Gson gson = new Gson()
 
 
     boolean isValid(User user, String hostname) {
@@ -40,15 +34,6 @@ class UserService {
         }
     }
 
-    boolean isServerHost(String hostname) {
-
-        String serverHost = getServerHostName()
-        hostname == serverHost && serverHost != 'localhost'
-    }
-
-    String getServerHostName() {
-        serverAuthUrl.toURL().host
-    }
 
     boolean isValidLocalUser(User user) {
 

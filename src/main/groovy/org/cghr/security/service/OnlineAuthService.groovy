@@ -1,6 +1,6 @@
 package org.cghr.security.service
 
-import com.google.gson.Gson
+import groovy.transform.TupleConstructor
 import org.cghr.security.exception.NoSuchUserFound
 import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
@@ -12,16 +12,12 @@ import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 
+@TupleConstructor
 class OnlineAuthService {
 
     String serverAuthUrl
     RestTemplate restTemplate
 
-    public OnlineAuthService(String serverAuthUrl, RestTemplate restTemplate) {
-        this.serverAuthUrl = serverAuthUrl
-        this.restTemplate = restTemplate
-    }
-    Gson gson = new Gson()
 
     public Map authenticate(User user, String hostname) {
 
@@ -57,7 +53,7 @@ class OnlineAuthService {
 
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
-        new HttpEntity<String>(gson.toJson(user), headers)
+        new HttpEntity<String>(user.toJson(), headers)
     }
 
     boolean isServerHost(String hostname) {

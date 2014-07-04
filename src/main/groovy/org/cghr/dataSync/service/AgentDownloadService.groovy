@@ -10,14 +10,14 @@ import org.springframework.web.client.RestTemplate
  */
 @TupleConstructor
 class AgentDownloadService {
-
+    
     DbAccess dbAccess
     DbStore dbStore
     String syncServerDownloadInfoUrl
     String syncServerDownloadDataBatchUrl
     RestTemplate restTemplate
 
-    
+
     List<Map> getDownloadInfo() {
 
         restTemplate.getForObject(syncServerDownloadInfoUrl, List.class)
