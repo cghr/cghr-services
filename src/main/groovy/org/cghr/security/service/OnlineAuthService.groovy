@@ -25,7 +25,6 @@ class OnlineAuthService {
 
     public Map authenticate(User user, String hostname) {
 
-        Map serverResponse
         if (isServerHost(hostname))
             throw new ServerNotFoundException()
 

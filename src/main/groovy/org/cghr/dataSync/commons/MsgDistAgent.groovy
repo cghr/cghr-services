@@ -15,13 +15,14 @@ class MsgDistAgent implements Agent {
         distributeMessages(messages)
     }
 
-    void distributeMessages(List msgs) {
+    void distributeMessages(List messages) {
 
-        List messages = getMessagesWithDistributionList(msgs)
         messages.each {
             Map message ->
                 getDistributionList(message)
-                        .each { agentService.distributeMessage(message, it) }
+                        .each { String recepient ->
+                    agentService.distributeMessage(message, recepient)
+                }
                 agentService.distributeSuccessful(message)
         }
 
@@ -31,8 +32,5 @@ class MsgDistAgent implements Agent {
         message.distList.split(",") as List
     }
 
-    List getMessagesWithDistributionList(List msgs) {
-        msgs.findAll { it.distList }
-    }
 
 }

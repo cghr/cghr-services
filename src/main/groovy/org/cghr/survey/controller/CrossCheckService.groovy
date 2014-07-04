@@ -20,8 +20,8 @@ public class CrossCheckService {
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     String getCrossCheck(@RequestBody Map crossCheckMetadata) {
 
-        def dbValue = getCrossCheckValue(crossCheckMetadata)
-        def crossCheckValue = dbValue.isInteger() ? dbValue.toInteger() : dbValue
+        String dbValue = getCrossCheckValue(crossCheckMetadata)
+        def crossCheckValue = getIntOrStringOf dbValue
 
         [value: crossCheckValue].toJson()
     }
@@ -30,6 +30,11 @@ public class CrossCheckService {
 
         def sql = "select $metadata.field crossCheck from $metadata.entity where $metadata.ref=?"
         dbAccess.firstRow(sql, [metadata.refId]).crossCheck
+
+    }
+
+    Object getIntOrStringOf(String crossCheckValue) {
+        crossCheckValue.isInteger() ? crossCheckValue.toInteger() : crossCheckValue
 
     }
 

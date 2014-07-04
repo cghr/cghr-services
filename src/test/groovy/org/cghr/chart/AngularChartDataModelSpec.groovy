@@ -5,6 +5,7 @@ import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 9/5/14.
  */
@@ -21,7 +22,7 @@ class AngularChartDataModelSpec extends Specification {
 
     }
 
-    def "should "() {
+    def "should transfrom sql query to chart model data"() {
 
         given:
         Map model = [series: ['total', 'month'], data: [
@@ -30,7 +31,7 @@ class AngularChartDataModelSpec extends Specification {
                 [x: 'srilanka', y: [40, 20]],
         ]]
         expect:
-        angularChartDataModel.getChartDataModel("select * from sales",[])==model.toJson()
+        angularChartDataModel.getChartDataModel("select * from sales", []) == model.toJson()
 
 
     }

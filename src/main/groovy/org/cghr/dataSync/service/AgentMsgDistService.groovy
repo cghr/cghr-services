@@ -1,20 +1,17 @@
 package org.cghr.dataSync.service
 
+import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 
 /**
  * Created by ravitej on 3/7/14.
  */
+@TupleConstructor
 class AgentMsgDistService {
 
     DbStore dbStore
     DbAccess dbAccess
-
-    AgentMsgDistService(DbStore dbStore, DbAccess dbAccess) {
-        this.dbStore = dbStore
-        this.dbAccess = dbAccess
-    }
 
     void importSuccessful(Map message) {
 
@@ -23,7 +20,7 @@ class AgentMsgDistService {
 
     List<Map> getInboxMessagesToDistribute() {
 
-        dbAccess.rows("select * from inbox where impStatus is not null and distStatus is null", [])
+        dbAccess.rows("select * from inbox where impStatus is not null and distList is not null and distStatus is null", [])
     }
 
     void distributeMessage(Map message, String recipient) {

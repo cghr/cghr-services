@@ -30,14 +30,12 @@ class Auth {
             return authFailure(user, response)
 
         String authtoken = generateAuthToken()
-
         saveAuthToken(authtoken, user)
         addCookies(user, authtoken, response)
 
         return authSuccessful(user)
 
     }
-
 
     String generateAuthToken() {
         UUID.randomUUID().toString()

@@ -19,7 +19,7 @@ class DbImport {
 
     @PostConstruct
     void importSqlScripts() {
-        this.importAndDeleteFiles sortedSqlFilesByName
+        importAndDeleteFiles sortedSqlFilesByName
     }
 
     List getSortedSqlFilesByName() {

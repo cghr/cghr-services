@@ -1,11 +1,14 @@
 package org.cghr.dataSync.service
 
+import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
 import org.springframework.web.client.RestTemplate
 
 /**
  * Created by ravitej on 5/5/14.
  */
+
+@TupleConstructor
 class SyncUtil {
 
 
@@ -18,17 +21,7 @@ class SyncUtil {
     String pathToCheck
     String appName
 
-    SyncUtil(DbAccess dbAccess, RestTemplate restTemplate, String baseIp, Integer startNode, Integer endNode, Integer port, String pathToCheck, String appName) {
-        this.dbAccess = dbAccess
-        this.restTemplate = restTemplate
-        this.baseIp = baseIp
-        this.startNode = startNode
-        this.endNode = endNode
-        this.port = port
-        this.pathToCheck = pathToCheck
-        this.appName = appName
-    }
-
+ 
     String syncServerBaseUrl(String mainServerBaseUrl) {
         userRole == 'manager' ? mainServerBaseUrl : getLocalServerBaseUrl()
     }
@@ -53,11 +46,12 @@ class SyncUtil {
 
         try {
             println 'checking for valid sync server ' + url
-            Map response = restTemplate.getForObject(url, Map.class)
-            return response.status
+            Map statusCheck = restTemplate.getForObject(url, Map.class)
+            return statusCheck.status
         }
         catch (Exception e) {
-            println 'exception while accessing'
+            println 'exception while accessing url :' + url
+            e.printStackTrace()
             return false
         }
     }

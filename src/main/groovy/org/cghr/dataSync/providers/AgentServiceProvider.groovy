@@ -47,6 +47,7 @@ class AgentServiceProvider {
     AgentDownloadService agentDownloadService
     AgentUploadService agentUploadService
     AgentMsgDistService agentMsgDistService
+    AgentFileUploadservice agentFileUploadservice
 
     AgentService provide() {
 
@@ -56,16 +57,12 @@ class AgentServiceProvider {
         agentDownloadService = getAgentDownloadService()
         agentUploadService = getAgentUploadService()
         agentMsgDistService = getAgentMsgDistService()
+        agentFileUploadservice = getAgentFileUploadService()
 
-
-        new AgentService(agentDownloadService, agentUploadService, agentMsgDistService)
-
-    }
-
-    AgentUploadService getAgentUploadService() {
-        new AgentUploadService(dbAccess, dbStore, syncServerUploadUrl, restTemplate, changelogChunkSize, awakeFileSession, fileStoreFactory);
+        new AgentService(agentDownloadService, agentUploadService, agentMsgDistService, agentFileUploadservice)
 
     }
+
 
     AgentDownloadService getAgentDownloadService() {
 
@@ -74,6 +71,16 @@ class AgentServiceProvider {
 
     AgentMsgDistService getAgentMsgDistService() {
         new AgentMsgDistService(dbStore, dbAccess)
+    }
+
+    AgentUploadService getAgentUploadService() {
+        new AgentUploadService(dbAccess, dbStore, syncServerUploadUrl, restTemplate, changelogChunkSize);
+
+    }
+
+    AgentFileUploadservice getAgentFileUploadService() {
+
+        new AgentFileUploadservice(dbAccess, dbStore, awakeFileSession, fileStoreFactory)
     }
 
     void createDynamicSyncServerUrls() {

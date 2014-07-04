@@ -7,7 +7,7 @@ class DataModelUtil {
 
     GenericDataModelTransformer dataModelTransformer
     DbAccess dbAccess
-    
+
     DataModelUtil(GenericDataModelTransformer dataModelTransformer, DbAccess dbAccess) {
         this.dataModelTransformer = dataModelTransformer
         this.dbAccess = dbAccess

@@ -1,5 +1,6 @@
 package org.cghr.dataSync.service
 
+import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.springframework.web.client.RestTemplate
@@ -7,6 +8,7 @@ import org.springframework.web.client.RestTemplate
 /**
  * Created by ravitej on 2/7/14.
  */
+@TupleConstructor
 class AgentDownloadService {
 
     DbAccess dbAccess
@@ -15,14 +17,7 @@ class AgentDownloadService {
     String syncServerDownloadDataBatchUrl
     RestTemplate restTemplate
 
-    AgentDownloadService(DbAccess dbAccess, DbStore dbStore, String syncServerDownloadInfoUrl, String syncServerDownloadDataBatchUrl, RestTemplate restTemplate) {
-        this.dbAccess = dbAccess
-        this.dbStore = dbStore
-        this.syncServerDownloadInfoUrl = syncServerDownloadInfoUrl
-        this.syncServerDownloadDataBatchUrl = syncServerDownloadDataBatchUrl
-        this.restTemplate = restTemplate
-    }
-
+    
     List<Map> getDownloadInfo() {
 
         restTemplate.getForObject(syncServerDownloadInfoUrl, List.class)
@@ -43,9 +38,19 @@ class AgentDownloadService {
 
     void downloadAndImport(Map<String, String> message) {
 
-        String url = syncServerDownloadDataBatchUrl + message.datastore + '/' + message.ref + '/' + message.refId
-        List data = restTemplate.getForObject(url, List.class)
+        List data = getDownloadedData(message)
         importData(data, message.datastore)
+    }
+
+    List getDownloadedData(Map message) {
+
+        String url = getDownloadBatchUrl(message)
+        restTemplate.getForObject(url, List.class)
+    }
+
+    String getDownloadBatchUrl(Map message) {
+
+        syncServerDownloadDataBatchUrl + message.datastore + '/' + message.ref + '/' + message.refId
     }
 
     void importData(List list, String datastore) {

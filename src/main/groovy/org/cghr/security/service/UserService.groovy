@@ -40,6 +40,16 @@ class UserService {
         }
     }
 
+    boolean isServerHost(String hostname) {
+
+        String serverHost = getServerHostName()
+        hostname == serverHost && serverHost != 'localhost'
+    }
+
+    String getServerHostName() {
+        serverAuthUrl.toURL().host
+    }
+
     boolean isValidLocalUser(User user) {
 
         Map userData = getUserAsMap(user)

@@ -30,14 +30,11 @@ class AngularChartDataModel implements ChartDataModel {
 
     List transformToChartModel(List rows) {
 
-        rows.collect {
-            Map row ->
-                List values = row.values() as List
+        rows.collectWithMapValues { List rowValues ->
 
-                [x: values.first(),
-                        y: values - values.first()]
+            [x: rowValues.first(),
+                    y: rowValues - rowValues.first()]
         }
-
 
     }
 

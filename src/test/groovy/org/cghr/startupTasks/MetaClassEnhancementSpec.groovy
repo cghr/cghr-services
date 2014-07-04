@@ -1,7 +1,7 @@
 package org.cghr.startupTasks
 
-import spock.lang.IgnoreRest
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 18/6/14.
  */
@@ -45,6 +45,17 @@ class MetaClassEnhancementSpec extends Specification {
 
         then:
         json.jsonToMap() == [id: 1, name: 'india']
+
+
+    }
+
+    def "should attach collectWithMapValues to List with Maps"() {
+
+        given:
+        List list = [[id: 1, name: 'india'], [id: 2, name: 'pakistan']]
+
+        expect:
+        list.collectWithMapValues({ it }) == [[1, 'india'], [2, 'pakistan']]
 
 
     }

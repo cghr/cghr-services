@@ -34,13 +34,13 @@ class AppStartupListener implements ServletContextListener {
     String getRealPath(ServletContext servletContext) {
 
         String path = servletContext.getRealPath("/")
-        String realPath = path.endsWith("/") ? path : path + "/"
+        resolvePath(path)
 
     }
 
     String getUserHome() {
         String path = System.getProperty("user.home")
-        path.endsWith("/") ? path : path + '/'
+        resolvePath(path)
     }
 
     void setBasePath(String path) {
@@ -55,5 +55,9 @@ class AppStartupListener implements ServletContextListener {
     void configureLogger(String path) {
 
         PropertyConfigurator.configure(path + "/WEB-INF/log4j.properties");
+    }
+
+    String resolvePath(String path) {
+        path.endsWith("/") ? path : path + "/"
     }
 }

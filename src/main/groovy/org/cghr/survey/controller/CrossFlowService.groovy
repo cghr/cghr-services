@@ -41,7 +41,11 @@ public class CrossFlowService {
 
         String sql = "select $metaData.field crossCheck from $metaData.entity where $metaData.ref=?"
         String dbValue = dbAccess.firstRow(sql, [metaData.refId]).crossCheck
-        dbValue.isInteger() ? dbValue.toInteger() : dbValue
+        getIntOrStringOf(dbValue)
+    }
+
+    Object getIntOrStringOf(String value) {
+        value.isInteger() ? value.toInteger() : value
     }
 
 }

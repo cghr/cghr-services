@@ -23,12 +23,24 @@ class MetaClassEnhancement {
     }
 
     @PostConstruct
-    void collectWithIndex() {
+    void listCollectWithIndex() {
         List.metaClass.collectWithIndex = { closure ->
             def index = 0;
             def list = [];
             delegate.each { obj ->
                 list << closure(obj, index++)
+            }
+            return list
+        }
+    }
+
+    @PostConstruct
+    void listCollectWithMapValues() {
+
+        List.metaClass.collectWithMapValues = { closure ->
+            def list = [];
+            delegate.each { obj ->
+                list << closure(obj.values() as List)
             }
             return list
         }
