@@ -1,7 +1,8 @@
 package org.cghr.commons.file
 
-import org.apache.commons.fileupload.FileItem
 import org.cghr.commons.db.DbStore
+import org.springframework.web.multipart.MultipartFile
+
 /**
  * Created by ravitej on 24/4/14.
  */
@@ -16,18 +17,37 @@ class FileSystemStore {
         this.dbStore = dbStore
     }
 
-    void saveOrUpdate(Map formData, String fileStore, FileItem file) {
+//    void saveOrUpdateOld(Map formData, String fileStore, FileItem file) {
+//
+//        Map data = formData.subMap(formData.keySet().toList() - ['filename', 'category'])
+//
+//        def fileName = formData.filename
+//        def category = formData.category
+//
+//        String fullPath = (fileStoreFactory."$fileStore")."$category"
+//
+//        //Save file to Disk
+//        File newFile = getNewFile(fullPath, fileName)
+//        file.write(newFile)
+//
+//        //Save data to Database
+//        dbStore.saveOrUpdate(data, fileStore)
+//
+//    }
 
-        Map data = formData.subMap(formData.keySet().toList() - ['filename','category'])
+    void saveOrUpdate(Map formData, String fileStore, MultipartFile file) {
+
+        Map data = formData.subMap(formData.keySet().toList() - ['filename', 'category'])
 
         def fileName = formData.filename
         def category = formData.category
 
-        String fullPath =  (fileStoreFactory."$fileStore")."$category"
+        String filePath = (fileStoreFactory."$fileStore")."$category"
 
         //Save file to Disk
-        File newFile = getNewFile(fullPath, fileName)
-        file.write(newFile)
+
+        File newFile = getNewFile(filePath, fileName)
+        file.transferTo(newFile)
 
         //Save data to Database
         dbStore.saveOrUpdate(data, fileStore)
@@ -35,10 +55,8 @@ class FileSystemStore {
     }
 
     File getNewFile(String dirPath, String fileName) {
-        File dir = new File(dirPath)
-        if (!dir.exists())
-            dir.mkdirs()
 
+        File dir = new File(dirPath)
         File file = new File(dir.getAbsolutePath()
                 + '/' + fileName)
         file.write('')
@@ -48,7 +66,7 @@ class FileSystemStore {
     void createFileChangelogs(Map fileData, String filestore) {
 
         Map data = (HashMap) fileData.clone()
-        Map fileMetadata = [filename: data.remove('filename'), filestore: filestore, fileId: data.remove('fileId')]
+        Map fileMetadata = [filename: data.remove('filename'), filestore: filestore, category: data.remove('category')]
 
         dbStore.saveOrUpdate(fileMetadata, 'filechangelog')
         dbStore.createDataChangeLogs(data, filestore)

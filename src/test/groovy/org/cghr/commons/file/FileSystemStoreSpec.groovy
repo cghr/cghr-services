@@ -27,7 +27,8 @@ class FileSystemStoreSpec extends Specification {
     DbStore dbStore
 
 
-    String userHome = File.createTempDir().absolutePath + File.separator
+    String userHome = File.createTempDir().absolutePath + '/'
+
     Map fileStoreFactory = [memberImage: [memberConsent: userHome + 'hcDemo/images/consent/', memberPhoto: userHome + 'hcDemo/images/photo/']]
 
     def setupSpec() {
@@ -35,6 +36,7 @@ class FileSystemStoreSpec extends Specification {
     }
 
     def setup() {
+
 
         fileSystemStore = new FileSystemStore(fileStoreFactory, dbStore)
 

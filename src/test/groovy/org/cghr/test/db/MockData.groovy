@@ -11,7 +11,7 @@ class MockData {
             inbox: [id: 'int auto_increment', datastore: 'varchar(100)', ref: 'varchar(20)', refId: 'varchar(20)', distList: 'varchar(20)', distStatus: 'varchar(20)', impStatus: 'varchar(20)'],
             outbox: [id: 'int', datastore: 'varchar(100)', ref: 'varchar(20)', refId: 'varchar(20)', recipient: 'varchar(20)', distList: 'varchar(20)', dwnStatus: 'varchar(20)'],
             datachangelog: [id: 'int', log: 'text', status: 'varchar(20)'],
-            filechangelog: [id: 'int', filename: 'varchar(100)', filestore: 'varchar(100)', fileId: 'varchar(100)', status: 'varchar(20)'],
+            filechangelog: [id: 'int', filename: 'varchar(100)', filestore: 'varchar(100)', category: 'varchar(100)', status: 'varchar(20)'],
             memberImage: [memberId: 'int', consent: 'varchar(100)', photoId: 'varchar(100)', photo: 'varchar(100)'],
             sales:[name:'varchar(100)',total:'int',month:'int']
     ]
@@ -57,9 +57,9 @@ class MockData {
 
             ],
             filechangelog: [
-                    [id: 1, filename: '151001001_consent.png', filestore: 'memberImage', fileId: 'memberConsent', status: null],
-                    [id: 2, filename: '151001002_consent.png', filestore: 'memberImage', fileId: 'memberConsent', status: null],
-                    [id: 3, filename: '151001003_consent.png', filestore: 'memberImage', fileId: 'memberConsent', status: null]
+                    [id: 1, filename: '151001001_consent.png', filestore: 'memberImage', category: 'memberConsent', status: null],
+                    [id: 2, filename: '151001002_consent.png', filestore: 'memberImage', category: 'memberConsent', status: null],
+                    [id: 3, filename: '151001003_consent.png', filestore: 'memberImage', category: 'memberConsent', status: null]
             ]
     ]
     def sampleDataUpdate = [

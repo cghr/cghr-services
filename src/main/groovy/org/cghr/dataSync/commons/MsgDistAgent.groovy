@@ -19,8 +19,7 @@ class MsgDistAgent implements Agent {
 
         messages.each {
             Map message ->
-                getDistributionList(message)
-                        .each { String recepient ->
+                getDistributionList(message).each { String recepient ->
                     agentService.distributeMessage(message, recepient)
                 }
                 agentService.distributeSuccessful(message)
