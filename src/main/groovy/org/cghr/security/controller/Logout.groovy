@@ -48,7 +48,7 @@ class Logout {
         cookies.each {
             Cookie cookie ->
                 cookie.with {
-                    setValue(""); setPath(""); setMaxAge(0)
+                    setValue(""); setPath("/"); setMaxAge(0)
                     response.addCookie(delegate)
                 }
 

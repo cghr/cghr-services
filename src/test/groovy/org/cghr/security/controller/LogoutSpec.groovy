@@ -61,7 +61,7 @@ class LogoutSpec extends Specification {
 
         then:
         response.getCookie("authtoken")?.getValue() == ""
-        //response.getCookie("user")?.getValue() == null
+        response.getCookie("user")?.getValue() == null
         gSql.rows("select * from authtoken").size() == 0
     }
 

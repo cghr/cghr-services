@@ -20,7 +20,8 @@ class PostAuth {
     void addCookie(String cookieName, String cookieValue, HttpServletResponse response) {
         Cookie cookie = new Cookie(cookieName, cookieValue)
         cookie.with {
-            setMaxAge(60 * 60 * 24); setPath(cookiePath);
+            setMaxAge(60 * 60 * 24);
+            setPath(cookiePath);
             response.addCookie(delegate)
         }
     }

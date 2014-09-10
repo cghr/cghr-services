@@ -34,15 +34,37 @@ public class CrossFlowService {
 
     boolean isConditionFailing(Map crossCheckMetadata, Object crossCheckValue) {
 
+       
         !Eval.me(crossCheckMetadata.field, crossCheckValue, crossCheckMetadata.condition)
     }
 
-    String crossFlowValue(Map metaData) {
+    Object crossFlowValue(Map metaData) {
 
+        String field = metaData.field
+        if (field.contains("age")) {
+            return getAgeValue(metaData)
+        }
         String sql = "select $metaData.field crossCheck from $metaData.entity where $metaData.ref=?"
         String dbValue = dbAccess.firstRow(sql, [metaData.refId]).crossCheck
         getIntOrStringOf(dbValue)
     }
+
+    double getAgeValue(Map metaData) {
+
+        String field = (metaData.field).split('_')[0]
+        String sql = "select $metaData.field age,$field" + "_unit age_unit from $metaData.entity where $metaData.ref=?"
+        Map result = dbAccess.firstRow(sql, [metaData.refId])
+        println 'result' + result
+        convertToYears((result.age).toInteger(), result.age_unit)
+    }
+
+
+    double convertToYears(Integer age, String age_unit) {
+
+        (age_unit == 'Days') ? (age / 365) : ((age_unit == 'Months') ? (age * 30) / 365 : age)
+
+    }
+
 
     Object getIntOrStringOf(String value) {
         value.isInteger() ? value.toInteger() : value

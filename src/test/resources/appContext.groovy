@@ -86,7 +86,7 @@ beans {
     postAuth(PostAuth, userService = userService)
     auth(Auth)
 
-    //Todo Startup Tasks
+    //Todo Startup Tasks  - Metaclass Enhancement
     metaClassEnhancement(MetaClassEnhancement)
     dbImport(DbImport, sqlDir = appPath + 'sqlImport', gSql = gSql)
     dirCreator(DirCreator, [
