@@ -37,7 +37,7 @@ class LookupSpec extends Specification {
         mockMvc=MockMvcBuilders.standaloneSetup(lookupService).build()
     }
 
-    def "should get a value for a given cross check data"() {
+    def "should get a value for a given lookup  data"() {
         given:
         Map lookup=[entity:'country',field:'name',ref:'continent',refId:'asia']
         String json=new Gson().toJson(lookup)
@@ -46,6 +46,17 @@ class LookupSpec extends Specification {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('[{"text":"india","value":"india"},{"text":"pakistan","value":"pakistan"},{"text":"srilanka","value":"srilanka"}]'))
+
+    }
+    def "should get a value for a given lookup  data with a condition"() {
+        given:
+        Map lookup=[entity:'country',field:'name',ref:'continent',refId:'asia',condition:'id>1']
+        String json=new Gson().toJson(lookup)
+        expect:
+        mockMvc.perform(post('/LookupService').contentType(MediaType.APPLICATION_JSON).content(json))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string('[{"text":"pakistan","value":"pakistan"},{"text":"srilanka","value":"srilanka"}]'))
 
     }
 

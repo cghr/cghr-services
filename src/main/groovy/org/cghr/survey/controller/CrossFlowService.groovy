@@ -34,7 +34,6 @@ public class CrossFlowService {
 
     boolean isConditionFailing(Map crossCheckMetadata, Object crossCheckValue) {
 
-       
         !Eval.me(crossCheckMetadata.field, crossCheckValue, crossCheckMetadata.condition)
     }
 
@@ -44,8 +43,10 @@ public class CrossFlowService {
         if (field.contains("age")) {
             return getAgeValue(metaData)
         }
-        String sql = "select $metaData.field crossCheck from $metaData.entity where $metaData.ref=?"
+        String sql = "select $metaData.field crossCheck from $metaData.entity where $metaData.ref=?".toString()
+        println sql
         String dbValue = dbAccess.firstRow(sql, [metaData.refId]).crossCheck
+        println dbValue
         getIntOrStringOf(dbValue)
     }
 
@@ -67,6 +68,9 @@ public class CrossFlowService {
 
 
     Object getIntOrStringOf(String value) {
+        println 'get int ot string of ' + value
+        if (!value)
+            return null
         value.isInteger() ? value.toInteger() : value
     }
 

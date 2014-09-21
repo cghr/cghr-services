@@ -41,6 +41,9 @@ class FileSystemStore {
 
         def fileName = formData.filename
         def category = formData.category
+        println 'filestore '+fileStore
+        println 'category '+category
+        println fileStoreFactory
 
         String filePath = (fileStoreFactory."$fileStore")."$category"
 
@@ -55,6 +58,10 @@ class FileSystemStore {
     }
 
     File getNewFile(String dirPath, String fileName) {
+
+        println 'gettting new file '
+        println 'dir path '+dirPath
+        println 'filename '+fileName
 
         File dir = new File(dirPath)
         File file = new File(dir.getAbsolutePath()

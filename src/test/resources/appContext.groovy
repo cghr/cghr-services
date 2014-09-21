@@ -5,8 +5,8 @@ import org.cghr.commons.db.CleanUp
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.commons.file.FileSystemStore
-import org.cghr.dataSync.providers.AgentProvider
 import org.cghr.dataSync.commons.SyncRunner
+import org.cghr.dataSync.providers.AgentProvider
 import org.cghr.dataSync.providers.AgentServiceProvider
 import org.cghr.dataSync.service.SyncUtil
 import org.cghr.dataViewModel.DataModelUtil
@@ -31,13 +31,14 @@ beans {
     context.'component-scan'('base-package': 'org.cghr.dataSync.controller')
     context.'component-scan'('base-package': 'org.cghr.security.controller')
     context.'component-scan'('base-package': 'org.cghr.survey.controller')
-    multiPartResolver(CommonsMultipartResolver)
+
     mvc.'annotation-driven'()
     mvc.'interceptors'() {
         mvc.'mapping'('path': '/api/GridService/**') {
             bean('class': 'org.cghr.security.controller.AuthInterceptor')
         }
     }
+    multiPartResolver(CommonsMultipartResolver)
     //Todo Add project specific Services
 
     String userHome = System.getProperty('user.home') + '/'
