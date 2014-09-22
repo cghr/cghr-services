@@ -1,4 +1,5 @@
 package org.cghr.commons.web.controller
+
 import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.GenericGroovyContextLoader
@@ -16,6 +17,7 @@ import spock.lang.Specification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 /**
  * Created by ravitej on 5/5/14.
  */
@@ -24,7 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class DataAccessSpec extends Specification {
 
     //@Autowired
-    DataAccess dataAccess=new DataAccess()
+    DataAccess dataAccess = new DataAccess()
+    @Autowired
+    HashMap dataStoreFactory
     @Autowired
     DbTester dt
     @Shared
@@ -47,7 +51,8 @@ class DataAccessSpec extends Specification {
         dt.cleanInsert('country')
         mockMvc = MockMvcBuilders.standaloneSetup(dataAccess).build()
 
-        dataAccess.dbAccess=dbAccess
+        dataAccess.dbAccess = dbAccess
+        dataAccess.dataStoreFactory=dataStoreFactory
 
     }
 
@@ -69,6 +74,23 @@ class DataAccessSpec extends Specification {
 
     }
 
+    def "should get resource as a json for a given entity and entityId"() {
+
+
+        expect:
+        mockMvc.perform(get("/data/dataAccessService/" + entity + "/" + entityId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(result))
+
+
+        where:
+        entity    | entityId || result
+        "country" | "1"      || new Gson().toJson(dataSet[0]).toString()
+        "country" | "999"    || "{}"
+
+
+    }
 
 
 }

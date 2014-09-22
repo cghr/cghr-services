@@ -13,6 +13,8 @@ class DataAccess {
 
     @Autowired
     DbAccess dbAccess
+    @Autowired
+    HashMap dataStoreFactory
 
     @RequestMapping(value = "/{dataStore}/{keyField}/{keyFieldValue}", method = RequestMethod.GET, produces = "application/json")
     String getDataAsJson(
@@ -21,5 +23,15 @@ class DataAccess {
 
         dbAccess.firstRow(dataStore, keyField, keyFieldValue).toJson()
     }
+
+    @RequestMapping(value = "/{entity}/{entityId}", method = RequestMethod.GET, produces = "application/json")
+    String getResource(
+            @PathVariable final String entity,
+            @PathVariable final String entityId) {
+
+        String keyField = dataStoreFactory.get(entity)
+        dbAccess.firstRow(entity, keyField, entityId).toJson()
+    }
+
 
 }
