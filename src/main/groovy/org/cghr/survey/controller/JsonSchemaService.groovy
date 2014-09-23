@@ -22,11 +22,13 @@ class JsonSchemaService {
     String getAllSchemaNamesDev(@PathVariable("app") String app) {
 
         String path = devJsonSchemaPath.replaceAll("<appName>", app)
+        println 'schema path dev '+path
         getJsonSchemaFileNames(path).toJson()
     }
 
     @RequestMapping(value = "/prod", method = RequestMethod.GET, produces = "application/json")
     String getAllSchemaNamesProduction() {
+        println 'schema path prod '+prodJsonSchemaPath
         getJsonSchemaFileNames(prodJsonSchemaPath).toJson()
     }
 
