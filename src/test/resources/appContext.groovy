@@ -116,6 +116,8 @@ beans {
 
     //Todo Maintenance Tasks
     cleanup(CleanUp, dbAccess = dbAccess, excludedEntities = 'user,area')
+
+    //Todo JsonSchema Path
     devJsonSchemaPath(String,"")
     prodJsonSchemaPath(String,"")
 

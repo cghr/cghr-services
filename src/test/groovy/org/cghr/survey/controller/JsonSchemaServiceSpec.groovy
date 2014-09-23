@@ -1,5 +1,4 @@
 package org.cghr.survey.controller
-import com.google.gson.Gson
 import org.cghr.GenericGroovyContextLoader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -28,23 +27,38 @@ class JsonSchemaServiceSpec extends Specification {
 
     def setup() {
 
-        File jsonSchemaDir = File.createTempDir()
-        new File(jsonSchemaDir.absolutePath + "/file1.json").write('')
-        jsonSchemaService.prodJsonSchemaPath = jsonSchemaDir.absolutePath
+        File prodJsonSchemaDir = File.createTempDir()
+        File devJsonSchemaDir = File.createTempDir()
+
+        new File(prodJsonSchemaDir.absolutePath + "/file1.json").write('')
+        new File(devJsonSchemaDir.absolutePath+"/hc/ui/src/assets/jsonSchema").mkdirs()
+        new File(devJsonSchemaDir.absolutePath+"/hc/ui/src/assets/jsonSchema/file1.json").write('')
+        new File(devJsonSchemaDir.absolutePath+"/hc/ui/src/assets/jsonSchema/file2.json").write('')
+
+        jsonSchemaService.prodJsonSchemaPath = prodJsonSchemaDir.absolutePath
+        jsonSchemaService.devJsonSchemaPath=devJsonSchemaDir.absolutePath+"/<appName>"+"/ui/src/assets/jsonSchema"
+
         mockMvc = MockMvcBuilders.standaloneSetup(jsonSchemaService).build()
     }
-
-    def "should get a value for a given lookup  data"() {
-        given:
-        Map lookup = [entity: 'country', field: 'name', ref: 'continent', refId: 'asia']
-        String json = new Gson().toJson(lookup)
+    def "should get list of json files in development"() {
         expect:
-        mockMvc.perform(get("/JsonSchemaService"))
+        mockMvc.perform(get("/JsonSchemaService/dev/hc"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string('["file2.json","file1.json"]'))
+
+    }
+
+    def "should get list of json files in production"() {
+        expect:
+        mockMvc.perform(get("/JsonSchemaService/prod"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('["file1.json"]'))
 
     }
+
+
 
 
 }
