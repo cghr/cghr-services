@@ -19,21 +19,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class NetworkStatusSpec extends Specification {
 
     @Autowired
-    NetworkStatus networkStatus
+    NetworkStatusService networkStatus
     MockMvc mockMvc
 
 
-    def setup() {
-
+    def "should get networkstatus as false for ipAddress pattern 192.168."() {
+        given:
         mockMvc = MockMvcBuilders.standaloneSetup(networkStatus).build()
-    }
-
-    def "should get a value for a given cross check data"() {
         expect:
         mockMvc.perform(get("/NetworkStatus"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('{"status":false}'))
+
+    }
+
+    def "should get networkstatus as true for ipAddress pattern 127.0."() {
+        given:
+        networkStatus.pattern="127.0."
+        mockMvc = MockMvcBuilders.standaloneSetup(networkStatus).build()
+
+        expect:
+        mockMvc.perform(get("/NetworkStatus"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string('{"status":true}'))
 
     }
 

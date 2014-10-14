@@ -1,5 +1,7 @@
 package org.cghr.survey.controller
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -8,24 +10,32 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping("/NetworkStatus")
-class NetworkStatus {
-    
+class NetworkStatusService {
 
-    Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces()
+
+    @Autowired
+    @Qualifier("ipAddressPattern")
+    String pattern
+
 
     @RequestMapping(value = "", produces = "application/json")
     String isConnectedToWifiNetwork() {
 
+        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces()
         List hostAddresses = []
+
         networkInterfaces.each {
             NetworkInterface networkInterface ->
+                println networkInterface
                 networkInterface.getInterfaceAddresses().each {
                     InterfaceAddress interfaceAddress ->
                         hostAddresses.add(interfaceAddress.getAddress().getHostAddress())
                 }
 
         }
-        hostAddresses.findAll { it == /~192.168*.*/ } ? [status: true].toJson() : [status: false].toJson()
+        hostAddresses.findAll {
+            it.contains(pattern)
+        } ? [status: true].toJson() : [status: false].toJson()
     }
 
 
