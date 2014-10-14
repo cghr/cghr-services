@@ -17,23 +17,6 @@ class FileSystemStore {
         this.dbStore = dbStore
     }
 
-//    void saveOrUpdateOld(Map formData, String fileStore, FileItem file) {
-//
-//        Map data = formData.subMap(formData.keySet().toList() - ['filename', 'category'])
-//
-//        def fileName = formData.filename
-//        def category = formData.category
-//
-//        String fullPath = (fileStoreFactory."$fileStore")."$category"
-//
-//        //Save file to Disk
-//        File newFile = getNewFile(fullPath, fileName)
-//        file.write(newFile)
-//
-//        //Save data to Database
-//        dbStore.saveOrUpdate(data, fileStore)
-//
-//    }
 
     void saveOrUpdate(Map formData, String fileStore, MultipartFile file) {
 
@@ -41,9 +24,6 @@ class FileSystemStore {
 
         def fileName = formData.filename
         def category = formData.category
-        println 'filestore '+fileStore
-        println 'category '+category
-        println fileStoreFactory
 
         String filePath = (fileStoreFactory."$fileStore")."$category"
 
@@ -59,15 +39,9 @@ class FileSystemStore {
 
     File getNewFile(String dirPath, String fileName) {
 
-        println 'gettting new file '
-        println 'dir path '+dirPath
-        println 'filename '+fileName
-
-        File dir = new File(dirPath)
-        File file = new File(dir.getAbsolutePath()
-                + '/' + fileName)
+        File file = new File(dirPath + '/' + fileName)
         file.write('')
-        return file
+        file
     }
 
     void createFileChangelogs(Map fileData, String filestore) {

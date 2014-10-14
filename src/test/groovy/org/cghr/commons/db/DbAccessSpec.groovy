@@ -56,6 +56,7 @@ class DbAccessSpec extends Specification {
 
     }
 
+
     def "should get database row as a Map object"() {
 
         expect:

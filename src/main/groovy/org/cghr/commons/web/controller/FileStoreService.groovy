@@ -21,11 +21,10 @@ class FileStoreService {
     FileSystemStore fileSystemStore
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    String saveOrUpdate(@RequestParam(value="data",required = false) String jsonData, @RequestParam(value="file",required =false) MultipartFile file) {
+    String saveOrUpdate(
+            @RequestParam("data") String jsonData,
+            @RequestParam("file") MultipartFile file) {
 
-
-        println 'data '+jsonData
-        println file
 
         Map data = new Gson().fromJson(jsonData, HashMap)
         String filestore = data.remove('filestore')
@@ -33,7 +32,7 @@ class FileStoreService {
         fileSystemStore.saveOrUpdate(data, filestore, file)
         fileSystemStore.createFileChangelogs(data, filestore)
 
-        return ''
+        return 'uploaded successfully'
     }
 
 

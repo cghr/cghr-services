@@ -1,4 +1,5 @@
 package org.cghr.survey.controller
+
 import org.cghr.GenericGroovyContextLoader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -10,6 +11,7 @@ import spock.lang.Specification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 /**
  * Created by ravitej on 7/5/14.
  */
@@ -31,15 +33,17 @@ class JsonSchemaServiceSpec extends Specification {
         File devJsonSchemaDir = File.createTempDir()
 
         new File(prodJsonSchemaDir.absolutePath + "/file1.json").write('')
-        new File(devJsonSchemaDir.absolutePath+"/hc/ui/src/assets/jsonSchema").mkdirs()
-        new File(devJsonSchemaDir.absolutePath+"/hc/ui/src/assets/jsonSchema/file1.json").write('')
-        new File(devJsonSchemaDir.absolutePath+"/hc/ui/src/assets/jsonSchema/file2.json").write('')
+        new File(devJsonSchemaDir.absolutePath + "/hc/ui/src/assets/jsonSchema").mkdirs()
+        new File(devJsonSchemaDir.absolutePath + "/hc/ui/src/assets/jsonSchema/file1.json").write('')
+        new File(devJsonSchemaDir.absolutePath + "/hc/ui/src/assets/jsonSchema/file2.json").write('')
 
         jsonSchemaService.prodJsonSchemaPath = prodJsonSchemaDir.absolutePath
-        jsonSchemaService.devJsonSchemaPath=devJsonSchemaDir.absolutePath+"/<appName>"+"/ui/src/assets/jsonSchema"
+        jsonSchemaService.devJsonSchemaPath = devJsonSchemaDir.absolutePath + "/<appName>" + "/ui/src/assets/jsonSchema"
 
         mockMvc = MockMvcBuilders.standaloneSetup(jsonSchemaService).build()
     }
+
+
     def "should get list of json files in development"() {
         expect:
         mockMvc.perform(get("/JsonSchemaService/dev/hc"))
@@ -49,6 +53,7 @@ class JsonSchemaServiceSpec extends Specification {
 
     }
 
+
     def "should get list of json files in production"() {
         expect:
         mockMvc.perform(get("/JsonSchemaService/prod"))
@@ -57,8 +62,6 @@ class JsonSchemaServiceSpec extends Specification {
                 .andExpect(content().string('["file1.json"]'))
 
     }
-
-
 
 
 }

@@ -69,7 +69,7 @@ beans {
             [memberImage: [
                     memberConsent: appPath + "repo/images/consent",
                     memberPhotoId: appPath + "repo/images/photoId",
-                    memberPhoto: appPath + "repo/images/photo"
+                    memberPhoto  : appPath + "repo/images/photo"
             ]])
     fileSystemStore(FileSystemStore, fileStoreFactory = fileStoreFactory, dbStore = dbStore)
     dt(DbTester, dataSource = dataSource) //Todo Only For unit Testing
@@ -118,7 +118,11 @@ beans {
     cleanup(CleanUp, dbAccess = dbAccess, excludedEntities = 'user,area')
 
     //Todo JsonSchema Path
-    devJsonSchemaPath(String,"")
-    prodJsonSchemaPath(String,"")
+    String prodPath = new File('./assets/jsonSchema').getCanonicalPath()
+    devJsonSchemaPath(String, "")
+    prodJsonSchemaPath(String, "")
+
+
+
 
 }

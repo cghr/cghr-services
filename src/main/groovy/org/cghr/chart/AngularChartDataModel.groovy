@@ -14,7 +14,7 @@ class AngularChartDataModel implements ChartDataModel {
     }
 
     /*
-    Data Format expected by Javascript Angular Chart
+    Example Data Format expected by Javascript Angular Chart
     {"series":["total","month"],"data":[{"x":"india","y":[100,20]},{"x":"pakistan","y":[80,10]},{"x":"srilanka","y":[40,20]}]}
     */
 

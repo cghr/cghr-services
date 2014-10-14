@@ -34,19 +34,27 @@ public class CrossFlowService {
 
     boolean isConditionFailing(Map crossCheckMetadata, Object crossCheckValue) {
 
-        !Eval.me(crossCheckMetadata.field, crossCheckValue, crossCheckMetadata.condition)
+        String field = crossCheckMetadata.field.contains(" ") ? crossCheckMetadata.field.split(" ")[1] : crossCheckMetadata.field
+        !Eval.me(field, crossCheckValue, crossCheckMetadata.condition)
     }
 
     Object crossFlowValue(Map metaData) {
 
         String field = metaData.field
-        if (field.contains("age")) {
+
+        if (field.contains("age"))
             return getAgeValue(metaData)
-        }
-        String sql = "select $metaData.field crossCheck from $metaData.entity where $metaData.ref=?".toString()
-        println sql
+
+        String sql = ""
+        String sqlField = ""
+
+        if (field.contains(" ")) {
+            sqlField = field.split(" ")[0]
+            sql = "select $sqlField crossCheck from $metaData.entity where $metaData.ref=? and $metaData.whereCondition".toString()
+        } else
+            sql = "select $field crossCheck from $metaData.entity where $metaData.ref=?".toString()
+
         String dbValue = dbAccess.firstRow(sql, [metaData.refId]).crossCheck
-        println dbValue
         getIntOrStringOf(dbValue)
     }
 
@@ -55,10 +63,8 @@ public class CrossFlowService {
         String field = (metaData.field).split('_')[0]
         String sql = "select $metaData.field age,$field" + "_unit age_unit from $metaData.entity where $metaData.ref=?"
         Map result = dbAccess.firstRow(sql, [metaData.refId])
-        println 'result' + result
         convertToYears((result.age).toInteger(), result.age_unit)
     }
-
 
     double convertToYears(Integer age, String age_unit) {
 
@@ -66,9 +72,7 @@ public class CrossFlowService {
 
     }
 
-
     Object getIntOrStringOf(String value) {
-        println 'get int ot string of ' + value
         if (!value)
             return null
         value.isInteger() ? value.toInteger() : value

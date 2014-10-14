@@ -18,7 +18,10 @@ class DataModelUtil {
         Map data = dataModelTransformer.getModel(sql, params)
         def headings = dbAccess.columns(sql, params).join(',')
 
-        [headings: headings, filters: filters, sortings: sortings, data: data].toJson()
+        [headings: headings,
+                filters: filters,
+                sortings: sortings,
+                data: data].toJson()
 
     }
 }

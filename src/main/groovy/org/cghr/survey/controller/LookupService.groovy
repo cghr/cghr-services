@@ -27,10 +27,10 @@ public class LookupService {
 
     String constructSqlFromMetadata(Map lookup) {
 
-        if (!lookup.condition)
-            "select $lookup.field text,$lookup.field value from $lookup.entity  where $lookup.ref=?"
-        else
-            "select $lookup.field text,$lookup.field value from $lookup.entity  where $lookup.ref=? and $lookup.condition"
+        String sql = "select $lookup.field text,$lookup.field value from $lookup.entity  where $lookup.ref=? "
+        String whereCondition = (lookup.condition) ? " and $lookup.condition" : "";
+
+        sql + whereCondition
     }
 
 }
