@@ -26,7 +26,6 @@ class NetworkStatusService {
 
         networkInterfaces.each {
             NetworkInterface networkInterface ->
-                println networkInterface
                 networkInterface.getInterfaceAddresses().each {
                     InterfaceAddress interfaceAddress ->
                         hostAddresses.add(interfaceAddress.getAddress().getHostAddress())

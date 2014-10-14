@@ -122,7 +122,7 @@ beans {
     devJsonSchemaPath(String, "")
     prodJsonSchemaPath(String, "")
 
-    ipAddressPattern(String, "192.168.")
+    ipAddressPattern(String, "xyz.abc")
 
 
 }
