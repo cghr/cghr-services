@@ -1,18 +1,17 @@
 package org.cghr.commons.db
+
+import groovy.transform.TupleConstructor
+
 /**
  * Created by ravitej on 9/5/14.
  */
+@TupleConstructor
 class CleanUp {
 
     String excludedEntities
     DbAccess dbAccess
 
-    CleanUp(String excludedEntities, DbAccess dbAccess) {
-
-        this.excludedEntities = excludedEntities
-        this.dbAccess = dbAccess
-    }
-
+    
     void cleanupTables() {
         dbAccess.removeData tableListForCleanup
     }

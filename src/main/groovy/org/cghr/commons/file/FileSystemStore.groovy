@@ -1,22 +1,18 @@
 package org.cghr.commons.file
 
+import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbStore
 import org.springframework.web.multipart.MultipartFile
 
 /**
  * Created by ravitej on 24/4/14.
  */
+@TupleConstructor
 class FileSystemStore {
 
 
     Map fileStoreFactory
     DbStore dbStore
-
-    FileSystemStore(Map fileStoreFactory, DbStore dbStore) {
-        this.fileStoreFactory = fileStoreFactory
-        this.dbStore = dbStore
-    }
-
 
     void saveOrUpdate(Map formData, String fileStore, MultipartFile file) {
 

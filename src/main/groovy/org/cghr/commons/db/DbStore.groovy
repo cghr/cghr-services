@@ -1,16 +1,14 @@
 package org.cghr.commons.db
 
 import groovy.sql.Sql
+import groovy.transform.TupleConstructor
 
+@TupleConstructor
 class DbStore {
 
     Map dataStoreFactory
     Sql gSql
 
-    DbStore(Sql gSql, Map dataStoreFactory) {
-        this.gSql = gSql
-        this.dataStoreFactory = dataStoreFactory
-    }
 
     void saveOrUpdate(Map data, String datastore) {
 
@@ -70,5 +68,5 @@ class DbStore {
         gSql.eachRow(sql, params, closure)
     }
 
-    
+
 }

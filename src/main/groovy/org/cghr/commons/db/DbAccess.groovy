@@ -1,6 +1,7 @@
 package org.cghr.commons.db
 
 import groovy.sql.Sql
+import groovy.transform.TupleConstructor
 
 import java.sql.ResultSetMetaData
 
@@ -8,13 +9,11 @@ import java.sql.ResultSetMetaData
 Wrapper Class for Groovy Sql for Database Access
  */
 
+@TupleConstructor
 class DbAccess {
 
     Sql gSql
 
-    DbAccess(final Sql gSql) {
-        this.gSql = gSql
-    }
 
     Map firstRow(String sql, List params = []) {
         Map row = gSql.firstRow(sql, params)

@@ -1,15 +1,14 @@
 package org.cghr.chart
 
-import org.cghr.GenericGroovyContextLoader
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Specification
-
 /**
  * Created by ravitej on 9/5/14.
  */
-@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyXmlContextLoader)
 class AngularChartDataModelSpec extends Specification {
 
     @Autowired

@@ -1,18 +1,15 @@
 package org.cghr.chart
 
+import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
 
 /**
  * Created by ravitej on 8/5/14.
  */
+@TupleConstructor
 class AngularChartDataModel implements ChartDataModel {
 
-    final DbAccess dbAccess
-
-    AngularChartDataModel(DbAccess dbAccess) {
-        this.dbAccess = dbAccess
-    }
-
+    DbAccess dbAccess
     /*
     Example Data Format expected by Javascript Angular Chart
     {"series":["total","month"],"data":[{"x":"india","y":[100,20]},{"x":"pakistan","y":[80,10]},{"x":"srilanka","y":[40,20]}]}
@@ -25,7 +22,7 @@ class AngularChartDataModel implements ChartDataModel {
         List columnLabels = dbAccess.columns(sql, params)
 
         [series: columnLabels - columnLabels.first(),
-                data: transformToChartModel(rows)].toJson()
+         data  : transformToChartModel(rows)].toJson()
     }
 
     List transformToChartModel(List rows) {
@@ -33,7 +30,7 @@ class AngularChartDataModel implements ChartDataModel {
         rows.collectWithMapValues { List rowValues ->
 
             [x: rowValues.first(),
-                    y: rowValues - rowValues.first()]
+             y: rowValues - rowValues.first()]
         }
 
     }
