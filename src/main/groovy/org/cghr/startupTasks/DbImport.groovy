@@ -1,21 +1,20 @@
 package org.cghr.startupTasks
 
 import groovy.sql.Sql
+import groovy.transform.TupleConstructor
 
 import javax.annotation.PostConstruct
 
 /**
  * Created by ravitej on 25/4/14.
  */
+@TupleConstructor
 class DbImport {
 
     String dbScriptsPath
     Sql gSql
 
-    DbImport(String dbScriptsPath, Sql gSql) {
-        this.dbScriptsPath = dbScriptsPath
-        this.gSql = gSql
-    }
+
 
     @PostConstruct
     void importSqlScripts() {

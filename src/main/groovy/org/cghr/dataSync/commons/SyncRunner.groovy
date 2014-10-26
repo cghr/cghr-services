@@ -1,17 +1,12 @@
 package org.cghr.dataSync.commons
 
+import groovy.transform.TupleConstructor
 import org.cghr.dataSync.providers.AgentProvider
-import org.springframework.beans.factory.annotation.Autowired
 
+@TupleConstructor
 class SyncRunner {
 
-    @Autowired
     AgentProvider agentProvider
-
-
-    SyncRunner(AgentProvider agentProvider) {
-        this.agentProvider = agentProvider
-    }
 
     void run() {
         List<Agent> agents = agentProvider.provideAllAgents()

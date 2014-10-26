@@ -1,17 +1,14 @@
 package org.cghr.dataSync.client
 
-import groovy.transform.CompileStatic
+import groovy.transform.TupleConstructor
 import org.cghr.dataSync.commons.Agent
 import org.cghr.dataSync.service.AgentService
 
-@CompileStatic
+
+@TupleConstructor
 class DownloadOrganizerAgent implements Agent {
 
     AgentService agentService
-
-    DownloadOrganizerAgent(AgentService agentService) {
-        this.agentService = agentService
-    }
 
     void run() {
         List entities = agentService.getDownloadInfo()

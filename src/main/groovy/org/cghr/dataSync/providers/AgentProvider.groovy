@@ -1,5 +1,6 @@
 package org.cghr.dataSync.providers
 
+import groovy.transform.TupleConstructor
 import org.cghr.dataSync.client.DownloadAgent
 import org.cghr.dataSync.client.DownloadOrganizerAgent
 import org.cghr.dataSync.client.FileUploadAgent
@@ -8,13 +9,10 @@ import org.cghr.dataSync.commons.Agent
 import org.cghr.dataSync.commons.MsgDistAgent
 import org.cghr.dataSync.service.AgentService
 
+@TupleConstructor(includes = ["agentServiceProvider"])
 class AgentProvider {
 
     AgentServiceProvider agentServiceProvider
-
-    AgentProvider(AgentServiceProvider agentServiceProvider) {
-        this.agentServiceProvider = agentServiceProvider
-    }
 
     Agent downloadOrganizerAgent
     Agent downloadAgent

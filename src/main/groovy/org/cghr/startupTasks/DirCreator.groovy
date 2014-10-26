@@ -1,18 +1,18 @@
 package org.cghr.startupTasks
 
+import groovy.transform.TupleConstructor
+
 import javax.annotation.PostConstruct
 
 /**
  * Created by ravitej on 25/4/14.
  */
 
+@TupleConstructor
 class DirCreator {
 
     List<String> dirs
 
-    DirCreator(List<String> dirs) {
-        this.dirs = dirs
-    }
 
     @PostConstruct
     void create() {

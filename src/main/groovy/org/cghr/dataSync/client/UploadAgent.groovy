@@ -1,20 +1,14 @@
 package org.cghr.dataSync.client
 
-import groovy.transform.CompileStatic
+import groovy.transform.TupleConstructor
 import org.cghr.dataSync.commons.Agent
 import org.cghr.dataSync.service.AgentService
 
-@CompileStatic
+@TupleConstructor
 class UploadAgent implements Agent {
 
-
     AgentService agentService
-
-    UploadAgent(AgentService agentService) {
-
-        this.agentService = agentService
-    }
-
+    
     public void run() {
 
         Integer chunks = agentService.getDataChangelogChunks()

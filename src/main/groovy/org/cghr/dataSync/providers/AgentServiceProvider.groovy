@@ -1,5 +1,6 @@
 package org.cghr.dataSync.providers
 
+import groovy.transform.TupleConstructor
 import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -9,6 +10,8 @@ import org.springframework.web.client.RestTemplate
 /**
  * Created by ravitej on 13/6/14.
  */
+
+@TupleConstructor(includes = ["dbAccess", "dbStore", "restTemplate", "changelogChunkSize", "serverBaseUrl", "downloadInfoPath", "downloadDataBatchPath", "uploadPath", "syncUtil", "awakeFileManagerPath", "fileStoreFactory", "userHome"])
 class AgentServiceProvider {
 
     DbAccess dbAccess
@@ -24,20 +27,6 @@ class AgentServiceProvider {
     Map fileStoreFactory
     String userHome
 
-    AgentServiceProvider(DbAccess dbAccess, DbStore dbStore, RestTemplate restTemplate, Integer changelogChunkSize, String serverBaseUrl, String downloadInfoPath, String downloadDataBatchPath, String uploadPath, SyncUtil syncUtil, String awakeFileManagerPath, Map fileStoreFactory, String userHome) {
-        this.dbAccess = dbAccess
-        this.dbStore = dbStore
-        this.restTemplate = restTemplate
-        this.changelogChunkSize = changelogChunkSize
-        this.serverBaseUrl = serverBaseUrl
-        this.downloadInfoPath = downloadInfoPath
-        this.downloadDataBatchPath = downloadDataBatchPath
-        this.uploadPath = uploadPath
-        this.syncUtil = syncUtil
-        this.awakeFileManagerPath = awakeFileManagerPath
-        this.fileStoreFactory = fileStoreFactory
-        this.userHome = userHome
-    }
     //Dynamic Properties
     String syncServerDownloadInfoUrl
     String syncServerUploadUrl

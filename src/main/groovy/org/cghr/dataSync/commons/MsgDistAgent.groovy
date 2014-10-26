@@ -1,14 +1,13 @@
 package org.cghr.dataSync.commons
 
+import groovy.transform.TupleConstructor
 import org.cghr.dataSync.service.AgentService
 
+@TupleConstructor
 class MsgDistAgent implements Agent {
 
     AgentService agentService
-
-    MsgDistAgent(AgentService agentService) {
-        this.agentService = agentService
-    }
+    
 
     public void run() {
         List messages = agentService.getInboxMessagesToDistribute()
