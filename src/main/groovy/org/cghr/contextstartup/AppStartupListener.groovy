@@ -1,12 +1,9 @@
 package org.cghr.contextstartup
-
 import groovy.transform.CompileStatic
-import org.apache.log4j.PropertyConfigurator
 
 import javax.servlet.ServletContext
 import javax.servlet.ServletContextEvent
 import javax.servlet.ServletContextListener
-
 /**
  * Created by ravitej on 25/4/14.
  */
@@ -54,7 +51,7 @@ class AppStartupListener implements ServletContextListener {
 
     void configureLogger(String path) {
 
-        PropertyConfigurator.configure(path + "/WEB-INF/log4j.properties");
+        //PropertyConfigurator.configure(path + "/WEB-INF/log4j.properties");
     }
 
     String resolvePath(String path) {
