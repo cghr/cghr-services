@@ -1,18 +1,16 @@
 package org.cghr.dataSync.client
 
+import groovy.transform.TupleConstructor
 import org.cghr.dataSync.commons.Agent
 import org.cghr.dataSync.service.AgentService
 
 /**
  * Created by ravitej on 8/5/14.
  */
+@TupleConstructor
 class FileUploadAgent implements Agent {
 
     AgentService agentService
-
-    FileUploadAgent(AgentService agentService) {
-        this.agentService = agentService
-    }
 
     @Override
     void run() {

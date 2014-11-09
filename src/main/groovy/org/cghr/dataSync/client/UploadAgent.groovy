@@ -8,10 +8,11 @@ import org.cghr.dataSync.service.AgentService
 class UploadAgent implements Agent {
 
     AgentService agentService
-    
+
     public void run() {
 
         Integer chunks = agentService.getDataChangelogChunks()
+
         chunks.times {
             agentService.postBatch(agentService.getDataChangelogBatch())
             agentService.postBatchSuccessful()
