@@ -2,11 +2,14 @@ CGHR-Services  [![Build Status](https://travis-ci.org/cghr/cghr-services.png?bra
 =============
 
 
-cghr-services is a common services module used as a base to create applications.
+A common Services module for apps
 
-It includes
+Includes
 
-Security module
-DataSync module
-DbAccess and DbStore modules
-Context Startup tasks execution module
+* Authetication & Authorisation
+* Data Synchronization 
+* Database wrappers
+* App Startup tasks execution
+* Chart Api 
+* DataViewModel for reports
+* Common services for survey apps
