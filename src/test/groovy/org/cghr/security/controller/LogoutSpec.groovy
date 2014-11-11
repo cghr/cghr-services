@@ -12,7 +12,7 @@ import spock.lang.Specification
 
 import javax.servlet.http.Cookie
 
-@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
 class LogoutSpec extends Specification {
 
     Logout logout

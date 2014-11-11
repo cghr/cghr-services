@@ -40,9 +40,6 @@ class AgentServiceProvider {
 
     AgentService provide() {
 
-        createDynamicSyncServerUrls()
-        buildAwakeFileSession()
-
         agentDownloadService = getAgentDownloadService()
         agentUploadService = getAgentUploadService()
         agentMsgDistService = getAgentMsgDistService()
@@ -52,9 +49,11 @@ class AgentServiceProvider {
 
     }
 
-
     AgentDownloadService getAgentDownloadService() {
 
+        String baseUrl = getSyncServerBaseUrl()
+        syncServerDownloadInfoUrl = baseUrl + downloadInfoPath + '/' + syncUtil.getRecipientId()
+        syncServerDownloadDataBatchUrl = baseUrl + downloadDataBatchPath
         new AgentDownloadService(dbAccess, dbStore, syncServerDownloadInfoUrl, syncServerDownloadDataBatchUrl, restTemplate)
     }
 
@@ -63,31 +62,32 @@ class AgentServiceProvider {
     }
 
     AgentUploadService getAgentUploadService() {
+
+        syncServerUploadUrl = getSyncServerBaseUrl() + uploadPath
         new AgentUploadService(dbAccess, dbStore, syncServerUploadUrl, restTemplate, changelogChunkSize);
 
     }
 
     AgentFileUploadservice getAgentFileUploadService() {
 
+        awakeFileSession = buildAwakeFileSession()
         new AgentFileUploadservice(dbAccess, dbStore, awakeFileSession, fileStoreFactory)
     }
 
-    void createDynamicSyncServerUrls() {
-        String syncServer = syncUtil.syncServerBaseUrl(serverBaseUrl)
-        syncServerDownloadInfoUrl = syncServer + downloadInfoPath + '/' + syncUtil.getRecipientId()
-        syncServerUploadUrl = syncServer + uploadPath
-        syncServerDownloadDataBatchUrl = syncServer + downloadDataBatchPath
 
+    String getSyncServerBaseUrl() {
+
+        return syncUtil.syncServerBaseUrl(serverBaseUrl)
     }
 
-    void buildAwakeFileSession() {
+    AwakeFileSession buildAwakeFileSession() {
 
         String username = "demo";
         char[] password = ['d', 'e', 'm', 'o']
 
         // Create the Awake FILE Session to the remote server:
         try {
-            this.awakeFileSession = new AwakeFileSession(serverBaseUrl + awakeFileManagerPath, username,
+            return this.awakeFileSession = new AwakeFileSession(serverBaseUrl + awakeFileManagerPath, username,
                     password);
 
         }

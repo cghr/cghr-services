@@ -11,7 +11,7 @@ import spock.lang.Specification
 /**
  * Created by ravitej on 27/1/14.
  */
-@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
 class MsgDistAgentSpec extends Specification {
 
     @Autowired

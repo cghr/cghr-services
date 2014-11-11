@@ -13,7 +13,7 @@ import spock.lang.Specification
 /**
  * Created by ravitej on 24/4/14.
  */
-@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
 class FileSystemStoreSpec extends Specification {
 
     FileSystemStore fileSystemStore
@@ -44,20 +44,7 @@ class FileSystemStoreSpec extends Specification {
         dt.clean('datachangelog')
     }
 
-    def "should create a file with a given filename and dir path"() {
-        given:
-        def filename = '151001001_consent.png'
-        def dirPath = File.createTempDir().path
 
-
-        when:
-        fileSystemStore.getNewFile(dirPath, filename)
-
-        then:
-        File finalDir = new File(dirPath)
-        finalDir.listFiles().length == 1
-
-    }
 
     @Ignore
     def "should save the data and write consent file to appropriate path"() {

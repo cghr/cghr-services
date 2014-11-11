@@ -24,17 +24,14 @@ class NetworkStatusService {
         Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces()
         List hostAddresses = []
 
-        networkInterfaces.each {
-            NetworkInterface networkInterface ->
-                networkInterface.getInterfaceAddresses().each {
-                    InterfaceAddress interfaceAddress ->
-                        hostAddresses.add(interfaceAddress.getAddress().getHostAddress())
-                }
+        networkInterfaces.each { NetworkInterface networkInterface ->
+
+            networkInterface.getInterfaceAddresses().each { InterfaceAddress interfaceAddress ->
+                hostAddresses.add(interfaceAddress.getAddress().getHostAddress())
+            }
 
         }
-        hostAddresses.findAll {
-            it.contains(pattern)
-        } ? [status: true].toJson() : [status: false].toJson()
+        hostAddresses.findAll { it.contains(pattern) } ? [status: true].toJson() : [status: false].toJson()
     }
 
 

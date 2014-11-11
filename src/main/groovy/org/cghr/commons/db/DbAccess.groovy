@@ -1,6 +1,7 @@
 package org.cghr.commons.db
 
 import groovy.sql.Sql
+import groovy.transform.Memoized
 import groovy.transform.TupleConstructor
 
 import java.sql.ResultSetMetaData
@@ -36,6 +37,7 @@ class DbAccess {
         rows(sql, [keyFieldValue])
     }
 
+    @Memoized
     List columns(String sql, List params) {
 
         List columnLabels = []

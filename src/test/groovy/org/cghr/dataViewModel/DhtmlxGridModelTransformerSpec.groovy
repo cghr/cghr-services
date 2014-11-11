@@ -8,7 +8,7 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
 class DhtmlxGridModelTransformerSpec extends Specification {
 
     @Autowired

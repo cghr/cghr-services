@@ -14,8 +14,6 @@ class DbImport {
     String dbScriptsPath
     Sql gSql
 
-
-
     @PostConstruct
     void importSqlScripts() {
         importAndDeleteFiles sortedSqlFilesByName

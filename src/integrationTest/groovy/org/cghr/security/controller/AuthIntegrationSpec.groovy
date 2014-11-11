@@ -22,7 +22,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*
 /**
  * Created by ravitej on 27/1/14.
  */
-@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
 class AuthIntegrationSpec extends Specification {
 
     @Autowired

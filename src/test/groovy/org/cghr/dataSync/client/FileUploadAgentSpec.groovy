@@ -12,7 +12,7 @@ import spock.lang.Specification
 /**
  * Created by ravitej on 27/4/14.
  */
-@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
 class FileUploadAgentSpec extends Specification {
 
     FileUploadAgent fileUploadAgent

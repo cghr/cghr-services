@@ -20,25 +20,19 @@ class DataStoreBatch {
 
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
-    void saveData(@RequestBody final Map[] data, HttpServletRequest request) {
+    String saveData(@RequestBody final Map[] data, HttpServletRequest request) {
 
         List changelogs = data.toList()
         dbStore.saveOrUpdateBatch(changelogs)
 
-        String requestHost = getRequestHost(request)
+        String requestHost = request.serverName
         if (isNotSeverHost(requestHost))
             generateChangelogs(changelogs)
 
     }
 
     void generateChangelogs(List changelogs) {
-        changelogs.each {
-            dbStore.createDataChangeLogs(it.data, it.datastore)
-        }
-    }
-
-    String getRequestHost(HttpServletRequest request) {
-        request.getRequestURL().toURL().getHost()
+        dbStore.saveDataChangelogs(changelogs)
     }
 
     String getServerHost() {

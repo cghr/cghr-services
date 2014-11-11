@@ -22,32 +22,28 @@ class FileSystemStore {
         def category = formData.category
 
         String filePath = (fileStoreFactory."$fileStore")."$category"
-
-        //Save file to Disk
-
-        File newFile = getNewFile(filePath, fileName)
+        File newFile = new File(filePath + '/' + fileName)
         file.transferTo(newFile)
 
-        //Save data to Database
         dbStore.saveOrUpdate(data, fileStore)
 
     }
 
-    File getNewFile(String dirPath, String fileName) {
 
-        File file = new File(dirPath + '/' + fileName)
-        file.write('')
-        file
-    }
+    void createFileChangelogs(final Map fileData, final String filestore) {
 
-    void createFileChangelogs(Map fileData, String filestore) {
-
-        Map data = (HashMap) fileData.clone()
-        Map fileMetadata = [filename: data.remove('filename'), filestore: filestore, category: data.remove('category')]
+        def (data, fileMetadata) = getDataAndFileMetaData(fileData, filestore)
 
         dbStore.saveOrUpdate(fileMetadata, 'filechangelog')
         dbStore.createDataChangeLogs(data, filestore)
+    }
 
+    def getDataAndFileMetaData(Map fileData, String filestore) {
+
+        Map data = fileData.subMap(fileData.keySet() - ['filename', 'category'])
+        Map fileMetadata = [filename: fileData.filename, filestore: filestore, category: fileData.category]
+
+        return [data, fileMetadata]
     }
 
 

@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate
  */
 @TupleConstructor
 class AgentDownloadService {
-    
+
     DbAccess dbAccess
     DbStore dbStore
     String syncServerDownloadInfoUrl

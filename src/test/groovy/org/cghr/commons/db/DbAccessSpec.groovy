@@ -1,5 +1,4 @@
 package org.cghr.commons.db
-
 import groovy.sql.Sql
 import org.cghr.GenericGroovyContextLoader
 import org.cghr.test.db.DbTester
@@ -9,7 +8,7 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
 class DbAccessSpec extends Specification {
 
     //specific

@@ -6,18 +6,17 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "net.saliman:gradle-cobertura-plugin:2.2.3"
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.4.0'
+        classpath "net.saliman:gradle-cobertura-plugin:2.2.5"
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1x'
     }
 }
 apply plugin: 'cobertura'
-apply plugin: 'coveralls'
+apply plugin: 'com.github.kt3k.coveralls'
 
 cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
 cobertura.coverageSourceDirs = sourceSets.main.groovy.srcDirs
 
 sourceCompatibility = 1.7
-targetCompatibility = 1.7
 
 version = '0.1-rc2'
 group = 'org.cghr'
@@ -34,7 +33,7 @@ repositories {
     mavenCentral()
 }
 
-String springVersion = '4.1.0.RELEASE'
+String springVersion = '4.1.1.RELEASE'
 
 test {
     systemProperties 'property': 'value'
@@ -43,6 +42,11 @@ test {
 
 }
 
+task copyTestResources(type: Copy) {
+    from "${projectDir}/src/test/resources"
+    into "${buildDir}/classes/test"
+}
+processTestResources.dependsOn copyTestResources
 
 sourceSets {
     integrationTest
@@ -61,7 +65,7 @@ assemble.dependsOn clean
 check.dependsOn intTest
 dependencies {
 
-    compile 'org.apache.httpcomponents:httpclient:4.3.3'
+    //compile 'org.apache.httpcomponents:httpclient:4.3.3'
     compile "org.springframework:spring-webmvc:$springVersion"
     compile 'com.google.code.gson:gson:2.2.4'
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
@@ -72,7 +76,6 @@ dependencies {
     compile 'org.awake-file:awake-file:1.3'
     compile 'log4j:log4j:1.2.17'
     compile 'org.apache.tomcat:tomcat-jdbc:8.0.5'
-    compile 'javax.servlet:javax.servlet-api:3.0.1'
     testCompile 'com.h2database:h2:1.4.177'
     testCompile 'org.spockframework:spock-unitils:0.7-groovy-2.0'
     testCompile 'org.spockframework:spock-spring:0.7-groovy-2.0'

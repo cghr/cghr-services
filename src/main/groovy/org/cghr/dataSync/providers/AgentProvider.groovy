@@ -14,25 +14,12 @@ class AgentProvider {
 
     AgentServiceProvider agentServiceProvider
 
-    Agent downloadOrganizerAgent
-    Agent downloadAgent
-    Agent msgDistAgent
-    Agent uploadAgent
-    Agent fileUploadAgent
-
+    List agents = [DownloadOrganizerAgent, DownloadAgent, MsgDistAgent, UploadAgent, FileUploadAgent]
 
     List<Agent> provideAllAgents() {
 
         AgentService agentService = agentServiceProvider.provide()
-
-        downloadOrganizerAgent = new DownloadOrganizerAgent(agentService)
-        downloadAgent = new DownloadAgent(agentService)
-        msgDistAgent = new MsgDistAgent(agentService)
-        uploadAgent = new UploadAgent(agentService)
-        fileUploadAgent = new FileUploadAgent(agentService)
-
-        return [downloadOrganizerAgent, downloadAgent, msgDistAgent, uploadAgent, fileUploadAgent]
-
+        agents.collect { it.newInstance(agentService) }
     }
 
 

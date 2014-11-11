@@ -1,5 +1,6 @@
 package org.cghr.dataViewModel
 
+import groovy.transform.Memoized
 import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
 
@@ -16,9 +17,15 @@ class DhtmlxGridModelTransformer implements GenericDataModelTransformer {
 
     Map getModel(String sql, List params) {
 
-        List rows = dbAccess.rows(sql, params).collectWithIndex { row, index ->
+        transformModel(dbAccess.rows(sql, params))
+    }
+
+    @Memoized
+    Map transformModel(List rows) {
+
+        List transformedList = rows.collectWithIndex { row, index ->
             [id: (index + 1), data: row.values()]
         }
-        [rows: rows]
+        [rows: transformedList]
     }
 }

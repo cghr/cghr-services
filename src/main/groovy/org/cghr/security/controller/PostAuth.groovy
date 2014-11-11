@@ -14,10 +14,10 @@ class PostAuth {
 
     UserService userService
 
+
     def final cookiePath = '/'
 
     void addCookie(String cookieName, String cookieValue, HttpServletResponse response) {
-
         Cookie cookie = new Cookie(cookieName, cookieValue)
         cookie.with {
             setMaxAge(60 * 60 * 24);

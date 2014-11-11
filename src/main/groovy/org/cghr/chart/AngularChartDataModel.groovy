@@ -1,5 +1,6 @@
 package org.cghr.chart
 
+import groovy.transform.Memoized
 import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
 
@@ -14,7 +15,6 @@ class AngularChartDataModel implements ChartDataModel {
     Example Data Format expected by Javascript Angular Chart
     {"series":["total","month"],"data":[{"x":"india","y":[100,20]},{"x":"pakistan","y":[80,10]},{"x":"srilanka","y":[40,20]}]}
     */
-
     @Override
     String getChartDataModel(String sql, List params) {
 
@@ -25,6 +25,7 @@ class AngularChartDataModel implements ChartDataModel {
          data  : transformToChartModel(rows)].toJson()
     }
 
+    @Memoized
     List transformToChartModel(List rows) {
 
         rows.collectWithMapValues { List rowValues ->

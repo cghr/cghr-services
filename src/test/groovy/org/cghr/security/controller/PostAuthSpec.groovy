@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse
 /**
  * Created by ravitej on 3/6/14.
  */
-@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
 class PostAuthSpec extends Specification {
 
     @Autowired

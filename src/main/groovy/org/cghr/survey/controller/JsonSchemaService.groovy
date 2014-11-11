@@ -29,16 +29,13 @@ class JsonSchemaService {
 
     @RequestMapping(value = "/prod", method = RequestMethod.GET, produces = "application/json")
     String getAllSchemaNamesProduction(HttpServletRequest request) {
-
         getJsonSchemaFileNames(prodJsonSchemaPath).toJson()
     }
 
 
     List getJsonSchemaFileNames(String path) {
         List jsonSchemaDir = new File(path).listFiles()
-        List fileNames = jsonSchemaDir.collect {
-            it.name
-        }
+        List fileNames = jsonSchemaDir.collect { it.name }
         fileNames
     }
 

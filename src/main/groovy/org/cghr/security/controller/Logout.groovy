@@ -2,15 +2,15 @@ package org.cghr.security.controller
 
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RestController
 
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-@Controller
+@RestController
 @RequestMapping("/security/logout")
 class Logout {
 
@@ -30,7 +30,6 @@ class Logout {
 
         deleteAuthToken(getAuthToken(request))
         eraseCookies(request.getCookies(), response)
-        return null
     }
 
     String getAuthToken(HttpServletRequest request) {

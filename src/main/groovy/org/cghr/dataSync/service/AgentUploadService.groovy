@@ -32,7 +32,6 @@ class AgentUploadService {
 
     String getLog(row) {
         row.log instanceof Clob ? row.log.getAsciiStream().getText() : row.log
-
     }
 
     void postBatch(String changelogBatch) {

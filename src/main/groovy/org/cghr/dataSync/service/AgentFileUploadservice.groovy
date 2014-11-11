@@ -19,7 +19,6 @@ class AgentFileUploadservice {
 
 
     List getFileChangelogs() {
-
         dbAccess.rows("select * from filechangelog where status is null", [])
     }
 
@@ -29,22 +28,11 @@ class AgentFileUploadservice {
 
     void uploadFile(Map fileInfo) {
 
-        String path = ((Map) fileStoreFactory.get(fileInfo.filestore)).get(fileInfo.fileId)
-        //String remoteFile = path + '/' + fileInfo.filename
-        String type = ((String) fileInfo.fileId).toLowerCase()
-        String remoteFile = ''
+        String path = fileStoreFactory."$fileInfo.filestore"."$fileInfo.category"
+        String category = fileInfo.category
+        String remoteFile = "/hcDemo/repo/images/$category" + fileInfo.filename
 
-        if (type.contains('consent'))
-            remoteFile = '/hcDemo/repo/images/consent'
-        else if (type.contains('photo'))
-            remoteFile = '/hcDemo/repo/images/photo'
-        else if (type.contains('photoId'))
-            remoteFile = '/hcDemo/repo/images/photoId'
-
-        remoteFile = remoteFile + '/' + fileInfo.filename
         File file = new File(path + '/' + fileInfo.filename)
-        println 'file to upload'
-        println file
         awakeFileSession.upload(file, remoteFile)
 
     }

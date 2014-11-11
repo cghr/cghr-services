@@ -17,20 +17,20 @@ class DataAccess {
     HashMap dataStoreFactory
 
     @RequestMapping(value = "/{dataStore}/{keyField}/{keyFieldValue}", method = RequestMethod.GET, produces = "application/json")
-    String getDataAsJson(
+    Map getDataAsJson(
             @PathVariable final String dataStore,
             @PathVariable final String keyField, @PathVariable final String keyFieldValue) {
 
-        dbAccess.firstRow(dataStore, keyField, keyFieldValue).toJson()
+        dbAccess.firstRow(dataStore, keyField, keyFieldValue)
     }
 
     @RequestMapping(value = "/{entity}/{entityId}", method = RequestMethod.GET, produces = "application/json")
-    String getResource(
+    Map getResource(
             @PathVariable final String entity,
             @PathVariable final String entityId) {
 
         String keyField = dataStoreFactory.get(entity)
-        dbAccess.firstRow(entity, keyField, entityId).toJson()
+        dbAccess.firstRow(entity, keyField, entityId)
     }
 
 

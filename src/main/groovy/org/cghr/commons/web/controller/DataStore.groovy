@@ -1,7 +1,11 @@
 package org.cghr.commons.web.controller
+
 import org.cghr.commons.db.DbStore
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/data/dataStoreService")
@@ -11,14 +15,13 @@ class DataStore {
     DbStore dbStore
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
-    String saveData(@RequestBody  final String reqData) {
+    String saveData(@RequestBody Map reqData) {
 
-        Map data=reqData.jsonToMap()
-        String datastore = data.remove("datastore")
+        Map data = reqData.subMap(reqData.keySet() - ['datastore'])
+        String datastore = reqData.datastore
         dbStore.saveOrUpdate(data, datastore)
 
-        //Create Changelogs
-        dbStore.createDataChangeLogs(data,datastore)
+        dbStore.createDataChangeLogs(data, datastore)
     }
 
 

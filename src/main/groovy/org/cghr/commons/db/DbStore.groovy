@@ -12,9 +12,10 @@ class DbStore {
 
     void saveOrUpdate(Map data, String datastore) {
 
-        String keyField = getKeyField(datastore)
-        String keyFieldValue = getKeyFieldValue(data, keyField)
+        String keyField = dataStoreFactory[datastore]
+        String keyFieldValue = data[keyField]
         String keysAndValues = getKeysAndValues(data)
+
         List valueList = data.values() as List
 
         def sql = isNewData(datastore, keyField, keyFieldValue) ?
@@ -22,15 +23,6 @@ class DbStore {
                 :
                 "update $datastore set $keysAndValues where $keyField=$keyFieldValue"
         gSql.execute(sql, valueList)
-    }
-
-
-    String getKeyField(String datastore) {
-        dataStoreFactory."$datastore"
-    }
-
-    String getKeyFieldValue(Map data, String keyField) {
-        data."$keyField"
     }
 
     String getKeysAndValues(Map data) {
@@ -61,6 +53,13 @@ class DbStore {
 
         Map log = [datastore: dataStore, data: data]
         gSql.execute("insert into datachangelog(log) values(?)", log.toJson())
+    }
+
+    void saveDataChangelogs(List changelogs) {
+
+        gSql.withBatch("insert into datachangelog(log) values(?)") { ps ->
+            changelogs.each { ps.addBatch([it]) }
+        }
     }
 
     void eachRow(String sql, List params, Closure closure) {

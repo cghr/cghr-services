@@ -1,6 +1,5 @@
 package org.cghr.commons.web.controller
 
-import com.google.gson.Gson
 import org.cghr.commons.file.FileSystemStore
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
@@ -26,7 +25,7 @@ class FileStoreService {
             @RequestParam("file") MultipartFile file) {
 
 
-        Map data = new Gson().fromJson(jsonData, HashMap)
+        Map data = jsonData.jsonToMap()
         String filestore = data.remove('filestore')
 
         fileSystemStore.saveOrUpdate(data, filestore, file)

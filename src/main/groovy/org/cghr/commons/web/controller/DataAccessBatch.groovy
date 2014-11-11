@@ -16,12 +16,12 @@ class DataAccessBatch {
     @Autowired
     DbAccess dbAccess
 
-    @RequestMapping(value = "/{dataStore}/{keyField}/{keyFieldValue}", method = RequestMethod.GET,  produces = "application/json")
+    @RequestMapping(value = "/{dataStore}/{keyField}/{keyFieldValue}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    String getDataAsJsonArray(
+    List getDataAsJsonArray(
             @PathVariable String dataStore, @PathVariable String keyField, @PathVariable String keyFieldValue) {
 
-        dbAccess.rows(dataStore, keyField, keyFieldValue).toJson()
+        dbAccess.rows(dataStore, keyField, keyFieldValue)
     }
 
 }

@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
-import org.unitils.reflectionassert.ReflectionAssert
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -22,8 +21,10 @@ class OnlineAuthServiceSpec extends Specification {
     String mockServerAuthUrl
 
 
-    @Shared User validUser = new User(username: 'user1', password: 'secret1')
-    @Shared User invalidUser = new User(username: 'invaliduser', password: 'secret1')
+    @Shared
+    User validUser = new User(username: 'user1', password: 'secret1')
+    @Shared
+    User invalidUser = new User(username: 'invaliduser', password: 'secret1')
 
     def setupSpec() {
     }
@@ -33,12 +34,13 @@ class OnlineAuthServiceSpec extends Specification {
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
 
-        HttpEntity<String> request=new HttpEntity<String>(new Gson().toJson(validUser),headers)
+        HttpEntity<String> request = new HttpEntity<String>(new Gson().toJson(validUser), headers)
 
         mockServerAuthUrl = "http://dummyServer:8080/app/api/security/auth"
         mockRestTemplate = Stub() {
-            postForObject(mockServerAuthUrl,request, Map.class) >> {
-               [id: 1, username: 'user1', password: 'secret1', role:[title:'user',bitMask:2], status: 'active']}
+            postForObject(mockServerAuthUrl, request, Map.class) >> {
+                [id: 1, username: 'user1', password: 'secret1', role: [title: 'user', bitMask: 2], status: 'active']
+            }
             getMessageConverters() >> [] //Mock list for adding message convertors
         }
 
@@ -47,11 +49,11 @@ class OnlineAuthServiceSpec extends Specification {
 
     def "should return User information for a valid User"() {
         given:
-        Map actual = onlineAuthService.authenticate(validUser,"localhost")
-        Map expected = [id: 1, username: 'user1', password: 'secret1', role:[title:'user',bitMask:2], status: 'active']
+        Map actual = onlineAuthService.authenticate(validUser, "localhost")
+        Map expected = [id: 1, username: 'user1', password: 'secret1', role: [title: 'user', bitMask: 2], status: 'active']
 
         expect:
-        ReflectionAssert.assertReflectionEquals(expected, actual)
+        actual == expected
 
     }
 
@@ -62,18 +64,18 @@ class OnlineAuthServiceSpec extends Specification {
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
 
-        HttpEntity<String> request=new HttpEntity<String>(new Gson().toJson(invalidUser),headers)
+        HttpEntity<String> request = new HttpEntity<String>(new Gson().toJson(invalidUser), headers)
 
-        RestTemplate fakeRestTemplate = Stub(){
-        postForObject(mockServerAuthUrl, request, Map.class) >> {
-            throw new HttpClientErrorException(HttpStatus.FORBIDDEN)
-        }
-        getMessageConverters() >> []
+        RestTemplate fakeRestTemplate = Stub() {
+            postForObject(mockServerAuthUrl, request, Map.class) >> {
+                throw new HttpClientErrorException(HttpStatus.FORBIDDEN)
+            }
+            getMessageConverters() >> []
         }
         OnlineAuthService fakeService = new OnlineAuthService(mockServerAuthUrl, fakeRestTemplate)
 
         when:
-        fakeService.authenticate(invalidUser,"localhost")
+        fakeService.authenticate(invalidUser, "localhost")
 
         then:
         thrown(NoSuchUserFound)
@@ -87,7 +89,7 @@ class OnlineAuthServiceSpec extends Specification {
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
 
-        HttpEntity<String> request=new HttpEntity<String>(new Gson().toJson(validUser),headers)
+        HttpEntity<String> request = new HttpEntity<String>(new Gson().toJson(validUser), headers)
 
         RestTemplate fakeRestTemplate = Mock()
         fakeRestTemplate.postForObject(mockServerAuthUrl, request, Map.class) >> {
@@ -97,7 +99,7 @@ class OnlineAuthServiceSpec extends Specification {
         OnlineAuthService fakeService = new OnlineAuthService(mockServerAuthUrl, fakeRestTemplate)
 
         when:
-        fakeService.authenticate(validUser,"localhost")
+        fakeService.authenticate(validUser, "localhost")
 
         then:
         thrown(ServerNotFoundException)
@@ -109,13 +111,13 @@ class OnlineAuthServiceSpec extends Specification {
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
 
-        HttpEntity<String> request=new HttpEntity<String>(new Gson().toJson(validUser),headers)
+        HttpEntity<String> request = new HttpEntity<String>(new Gson().toJson(validUser), headers)
 
         RestTemplate fakeRestTemplate = Mock()
         OnlineAuthService fakeService = new OnlineAuthService(mockServerAuthUrl, fakeRestTemplate)
 
         when:
-        fakeService.authenticate(validUser,"dummyServer")
+        fakeService.authenticate(validUser, "dummyServer")
 
         then:
         thrown(ServerNotFoundException)

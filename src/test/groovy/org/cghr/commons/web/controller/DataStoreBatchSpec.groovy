@@ -1,5 +1,4 @@
 package org.cghr.commons.web.controller
-
 import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.GenericGroovyContextLoader
@@ -15,9 +14,9 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@ContextConfiguration(value = "classpath:appContext.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
 class DataStoreBatchSpec extends Specification {
 
     @Autowired
