@@ -11,7 +11,7 @@ class CleanUp {
     String excludedEntities
     DbAccess dbAccess
 
-    
+
     void cleanupTables() {
         dbAccess.removeData tableListForCleanup
     }

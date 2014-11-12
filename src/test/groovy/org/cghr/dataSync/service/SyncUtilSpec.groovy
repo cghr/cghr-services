@@ -1,17 +1,16 @@
 package org.cghr.dataSync.service
 
-import org.cghr.GenericGroovyContextLoader
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
-
 /**
  * Created by ravitej on 7/5/14.
  */
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class SyncUtilSpec extends Specification {
 
     SyncUtil syncUtil

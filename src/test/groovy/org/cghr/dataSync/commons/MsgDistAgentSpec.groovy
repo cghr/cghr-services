@@ -1,17 +1,17 @@
 package org.cghr.dataSync.commons
 import groovy.sql.Sql
-import org.cghr.GenericGroovyContextLoader
 import org.cghr.dataSync.service.AgentService
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Shared
 import spock.lang.Specification
 /**
  * Created by ravitej on 27/1/14.
  */
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class MsgDistAgentSpec extends Specification {
 
     @Autowired

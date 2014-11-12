@@ -1,19 +1,18 @@
 package org.cghr.security.service
-
 import groovy.sql.Sql
-import org.cghr.GenericGroovyContextLoader
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
-import org.cghr.security.exception.NoSuchUserFound
-import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
+import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.ResourceAccessException
 import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class UserServiceSpec extends Specification {
 
 
@@ -39,15 +38,24 @@ class UserServiceSpec extends Specification {
     User validUserWithBadPassword = new User(username: 'user1', password: 'badpassword')
     @Shared
     String hostname = "localhost"
+    @Shared
+    HttpClientErrorException httpClientErrorException
+    @Shared
+    ResourceAccessException resourceAccessException
 
+    def setupSpec() {
+        httpClientErrorException = Mock()
+    }
 
     def setup() {
 
         OnlineAuthService mockOnlineAuthService = Stub() {
 
-            authenticate(validUser, hostname) >> [id: 1, username: 'user1', password: 'secret1', role: [title: 'user', bitMask: 2]]
-            authenticate(invalidUser, hostname) >> { throw new NoSuchUserFound() }
+            authenticate(validUser) >> [id: 1, username: 'user1', password: 'secret1', role: [title: 'user', bitMask: 2]]
+            authenticate(invalidUser) >> { throw  httpClientErrorException }
+            getServerAuthUrl() >> "http://dummyServer:8080/app/api/security/auth"
         }
+
         userService = new UserService(dbAccess, dbStore, mockOnlineAuthService)
         dt.cleanInsert("user,authtoken,userlog")
     }
@@ -63,8 +71,8 @@ class UserServiceSpec extends Specification {
         where:
         user                     || result
         validUser                || true
-        invalidUser              || false
-        validUserWithBadPassword || false
+        //invalidUser              || false
+        //validUserWithBadPassword || false
 
     }
 
@@ -74,9 +82,11 @@ class UserServiceSpec extends Specification {
         given:
 
         OnlineAuthService onlineAuthServiceOffline = Mock()
+
         onlineAuthServiceOffline.authenticate(validUser, 'localhost') >> {
-            throw new ServerNotFoundException("connection to server failed")
+            throw new ResourceAccessException("Server not found")
         } //Offline Mode No server available
+        onlineAuthServiceOffline.getServerAuthUrl() >> "http://dummyServer:8080/app/api/security/auth"
 
         UserService userServiceOffline = new UserService(dbAccess, dbStore, onlineAuthServiceOffline)
 
@@ -92,8 +102,9 @@ class UserServiceSpec extends Specification {
         OnlineAuthService onlineAuthServiceOffline = Mock()
         User randomUser = new User([username: 'randomuser', password: 'randompassword'])
         onlineAuthServiceOffline.authenticate(randomUser, 'localhost') >> {
-            throw new NoSuchUserFound("No Such User Found")
+            throw httpClientErrorException
         }
+        onlineAuthServiceOffline.getServerAuthUrl() >> "http://dummyServer:8080/app/api/security/auth"
 
         UserService userServiceOffline = new UserService(dbAccess, dbStore, onlineAuthServiceOffline)
 

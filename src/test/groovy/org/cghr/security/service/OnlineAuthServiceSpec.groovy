@@ -1,14 +1,12 @@
 package org.cghr.security.service
-
 import com.google.gson.Gson
-import org.cghr.security.exception.NoSuchUserFound
-import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
@@ -49,7 +47,7 @@ class OnlineAuthServiceSpec extends Specification {
 
     def "should return User information for a valid User"() {
         given:
-        Map actual = onlineAuthService.authenticate(validUser, "localhost")
+        Map actual = onlineAuthService.authenticate(validUser)
         Map expected = [id: 1, username: 'user1', password: 'secret1', role: [title: 'user', bitMask: 2], status: 'active']
 
         expect:
@@ -75,10 +73,10 @@ class OnlineAuthServiceSpec extends Specification {
         OnlineAuthService fakeService = new OnlineAuthService(mockServerAuthUrl, fakeRestTemplate)
 
         when:
-        fakeService.authenticate(invalidUser, "localhost")
+        fakeService.authenticate(invalidUser)
 
         then:
-        thrown(NoSuchUserFound)
+        thrown(HttpClientErrorException)
     }
 
 
@@ -93,35 +91,17 @@ class OnlineAuthServiceSpec extends Specification {
 
         RestTemplate fakeRestTemplate = Mock()
         fakeRestTemplate.postForObject(mockServerAuthUrl, request, Map.class) >> {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND)
+            throw  new ResourceAccessException("Failed to access Resource")
         }
         fakeRestTemplate.getMessageConverters() >> []
         OnlineAuthService fakeService = new OnlineAuthService(mockServerAuthUrl, fakeRestTemplate)
 
         when:
-        fakeService.authenticate(validUser, "localhost")
+        fakeService.authenticate(validUser)
 
         then:
-        thrown(ServerNotFoundException)
+        thrown(ResourceAccessException)
     }
 
-    def "should throw an ServerNotFound exception when hostname and ServerAuth Hostname are same"() {
-
-        given:
-        HttpHeaders headers = new HttpHeaders()
-        headers.setContentType(MediaType.APPLICATION_JSON)
-
-        HttpEntity<String> request = new HttpEntity<String>(new Gson().toJson(validUser), headers)
-
-        RestTemplate fakeRestTemplate = Mock()
-        OnlineAuthService fakeService = new OnlineAuthService(mockServerAuthUrl, fakeRestTemplate)
-
-        when:
-        fakeService.authenticate(validUser, "dummyServer")
-
-        then:
-        thrown(ServerNotFoundException)
-
-    }
 
 }

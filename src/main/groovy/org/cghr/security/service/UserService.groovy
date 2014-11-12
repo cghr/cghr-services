@@ -3,9 +3,9 @@ package org.cghr.security.service
 import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
-import org.cghr.security.exception.NoSuchUserFound
-import org.cghr.security.exception.ServerNotFoundException
 import org.cghr.security.model.User
+import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.ResourceAccessException
 
 @TupleConstructor
 class UserService {
@@ -17,21 +17,29 @@ class UserService {
 
     boolean isValid(User user, String hostname) {
 
-        try {
-            Map userRespFromServer = onlineAuthService.authenticate(user, hostname);
-            cacheUserLocally(userRespFromServer)
-        }
+        if (isServerHost(hostname, onlineAuthService.serverAuthUrl))
+            return isValidLocalUser(user)
 
-        catch (ServerNotFoundException ex) {
-            println 'Server Not Found'
+        try {
+            Map userResponse = onlineAuthService.authenticate(user)
+            cacheUserLocally(userResponse)
         }
-        catch (NoSuchUserFound ex) {
+        catch (ResourceAccessException ex) {
+            println 'Offline Mode:Authenticating Locally'
+        }
+        catch (HttpClientErrorException ex) {
             return false
         }
-
         finally {
             return isValidLocalUser(user)
         }
+
+    }
+
+    boolean isServerHost(String hostname, String serverAuthUrl) {
+
+        String serverHost = serverAuthUrl.toURL().host
+        hostname == serverHost && serverHost != 'localhost'
     }
 
 
@@ -43,7 +51,6 @@ class UserService {
     }
 
     void cacheUserLocally(Map user) {
-
 
         dbStore.saveOrUpdate([id: user.id, username: user.username, password: user.password, role: ((Map) user.role).title], 'user')
     }

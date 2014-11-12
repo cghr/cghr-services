@@ -115,7 +115,7 @@ beans {
     angularChartDataModel(AngularChartDataModel, dbAccess = dbAccess)
 
     //Todo Maintenance Tasks
-    cleanup(CleanUp, dbAccess = dbAccess, excludedEntities = 'user,area')
+    cleanup(CleanUp, dbAccess = dbAccess, excludedEntities = "user,area")
 
     //Todo JsonSchema Path
     String prodPath = new File('./assets/jsonSchema').getCanonicalPath()

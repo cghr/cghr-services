@@ -1,13 +1,13 @@
 package org.cghr.startupTasks
 import groovy.sql.Sql
-import org.cghr.GenericGroovyContextLoader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Specification
 /**
  * Created by ravitej on 25/4/14.
  */
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class DbImportSpec extends Specification {
 
     DbImport dbImport

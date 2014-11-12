@@ -1,7 +1,6 @@
 package org.cghr.security.controller
 import com.google.gson.Gson
 import groovy.sql.Sql
-import org.cghr.GenericGroovyContextLoader
 import org.cghr.security.model.User
 import org.cghr.security.service.UserService
 import org.cghr.test.db.DbTester
@@ -11,10 +10,11 @@ import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class AuthSpec extends Specification {
 
 

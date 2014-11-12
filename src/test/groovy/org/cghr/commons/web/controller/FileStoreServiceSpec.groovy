@@ -1,22 +1,20 @@
 package org.cghr.commons.web.controller
-
 import com.google.gson.Gson
 import groovy.sql.Sql
-import org.cghr.GenericGroovyContextLoader
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Shared
 import spock.lang.Specification
-
 /**
  * Created by ravitej on 12/8/14.
  */
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class FileStoreServiceSpec extends Specification {
 
     @Autowired

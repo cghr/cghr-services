@@ -1,19 +1,17 @@
 package org.cghr.commons.file
-
 import groovy.sql.Sql
-import org.cghr.GenericGroovyContextLoader
 import org.cghr.commons.db.DbStore
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Ignore
 import spock.lang.Specification
-
 /**
  * Created by ravitej on 24/4/14.
  */
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class FileSystemStoreSpec extends Specification {
 
     FileSystemStore fileSystemStore

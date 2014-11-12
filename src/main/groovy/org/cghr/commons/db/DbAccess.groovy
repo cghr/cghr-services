@@ -42,9 +42,7 @@ class DbAccess {
 
         List columnLabels = []
         gSql.rows(sql, params) { ResultSetMetaData metaData ->
-            columnLabels = (1..metaData.columnCount).collect {
-                metaData.getColumnLabel(it)
-            }
+            columnLabels = (1..metaData.columnCount).collect { metaData.getColumnLabel(it) }
         }
         return columnLabels
     }

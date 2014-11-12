@@ -1,17 +1,16 @@
 package org.cghr.security.controller
 
-import org.cghr.GenericGroovyContextLoader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Specification
 
 import javax.servlet.http.HttpServletResponse
-
 /**
  * Created by ravitej on 3/6/14.
  */
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class PostAuthSpec extends Specification {
 
     @Autowired

@@ -1,6 +1,5 @@
 package org.cghr.security.controller
 import groovy.sql.Sql
-import org.cghr.GenericGroovyContextLoader
 import org.cghr.commons.db.DbAccess
 import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
@@ -8,11 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Specification
 
 import javax.servlet.http.Cookie
 
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class LogoutSpec extends Specification {
 
     Logout logout

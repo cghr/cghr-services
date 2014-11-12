@@ -1,17 +1,14 @@
 package org.cghr.commons.db
-
 import groovy.sql.Sql
-import org.cghr.GenericGroovyContextLoader
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Specification
-
-
 /**
  * Created by ravitej on 9/5/14.
  */
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class CleanupSpec extends Specification {
 
     @Autowired

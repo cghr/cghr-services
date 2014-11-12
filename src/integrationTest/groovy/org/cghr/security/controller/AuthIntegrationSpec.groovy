@@ -1,9 +1,7 @@
 package org.cghr.security.controller
-
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.google.gson.Gson
 import groovy.sql.Sql
-import org.cghr.GenericGroovyContextLoader
 import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
@@ -13,16 +11,16 @@ import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
-
 /**
  * Created by ravitej on 27/1/14.
  */
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class AuthIntegrationSpec extends Specification {
 
     @Autowired
