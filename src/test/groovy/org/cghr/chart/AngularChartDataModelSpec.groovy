@@ -22,7 +22,7 @@ class AngularChartDataModelSpec extends Specification {
 
     }
 
-    def "should transfrom sql query to chart model data"() {
+    def "should transform sql query to chart model data"() {
 
         given:
         Map model = [series: ['total', 'month'], data: [

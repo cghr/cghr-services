@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
-import spock.lang.Ignore
 import spock.lang.Specification
 /**
  * Created by ravitej on 24/4/14.
@@ -20,6 +19,7 @@ class FileSystemStoreSpec extends Specification {
     Sql gSql
     @Autowired
     DbTester dt
+
 
     @Autowired
     DbStore dbStore
@@ -35,6 +35,8 @@ class FileSystemStoreSpec extends Specification {
 
     def setup() {
 
+        new File(userHome+'hcDemo/images/consent').mkdirs()
+        new File(userHome+'hcDemo/images/photo').mkdirs()
 
         fileSystemStore = new FileSystemStore(fileStoreFactory, dbStore)
 
@@ -44,7 +46,7 @@ class FileSystemStoreSpec extends Specification {
 
 
 
-    @Ignore
+
     def "should save the data and write consent file to appropriate path"() {
 
         given:
@@ -59,14 +61,13 @@ class FileSystemStoreSpec extends Specification {
 
         then:
         File dir = new File(fileStoreFactory.get(fileStore).get('memberConsent'))
-        println dir.path
         dir.listFiles().length == 1
         gSql.rows('select * from memberImage').size() == 1
 
 
     }
 
-    @Ignore
+
     def "should save the data and write the photo file to appropriate path"() {
 
         given:
@@ -80,7 +81,6 @@ class FileSystemStoreSpec extends Specification {
 
         then:
         File dir = new File(fileStoreFactory.get(fileStore).get('memberPhoto'))
-        println dir.path
         dir.listFiles().length == 1
         gSql.rows('select * from memberImage').size() == 1
 

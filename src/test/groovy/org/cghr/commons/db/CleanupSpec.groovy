@@ -1,10 +1,12 @@
 package org.cghr.commons.db
+
 import groovy.sql.Sql
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 9/5/14.
  */
@@ -35,7 +37,7 @@ class CleanupSpec extends Specification {
 
         where:
         table     || result
-        "user"    || 5
+        "user"    || 5     //Excluded Entity Should not be truncated
         "sales"   || 0
         "country" || 0
 
