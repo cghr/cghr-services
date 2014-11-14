@@ -1,39 +1,41 @@
 package org.cghr.security.controller
 
 import org.cghr.security.service.UserService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
-import spock.lang.Shared
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Specification
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class AuthInterceptorSpec extends Specification {
 
-    @Shared
+
+    @Autowired
     AuthInterceptor authInterceptor
 
-
-    @Shared
     def authtoken = "ABCDEFG-12345"
 
-
-    def setupSpec() {
+    def setup() {
         RequestParser mockParser = Stub() {
-            getAuthTokenFromCookies(_) >>> [authtoken, null]
+            getAuthTokenFromCookies(_) >>> [authtoken,null]
         }
-
         UserService mockUserService = Stub() {
             isValidToken(authtoken) >> true
             isValidToken(null) >> false
         }
-        authInterceptor = new AuthInterceptor(mockUserService, mockParser)
+        authInterceptor.requestParser = mockParser
+        authInterceptor.userService = mockUserService
+
     }
 
 
-    def "should authorise valid User"() {
+    def "should authorise/unAuthorise user based on valid authtoken"() {
 
         given:
         HttpServletRequest request = new MockHttpServletRequest()
@@ -42,10 +44,11 @@ class AuthInterceptorSpec extends Specification {
         expect:
         authInterceptor.preHandle(request, response, new Object()) == true
         response.status == HttpStatus.OK.value
+
         authInterceptor.preHandle(request, response, new Object()) == false
         response.status == HttpStatus.UNAUTHORIZED.value
 
-
     }
+
 
 }

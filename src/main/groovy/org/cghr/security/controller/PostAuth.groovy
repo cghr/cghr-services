@@ -1,18 +1,12 @@
 package org.cghr.security.controller
 
-import groovy.transform.TupleConstructor
-import org.cghr.security.service.UserService
-
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by ravitej on 3/6/14.
  */
-@TupleConstructor
 class PostAuth {
-
-    UserService userService
 
 
     def final cookiePath = '/'

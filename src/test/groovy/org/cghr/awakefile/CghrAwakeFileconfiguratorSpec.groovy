@@ -3,7 +3,6 @@ package org.cghr.awakefile
 import org.cghr.awakeFile.CghrAwakeFileConfigurator
 import spock.lang.Specification
 
-
 /**
  * Created by ravitej on 12/11/14.
  */
@@ -29,9 +28,7 @@ class CghrAwakeFileconfiguratorSpec extends Specification {
     def "should return false for for useOneRoot per username"() {
 
         expect:
-        cghrAwakeFileConfigurator.useOneRootPerUsername() == false
-
+        !cghrAwakeFileConfigurator.useOneRootPerUsername()
     }
-
 
 }

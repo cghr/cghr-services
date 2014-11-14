@@ -19,24 +19,15 @@ class AuthInterceptor implements HandlerInterceptor {
     @Autowired
     RequestParser requestParser
 
-
-    AuthInterceptor(UserService userService, RequestParser requestParser) {
-
-        this.userService = userService
-        this.requestParser = requestParser
-    }
-
-    AuthInterceptor() {
-
-    }
-
     @Override
     boolean preHandle(HttpServletRequest request,
                       HttpServletResponse response, Object handler) throws Exception {
 
         def token = getAuthToken(request)
+
+        println 'token ' + token
         if (isInvalidToken(token))
-            return UNAUTHORISED(response)
+            return unauthorised(response)
 
         return true
     }
@@ -50,8 +41,7 @@ class AuthInterceptor implements HandlerInterceptor {
         (token == null) ? true : !(userService.isValidToken(token))
     }
 
-
-    boolean UNAUTHORISED(HttpServletResponse response) {
+    boolean unauthorised(HttpServletResponse response) {
         response.setStatus(HttpStatus.UNAUTHORIZED.value)
         return false
     }

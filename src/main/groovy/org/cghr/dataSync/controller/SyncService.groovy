@@ -4,7 +4,6 @@ import groovy.transform.CompileStatic
 import org.cghr.dataSync.commons.SyncRunner
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
 @CompileStatic
@@ -15,9 +14,10 @@ class SyncService {
     @Autowired
     SyncRunner syncRunner
 
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping("")
     String synchronize() {
         syncRunner.run()
+        return "Synchronization successful"
     }
 
 }

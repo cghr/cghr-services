@@ -20,10 +20,10 @@ class DbImport {
     }
 
     List getSortedSqlFilesByName() {
-        getSqlFiles()?.sort { it.name }
+        getSqlFiles(dbScriptsPath)?.sort { it.name }
     }
 
-    List getSqlFiles() {
+    List getSqlFiles(dbScriptsPath) {
         new File(dbScriptsPath).listFiles() as List
     }
 

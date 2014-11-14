@@ -13,7 +13,7 @@ import org.springframework.web.client.ResourceAccessException
 import spock.lang.Shared
 import spock.lang.Specification
 
-@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
+@ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader)
 class UserServiceSpec extends Specification {
 
 
@@ -207,6 +207,7 @@ class UserServiceSpec extends Specification {
     def "should be true for a valid token"() {
         given:
         gSql.executeInsert("insert into authtoken(token,username,role) values(?,?,?)", [authtoken, 'user1', 'user'])
+
 
 
         expect:

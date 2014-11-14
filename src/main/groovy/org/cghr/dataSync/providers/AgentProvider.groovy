@@ -14,6 +14,7 @@ class AgentProvider {
 
     AgentServiceProvider agentServiceProvider
 
+    //Order is very important
     List agents = [DownloadOrganizerAgent, DownloadAgent, MsgDistAgent, UploadAgent, FileUploadAgent]
 
     List<Agent> provideAllAgents() {

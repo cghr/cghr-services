@@ -46,8 +46,7 @@ class UserService {
     boolean isValidLocalUser(User user) {
 
         Map userData = getUserAsMap(user)
-        def isValid = userData.isEmpty() ? false : (userData.password == user.password)
-        isValid
+        userData.isEmpty() ? false : (userData.password == user.password)
     }
 
     void cacheUserLocally(Map user) {
@@ -56,7 +55,6 @@ class UserService {
     }
 
     String getUserJson(User user) {
-
 
         dbAccess.firstRow("select * from user where username=?", [user.username]).toJson()
     }

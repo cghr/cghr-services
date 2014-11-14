@@ -6,13 +6,14 @@ import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.commons.file.FileSystemStore
 import org.cghr.dataSync.commons.SyncRunner
-import org.cghr.dataSync.providers.AgentProvider
-import org.cghr.dataSync.providers.AgentServiceProvider
+import org.cghr.dataSync.providers.*
 import org.cghr.dataSync.service.SyncUtil
 import org.cghr.dataViewModel.DataModelUtil
 import org.cghr.dataViewModel.DhtmlxGridModelTransformer
 import org.cghr.security.controller.Auth
+import org.cghr.security.controller.AuthInterceptor
 import org.cghr.security.controller.PostAuth
+import org.cghr.security.controller.RequestParser
 import org.cghr.security.service.OnlineAuthService
 import org.cghr.security.service.UserService
 import org.cghr.startupTasks.DbImport
@@ -84,8 +85,10 @@ beans {
     restTemplate(RestTemplate)
     onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
     userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService)
-    postAuth(PostAuth, userService = userService)
+    postAuth(PostAuth)
     auth(Auth)
+    requestParser(RequestParser)
+    authInterceptor(AuthInterceptor)
 
     //Todo Startup Tasks  - Metaclass Enhancement
     metaClassEnhancement(MetaClassEnhancement)
@@ -99,15 +102,38 @@ beans {
     //Todo Data Synchronization
     String appName = 'hc'
     syncUtil(SyncUtil, dbAccess = dbAccess, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/status/manager', appName = appName)
-    agentServiceProvider(AgentServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
+//    agentServiceProvider(AgentServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
+//            serverBaseUrl = 'http://demo1278634.mockable.io/',
+//            downloadInfoPath = 'api/sync/downloadInfo',
+//            downloadDataBatchPath = 'api/data/dataAccessBatchService/',
+//            uploadPath = 'api/data/dataStoreBatchService',
+//            awakeFileManagerPath = 'app/AwakeFileManager',
+//            fileStoreFactory = fileStoreFactory,
+//            userHome = userHome,
+//            syncUtil = syncUtil)
+
+    agentDownloadServiceProvider(AgentDownloadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate,
             serverBaseUrl = 'http://demo1278634.mockable.io/',
             downloadInfoPath = 'api/sync/downloadInfo',
             downloadDataBatchPath = 'api/data/dataAccessBatchService/',
-            uploadPath = 'api/data/dataStoreBatchService',
-            awakeFileManagerPath = 'app/AwakeFileManager',
-            fileStoreFactory = fileStoreFactory,
-            userHome = userHome,
             syncUtil = syncUtil)
+
+    agentFileUploadServiceProvider(AgentFileUploadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, serverBaseUrl = 'http://demo1278634.mockable.io/',
+            fileStoreFactory = fileStoreFactory,
+            awakeFileManagerPath = 'app/AwakeFileManager')
+
+    agentMsgDistServiceProvider(AgentMsgDistServiceProvider, dbAccess = dbAccess, dbStore = dbStore)
+
+    agentUploadServiceProvider(AgentUploadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
+            serverBaseUrl = 'http://demo1278634.mockable.io/',
+            uploadPath = 'api/data/dataStoreBatchService',
+            syncUtil = syncUtil)
+
+    agentServiceProvider(AgentServiceProvider, agentDownloadServiceProvider,
+            agentFileUploadServiceProvider,
+            agentMsgDistServiceProvider,
+            agentUploadServiceProvider)
+
     agentProvider(AgentProvider, agentServiceProvider = agentServiceProvider)
     syncRunner(SyncRunner, agentProvider = agentProvider)
 

@@ -1,4 +1,5 @@
 package org.cghr.commons.file
+
 import groovy.sql.Sql
 import org.cghr.commons.db.DbStore
 import org.cghr.test.db.DbTester
@@ -7,6 +8,7 @@ import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 24/4/14.
  */
@@ -35,16 +37,15 @@ class FileSystemStoreSpec extends Specification {
 
     def setup() {
 
-        new File(userHome+'hcDemo/images/consent').mkdirs()
-        new File(userHome+'hcDemo/images/photo').mkdirs()
+        new File(userHome + 'hcDemo/images/consent').mkdirs()
+        new File(userHome + 'hcDemo/images/photo').mkdirs()
 
         fileSystemStore = new FileSystemStore(fileStoreFactory, dbStore)
 
         dt.clean('memberImage')
+        dt.clean('filechangelog')
         dt.clean('datachangelog')
     }
-
-
 
 
     def "should save the data and write consent file to appropriate path"() {
@@ -83,6 +84,21 @@ class FileSystemStoreSpec extends Specification {
         File dir = new File(fileStoreFactory.get(fileStore).get('memberPhoto'))
         dir.listFiles().length == 1
         gSql.rows('select * from memberImage').size() == 1
+
+
+    }
+
+    def "should create file changelogs for a given fileData and filestore"() {
+        given:
+        Map formData = [memberId: '151001001', photo: '151001001_photo.png', filename: '151001001_photo', category: 'memberPhoto']
+        String fileStore = 'memberImage'
+
+        when:
+        fileSystemStore.createFileChangelogs(formData, fileStore)
+
+        then:
+        gSql.rows("select * from filechangelog").size() == 1
+        gSql.rows("select * from datachangelog").size()==1
 
 
     }

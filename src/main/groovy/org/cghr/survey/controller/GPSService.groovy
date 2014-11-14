@@ -29,14 +29,13 @@ class GPSService {
                 output << "requesting gps socket server ...\n"
                 def gps = input.newReader().readLine()
 
-                def points = gps.split(";")
+                List points = gps.split(";")
                 return [latitude: points[0], longitude: points[1]].toJson()
 
             }
         }
 
-        catch (Exception ex) {
-
+        catch (any) {
             println "GPS Server not running"
             response.sendError(500)
         }

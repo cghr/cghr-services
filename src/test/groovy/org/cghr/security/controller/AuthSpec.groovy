@@ -23,8 +23,10 @@ class AuthSpec extends Specification {
     Sql gSql
     @Autowired
     DbTester dt
+
     @Autowired
     Auth auth
+
     @Shared
     User validUser = new User(username: 'user1', password: 'secret1')
     @Shared
@@ -51,9 +53,9 @@ class AuthSpec extends Specification {
 
             isServerHost(hostname, _) >> false
 
-            getUserCookieJson(validUser) >> '{"username":"user1","role":{"title":"user","bitMask":2}}'
+            getUserCookieJson(validUser) >> '{"id":1,"username":"user1","password":"secret1","role":{"title":"user","bitMask":2}}'
             getUserCookieJson(invalidUser) >> '{}'
-            getUserCookieJson(manager) >> '{"username":"user4","role":{"title":"manager","bitMask":4}}'
+            getUserCookieJson(manager) >> '{"id":4,"username":"user4","password":"secret4","role":{"title":"manager","bitMask":4}}'
 
             getId(validUser) >> "1"
             getId(validUser) >> null

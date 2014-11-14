@@ -1,4 +1,5 @@
 package org.cghr.security.controller
+
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.security.model.User
@@ -15,6 +16,7 @@ import javax.servlet.http.Cookie
 @ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class LogoutSpec extends Specification {
 
+    @Autowired
     Logout logout
 
     @Autowired
@@ -26,7 +28,6 @@ class LogoutSpec extends Specification {
     def authtoken = 'ABCDEFG-12345'
 
 
-
     def setup() {
 
         DbAccess mockDbAccess = Stub() {
@@ -36,7 +37,7 @@ class LogoutSpec extends Specification {
             }
         }
 
-        logout = new Logout(mockDbAccess)
+        logout.dbAccess = mockDbAccess
         dt.clean("authtoken")
     }
 
@@ -57,7 +58,7 @@ class LogoutSpec extends Specification {
 
 
         when:
-        logout.invalidateSession(request, response)
+        logout.invalidateSession(authtoken, request, response)
 
         then:
         response.getCookie("authtoken")?.getValue() == ""

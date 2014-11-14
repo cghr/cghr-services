@@ -35,8 +35,7 @@ class JsonSchemaService {
 
     List getJsonSchemaFileNames(String path) {
         List jsonSchemaDir = new File(path).listFiles()
-        List fileNames = jsonSchemaDir.collect { it.name }
-        fileNames
+        jsonSchemaDir.collect { it.name }
     }
 
 }
