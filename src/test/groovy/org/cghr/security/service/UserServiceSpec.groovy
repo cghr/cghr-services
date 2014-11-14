@@ -1,4 +1,5 @@
 package org.cghr.security.service
+
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -16,6 +17,7 @@ import spock.lang.Specification
 class UserServiceSpec extends Specification {
 
 
+    @Autowired
     UserService userService
     @Shared
     def authtoken = "ABCDEFG-12345"
@@ -52,11 +54,11 @@ class UserServiceSpec extends Specification {
         OnlineAuthService mockOnlineAuthService = Stub() {
 
             authenticate(validUser) >> [id: 1, username: 'user1', password: 'secret1', role: [title: 'user', bitMask: 2]]
-            authenticate(invalidUser) >> { throw  httpClientErrorException }
+            authenticate(invalidUser) >> { throw httpClientErrorException }
             getServerAuthUrl() >> "http://dummyServer:8080/app/api/security/auth"
         }
 
-        userService = new UserService(dbAccess, dbStore, mockOnlineAuthService)
+        userService.onlineAuthService = mockOnlineAuthService
         dt.cleanInsert("user,authtoken,userlog")
     }
 
@@ -71,8 +73,8 @@ class UserServiceSpec extends Specification {
         where:
         user                     || result
         validUser                || true
-        //invalidUser              || false
-        //validUserWithBadPassword || false
+        invalidUser              || false
+        validUserWithBadPassword || false
 
     }
 
@@ -227,6 +229,18 @@ class UserServiceSpec extends Specification {
         'manager'     | 4
         'coordinator' | 8
         'admin'       | 16
+
+    }
+
+    def "should verify for serverHost"() {
+
+        expect:
+        userService.isServerHost(host, serverAuthUrl) == result
+        where:
+        host                 | serverAuthUrl                             || result
+        "localhost"          | "http://barshi.vm-host.net:8080/hcServer" || false
+        "barshi.vm-host.net" | "http://barshi.vm-host.net:8080/hcServer" || true
+
 
     }
 }

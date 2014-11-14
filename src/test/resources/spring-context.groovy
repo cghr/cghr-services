@@ -123,6 +123,7 @@ beans {
     prodJsonSchemaPath(String, "")
 
     ipAddressPattern(String, "xyz.abc")
+    gpsSocketPort(Integer, 4444)
 
 
 }

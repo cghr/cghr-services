@@ -9,10 +9,9 @@ import spock.lang.Specification
  */
 class CghrAwakeFileconfiguratorSpec extends Specification {
 
+
     CghrAwakeFileConfigurator cghrAwakeFileConfigurator
-
     String tmpDir = File.createTempDir().absolutePath
-
 
     def setup() {
 

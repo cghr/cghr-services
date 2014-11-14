@@ -38,6 +38,8 @@ class UserService {
 
     boolean isServerHost(String hostname, String serverAuthUrl) {
 
+        println 'hostname ' + hostname
+        println 'serverAuth url ' + serverAuthUrl
         String serverHost = serverAuthUrl.toURL().host
         hostname == serverHost && serverHost != 'localhost'
     }
