@@ -84,8 +84,11 @@ class SyncIntegrationSpec extends Specification {
         String pathToCheck = 'status/manager'
         String appName = 'app'
         SyncUtil syncUtil = new SyncUtil(dbAccess, restTemplate, baseIp, startNode, endNode, port, pathToCheck, appName)
-        syncService.syncRunner.agentProvider.agentServiceProvider.syncUtil = syncUtil
-        syncService.syncRunner.agentProvider.agentServiceProvider.restTemplate = restTemplate
+        syncService.syncRunner.agentProvider.agentServiceProvider.agentUploadServiceProvider.syncUtil = syncUtil
+        syncService.syncRunner.agentProvider.agentServiceProvider.agentDownloadServiceProvider.syncUtil = syncUtil
+
+        syncService.syncRunner.agentProvider.agentServiceProvider.agentUploadServiceProvider.restTemplate = restTemplate
+        syncService.syncRunner.agentProvider.agentServiceProvider.agentDownloadServiceProvider.restTemplate = restTemplate
 
         gSql.execute("insert into user(id,username,password,role) values(?,?,?,?)", [15, 'user1', 'password', 'user'])
         //Make an entry in authtoken as User
