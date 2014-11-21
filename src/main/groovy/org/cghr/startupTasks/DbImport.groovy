@@ -19,6 +19,10 @@ class DbImport {
         importAndDeleteFiles sortedSqlFilesByName
     }
 
+    void importSqlScriptsWithoutDeleting() {
+        importFiles sortedSqlFilesByName
+    }
+
     List getSortedSqlFilesByName() {
         getSqlFiles(dbScriptsPath)?.sort { it.name }
     }
@@ -32,6 +36,10 @@ class DbImport {
         files.each { importSqlFile(it); deleteFile(it) }
     }
 
+    void importFiles(List files) {
+
+        files.each { importSqlFile(it); }
+    }
 
     void importSqlFile(File file) {
 

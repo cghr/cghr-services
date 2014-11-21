@@ -25,15 +25,7 @@ class Auth {
     String authenticate(@RequestBody User user, HttpServletResponse response, HttpServletRequest request) {
 
         String hostname = getHostName(request)
-
-        if (isInvalidUser(user, hostname))
-            return authFailure(user, response)
-
-        String authtoken = generateAuthToken()
-        saveAuthToken(authtoken, user)
-        addCookies(user, authtoken, response)
-
-        return authSuccessful(user)
+        isInvalidUser(user, hostname) ? authFailure(user, response) : authSuccessful(user, response)
 
     }
 
@@ -41,9 +33,14 @@ class Auth {
         UUID.randomUUID().toString()
     }
 
-    String authSuccessful(User user) {
+    String authSuccessful(User user, HttpServletResponse response) {
+
+        String authtoken = generateAuthToken()
+        saveAuthToken(authtoken, user)
+        addCookies(user, authtoken, response)
+
         userService.logUserAuthStatus(user, "success")
-        return getUserJson(user)
+        getUserJson(user)
     }
 
     String authFailure(User user, HttpServletResponse response) {

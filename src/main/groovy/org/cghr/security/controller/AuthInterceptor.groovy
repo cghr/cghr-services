@@ -24,12 +24,7 @@ class AuthInterceptor implements HandlerInterceptor {
                       HttpServletResponse response, Object handler) throws Exception {
 
         def token = getAuthToken(request)
-
-        println 'token ' + token
-        if (isInvalidToken(token))
-            return unauthorised(response)
-
-        return true
+        isInvalidToken(token) ? unauthorised(response) : true
     }
 
     String getAuthToken(HttpServletRequest request) {

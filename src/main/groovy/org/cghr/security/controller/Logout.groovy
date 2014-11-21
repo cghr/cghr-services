@@ -36,12 +36,11 @@ class Logout {
 
     void eraseCookies(Cookie[] cookies, HttpServletResponse response) {
 
-        cookies.each {
-            Cookie cookie ->
-                cookie.with {
-                    setValue(""); setPath("/"); setMaxAge(0)
-                    response.addCookie(delegate)
-                }
+        cookies.each { Cookie cookie ->
+            cookie.with {
+                setValue(""); setPath("/"); setMaxAge(0)
+                response.addCookie(delegate)
+            }
 
         }
     }

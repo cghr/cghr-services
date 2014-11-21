@@ -12,25 +12,22 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping("/CrossCheckService")
-public class CrossCheckService {
+class CrossCheckService {
 
     @Autowired
     DbAccess dbAccess
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    String getCrossCheck(@RequestBody Map crossCheckMetadata) {
+    Map getCrossCheck(@RequestBody Map crossCheckMetadata) {
 
         String dbValue = getCrossCheckValue(crossCheckMetadata)
-        def crossCheckValue = getIntOrStringOf dbValue
-
-        [value: crossCheckValue].toJson()
+        [value: getIntOrStringOf(dbValue)]
     }
 
     String getCrossCheckValue(Map metadata) {
-
+        
         def sql = "select $metadata.field crossCheck from $metadata.entity where $metadata.ref=?"
         dbAccess.firstRow(sql, [metadata.refId]).crossCheck
-
     }
 
     Object getIntOrStringOf(String crossCheckValue) {

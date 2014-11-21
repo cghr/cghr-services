@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
-import javax.servlet.http.HttpServletRequest
-
 /**
  * Created by ravitej on 21/9/14.
  */
@@ -28,14 +26,17 @@ class JsonSchemaService {
     }
 
     @RequestMapping(value = "/prod", method = RequestMethod.GET, produces = "application/json")
-    String getAllSchemaNamesProduction(HttpServletRequest request) {
+    String getAllSchemaNamesProduction() {
         getJsonSchemaFileNames(prodJsonSchemaPath).toJson()
     }
 
 
     List getJsonSchemaFileNames(String path) {
         List jsonSchemaDir = new File(path).listFiles()
-        jsonSchemaDir.collect { it.name }
-    }
 
+        jsonSchemaDir
+                .findAll { File file -> !file.isDirectory() }
+                .collect { it.name }
+
+    }
 }

@@ -9,12 +9,13 @@ import javax.servlet.http.HttpServletResponse
 class PostAuth {
 
 
-    def final cookiePath = '/'
+    final String cookiePath = '/'
 
     void addCookie(String cookieName, String cookieValue, HttpServletResponse response) {
+
         Cookie cookie = new Cookie(cookieName, cookieValue)
         cookie.with {
-            setMaxAge(60 * 60 * 24);
+            setMaxAge(60 * 60 * 24)
             setPath(cookiePath);
             response.addCookie(delegate)
         }

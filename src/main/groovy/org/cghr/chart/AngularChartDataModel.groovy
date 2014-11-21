@@ -27,12 +27,13 @@ class AngularChartDataModel implements ChartDataModel {
     }
 
     @Memoized
-    List transformToChartModel(List rows) {
+    List transformToChartModel(List<Map> rows) {
 
-        rows.collectWithMapValues { List rowValues ->
 
-            [x: rowValues.first(),
-             y: rowValues - rowValues.first()]
+        rows.collectWithMapValues { List mapValues ->
+
+            [x: mapValues.first(),
+             y: mapValues - mapValues.first()]
         }
 
     }
