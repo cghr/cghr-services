@@ -1,4 +1,5 @@
 package org.cghr.commons.web.controller
+
 import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.commons.db.DbStore
@@ -40,7 +41,7 @@ class DataStoreSpec extends Specification {
 
     def setup() {
 
-        mockMvc=MockMvcBuilders.standaloneSetup(dataStore).build()
+        mockMvc = MockMvcBuilders.standaloneSetup(dataStore).build()
 
         dt.clean("country")
         dt.clean("datachangelog")
@@ -49,14 +50,18 @@ class DataStoreSpec extends Specification {
     def "should save a map to database"() {
 
         given:
-        String json=new Gson().toJson([id:1,name:'india',continent:'asia',datastore:'country'])
+        String json = new Gson().toJson([id: 1, name: 'india', continent: 'asia', datastore: 'country'])
 
         when:
-        mockMvc.perform(post('/data/dataStoreService').contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk()).andReturn();
+        mockMvc.perform(post('/data/dataStoreService')
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk())
+                .andReturn();
 
 
         then:
         gSql.firstRow("select * from country where id=?", [1]) == dataSet[0]
-        gSql.rows("select * from datachangelog").size()==1
+        gSql.rows("select * from datachangelog").size() == 1
     }
 }

@@ -61,5 +61,9 @@ class DbAccess {
         }
     }
 
+    List getAllRows(String table) {
 
+        String sql = "select * from $table"
+        rows(sql, [])
+    }
 }

@@ -1,4 +1,5 @@
 package org.cghr.commons.db
+
 import groovy.sql.Sql
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
@@ -56,7 +57,6 @@ class DbAccessSpec extends Specification {
     }
 
 
-
     def "should get database row as a Map object"() {
 
         expect:
@@ -87,6 +87,17 @@ class DbAccessSpec extends Specification {
         sql            | params                   || result
         multipleRowSql | validParamsMultipleRow   || dataSet
         multipleRowSql | invalidParamsMultipleRow || []
+
+
+    }
+
+    def "should get all rows for a given table"() {
+        expect:
+        dbAccess.getAllRows(tableName) == result
+
+        where:
+        tableName || result
+        'country' || dataSet
 
 
     }
