@@ -1,7 +1,6 @@
 package org.cghr.commons.db
 
 import groovy.transform.TupleConstructor
-
 /**
  * Created by ravitej on 9/5/14.
  */
@@ -13,18 +12,19 @@ class CleanUp {
 
 
     void cleanupTables() {
-        dbAccess.removeData tableListForCleanup
+        dbAccess.removeData(getTableListForCleanup())
     }
 
     List getTableListForCleanup() {
-        List excludedTables = excludedEntities.split(",") as List
-        getAllTables().findAll { !(it in excludedTables) }
+        List excludedTables = excludedEntities.split(",")
+        allTables - excludedTables
     }
 
     List getAllTables() {
 
-        dbAccess.rows('show tables', []).collect {
-            it.values()[0]
-        }
+        dbAccess.rows('show tables', [])
+                .collect { it.values() as List }
+                .collect { List values -> values.first() }
+
     }
 }

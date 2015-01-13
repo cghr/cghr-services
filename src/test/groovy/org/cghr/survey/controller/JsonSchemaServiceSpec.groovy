@@ -47,7 +47,6 @@ class JsonSchemaServiceSpec extends Specification {
         expect:
         mockMvc.perform(get("/JsonSchemaService/dev/hc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('["file2.json","file1.json"]'))
 
     }
@@ -57,7 +56,6 @@ class JsonSchemaServiceSpec extends Specification {
         expect:
         mockMvc.perform(get("/JsonSchemaService/prod"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('["file1.json"]'))
 
     }

@@ -5,7 +5,6 @@ import org.cghr.commons.db.DbAccess
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import org.springframework.test.web.servlet.MockMvc
@@ -43,14 +42,13 @@ class DataAccessSpec extends Specification {
         dataSet = new MockData().sampleData.get('country')
 
     }
-
     def setup() {
 
         dt.cleanInsert('country')
         mockMvc = MockMvcBuilders.standaloneSetup(dataAccess).build()
 
         dataAccess.dbAccess = dbAccess
-        dataAccess.dataStoreFactory=dataStoreFactory
+        dataAccess.dataStoreFactory = dataStoreFactory
 
     }
 
@@ -60,9 +58,7 @@ class DataAccessSpec extends Specification {
         expect:
         mockMvc.perform(get("/data/dataAccessService/" + datastore + "/" + id + "/" + value))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(result))
-
 
         where:
         datastore | id   | value || result
@@ -71,14 +67,12 @@ class DataAccessSpec extends Specification {
 
 
     }
-
     def "should get resource as a json for a given entity and entityId"() {
 
 
         expect:
         mockMvc.perform(get("/data/dataAccessService/" + entity + "/" + entityId))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(result))
 
 

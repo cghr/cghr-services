@@ -48,7 +48,6 @@ class DataAccessBatchSpec extends Specification {
         expect:
         mockMvc.perform(get("/data/dataAccessBatchService/" + datastore + "/" + keyField + "/" + keyFieldValue))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(result))
 
         where:

@@ -18,15 +18,19 @@ class FileSystemStore {
 
         Map data = formData.subMap(formData.keySet().toList() - ['filename', 'category'])
 
-        def fileName = formData.filename
-        def category = formData.category
+        def (fileName, category) = [formData.filename, formData.category]
 
         String filePath = (fileStoreFactory."$fileStore")."$category"
-        File newFile = new File(filePath + '/' + fileName)
-        file.transferTo(newFile)
+        createFile(filePath, fileName, file)
+
 
         dbStore.saveOrUpdate(data, fileStore)
 
+    }
+
+    void createFile(String filePath, String fileName, MultipartFile file) {
+        File newFile = new File(filePath + '/' + fileName)
+        file.transferTo(newFile)
     }
 
 

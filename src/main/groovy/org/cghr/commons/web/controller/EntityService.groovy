@@ -14,14 +14,14 @@ class EntityService {
 
     @Autowired
     DbAccess dbAccess
-
     @Autowired
     DbStore dbStore
-
     @Autowired
     HashMap dataStoreFactory
 
-    @RequestMapping(value = "/{entityName}/{entityId}", method = RequestMethod.GET, produces = "application/json")
+
+
+    @RequestMapping("/{entityName}/{entityId}")
     Map getEntity(
             @PathVariable("entityName") String entityName,
             @PathVariable("entityId") String entityId) {
@@ -30,16 +30,16 @@ class EntityService {
 
     }
 
-    @RequestMapping(value = "/{entityName}", method = RequestMethod.GET, produces = "application/json")
+
+
+    @RequestMapping("/{entityName}")
     Map[] getEntityList(@PathVariable("entityName") String entityName) {
 
         findEntityList(entityName)
 
     }
 
-    Map[] findEntityList(String entityName) {
-        dbAccess.getAllRows(entityName)
-    }
+
 
     @RequestMapping(value = "/{entityName}", method = RequestMethod.POST, consumes = "application/json")
     String saveOrUpdateEntity(@RequestBody Map entity, @PathVariable("entityName") String entityName) {
@@ -48,6 +48,8 @@ class EntityService {
         dbStore.createDataChangeLogs(entity, entityName)
         return "saved successfully"
     }
+
+
 
     @RequestMapping(value = "/{entityName}/{entityId}", method = RequestMethod.DELETE)
     String deleteEntity(@PathVariable("entityName") String entityName,
@@ -58,11 +60,20 @@ class EntityService {
     }
 
 
+
+    Map[] findEntityList(String entityName) {
+        dbAccess.getAllRows(entityName)
+    }
+
+
+
     Map findEntityById(String entityName, String entityId) {
 
         String entityKey = getEntityKey(entityName)
         entityKey ? dbAccess.firstRow(entityName, entityKey, entityId) : [:]
     }
+
+
 
     String getEntityKey(String entityName) {
 

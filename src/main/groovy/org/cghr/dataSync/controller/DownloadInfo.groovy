@@ -1,11 +1,9 @@
 package org.cghr.dataSync.controller
-
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 /**
  * Created by ravitej on 4/5/14.
@@ -20,7 +18,7 @@ class DownloadInfo {
     DbStore dbStore
 
 
-    @RequestMapping(value = "/{recipient}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping("/{recipient}")
     String downloadInfo(@PathVariable("recipient") Integer recipient) {
 
         String sql = "select datastore,ref,refId,distList from outbox where recipient=? and dwnStatus is null"

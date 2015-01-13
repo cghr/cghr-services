@@ -28,8 +28,10 @@ class FileUploadAgent implements Agent {
     void uploadAFile(Map fileInfo) {
 
         try {
-            agentService.uploadFile(fileInfo)
-            agentService.fileUploadSuccessful(fileInfo.id)
+            agentService.with {
+                uploadFile(fileInfo)
+                fileUploadSuccessful(fileInfo.id)
+            }
         }
         catch (Exception e) {
             e.printStackTrace();

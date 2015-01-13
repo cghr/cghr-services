@@ -18,7 +18,7 @@ class NetworkStatusService {
     String pattern
 
 
-    @RequestMapping(value = "", produces = "application/json")
+    @RequestMapping("")
     String isConnectedToWifiNetwork() {
 
         Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces()

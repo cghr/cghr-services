@@ -1,13 +1,10 @@
 package org.cghr.survey.controller
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
 import javax.servlet.http.HttpServletResponse
-
 /**
  * Created by ravitej on 12/11/14.
  */
@@ -19,7 +16,7 @@ class GPSService {
     @Qualifier("gpsSocketPort")
     Integer gpsSocketPort
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping("")
     String getGps(HttpServletResponse response) {
 
         try {

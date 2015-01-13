@@ -28,7 +28,6 @@ class NetworkStatusSpec extends Specification {
         expect:
         mockMvc.perform(get("/NetworkStatus"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('{"status":false}'))
 
     }
@@ -41,7 +40,6 @@ class NetworkStatusSpec extends Specification {
         expect:
         mockMvc.perform(get("/NetworkStatus"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('{"status":true}'))
 
     }

@@ -1,6 +1,5 @@
 import groovy.sql.Sql
 import org.apache.tomcat.jdbc.pool.DataSource
-import org.cghr.chart.AngularChartDataModel
 import org.cghr.commons.db.CleanUp
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -8,8 +7,6 @@ import org.cghr.commons.file.FileSystemStore
 import org.cghr.dataSync.commons.SyncRunner
 import org.cghr.dataSync.providers.*
 import org.cghr.dataSync.service.SyncUtil
-import org.cghr.dataViewModel.DataModelUtil
-import org.cghr.dataViewModel.DhtmlxGridModelTransformer
 import org.cghr.security.controller.Auth
 import org.cghr.security.controller.AuthInterceptor
 import org.cghr.security.controller.PostAuth
@@ -27,7 +24,7 @@ beans {
     xmlns([context: 'http://www.springframework.org/schema/context'])
     xmlns([mvc: 'http://www.springframework.org/schema/mvc'])
 
-    //Common Services
+
     context.'component-scan'('base-package': 'org.cghr.commons.web.controller')
     context.'component-scan'('base-package': 'org.cghr.dataSync.controller')
     context.'component-scan'('base-package': 'org.cghr.security.controller')
@@ -40,6 +37,9 @@ beans {
         }
     }
     multiPartResolver(CommonsMultipartResolver)
+//    contentNegotiationViewResolver(ContentNegotiatingViewResolver, {
+//        mediaTypes = [json: 'application/json']
+//    })
     //Todo Add project specific Services
 
     String userHome = System.getProperty('user.home') + '/'
@@ -75,9 +75,6 @@ beans {
     fileSystemStore(FileSystemStore, fileStoreFactory = fileStoreFactory, dbStore = dbStore)
     dt(DbTester, dataSource = dataSource) //Todo Only For unit Testing
 
-    //Data Model for reports
-    transformer(DhtmlxGridModelTransformer, dbAccess = dbAccess)
-    dataModelUtil(DataModelUtil, transformer = transformer, dbAccess = dbAccess)
 
     //Todo Security
     serverAuthUrl(String, "http://localhost:8089/app/api/security/auth")
@@ -102,15 +99,6 @@ beans {
     //Todo Data Synchronization
     String appName = 'hc'
     syncUtil(SyncUtil, dbAccess = dbAccess, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/status/manager', appName = appName)
-//    agentServiceProvider(AgentServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
-//            serverBaseUrl = 'http://demo1278634.mockable.io/',
-//            downloadInfoPath = 'api/sync/downloadInfo',
-//            downloadDataBatchPath = 'api/data/dataAccessBatchService/',
-//            uploadPath = 'api/data/dataStoreBatchService',
-//            awakeFileManagerPath = 'app/AwakeFileManager',
-//            fileStoreFactory = fileStoreFactory,
-//            userHome = userHome,
-//            syncUtil = syncUtil)
 
     agentDownloadServiceProvider(AgentDownloadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate,
             serverBaseUrl = 'http://demo1278634.mockable.io/',
@@ -137,8 +125,6 @@ beans {
     agentProvider(AgentProvider, agentServiceProvider = agentServiceProvider)
     syncRunner(SyncRunner, agentProvider = agentProvider)
 
-    //Chart Data Model Services
-    angularChartDataModel(AngularChartDataModel, dbAccess = dbAccess)
 
     //Todo Maintenance Tasks
     cleanup(CleanUp, dbAccess = dbAccess, excludedEntities = "user,area")

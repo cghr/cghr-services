@@ -32,7 +32,7 @@ class MsgDistAgent implements Agent {
 
     @Memoized
     List getDistributionList(Map message) {
-        message.distList.split(",") as List
+        message.distList.split(",")
     }
 
 

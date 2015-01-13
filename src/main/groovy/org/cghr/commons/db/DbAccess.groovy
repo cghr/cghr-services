@@ -6,9 +6,6 @@ import groovy.transform.TupleConstructor
 
 import java.sql.ResultSetMetaData
 
-/*
-Wrapper Class for Groovy Sql for Database Access
- */
 
 @TupleConstructor
 class DbAccess {
@@ -17,21 +14,18 @@ class DbAccess {
 
 
     Map firstRow(String sql, List params = []) {
-        Map row = gSql.firstRow(sql, params)
-        row ?: [:]
+        gSql.firstRow(sql, params) ?: [:]
     }
 
-    //Overloaded
-    Map firstRow(String dataStore, String keyField, String keyFieldValue) {
-        String sql = "select * from $dataStore where $keyField=?"
-        firstRow(sql, [keyFieldValue])
+    Map firstRow(String entity, String entityKey, String entityId) {
+        String sql = "select * from $entity where $entityKey=?"
+        firstRow(sql, [entityId])
     }
 
     List rows(String sql, List params = []) {
         gSql.rows(sql, params)
     }
 
-    //Overloaded
     List rows(String dataStore, String keyField, String keyFieldValue) {
         String sql = "select * from $dataStore where $keyField=?"
         rows(sql, [keyFieldValue])
@@ -40,11 +34,12 @@ class DbAccess {
     @Memoized
     List columns(String sql, List params) {
 
-        List columnLabels = []
+        List columnLabels
         gSql.rows(sql, params) { ResultSetMetaData metaData ->
             columnLabels = (1..metaData.columnCount).collect { metaData.getColumnLabel(it) }
         }
         return columnLabels
+
     }
 
 
@@ -54,16 +49,11 @@ class DbAccess {
 
     }
 
-    //Overloaded
     void removeData(List tables) {
-        tables.each {
-            gSql.executeUpdate("truncate table $it", [])
-        }
+        tables.each { gSql.executeUpdate("truncate table $it", []) }
     }
 
     List getAllRows(String table) {
-
-        String sql = "select * from $table"
-        rows(sql, [])
+        rows("select * from $table", [])
     }
 }

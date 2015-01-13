@@ -53,23 +53,19 @@ class EntityServiceSpec extends Specification {
         expect:
         mockMvc.perform(get('/entity/country/1'))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(dataSet[0].toJson()))
 
         mockMvc.perform(get('/entity/country/2'))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(dataSet[1].toJson()))
-
-
     }
+
 
     def "should respond with entityList"() {
 
         expect:
         mockMvc.perform(get('/entity/country'))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(dataSet.toJson()))
 
     }

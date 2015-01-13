@@ -47,7 +47,6 @@ class DownloadInfoSpec extends Specification {
         expect:
         mockMvc.perform(get('/sync/downloadInfo/15'))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('[{"datastore":"country","ref":"id","refId":"1"}]'))
 
         gSql.rows("select * from outbox where dwnStatus=1 and recipient=15").size()==1

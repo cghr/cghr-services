@@ -26,7 +26,7 @@ class CrossCheckService {
 
     String getCrossCheckValue(Map metadata) {
         
-        def sql = "select $metadata.field crossCheck from $metadata.entity where $metadata.ref=?"
+        String sql = "select $metadata.field crossCheck from $metadata.entity where $metadata.ref=?"
         dbAccess.firstRow(sql, [metadata.refId]).crossCheck
     }
 

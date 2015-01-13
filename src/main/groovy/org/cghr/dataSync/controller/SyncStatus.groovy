@@ -1,12 +1,9 @@
 package org.cghr.dataSync.controller
-
 import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-
 /**
  * Created by ravitej on 4/5/14.
  */
@@ -33,7 +30,7 @@ class SyncStatus {
         getCount("select count(*) count from filechangelog where status is null")
     }
 
-    @RequestMapping(value = "/manager", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping("/manager")
     Map isManager() {
 
         String role = dbAccess.firstRow("select role from authtoken order by id desc limit 1", []).role

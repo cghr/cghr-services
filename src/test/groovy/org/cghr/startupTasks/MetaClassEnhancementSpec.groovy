@@ -48,18 +48,6 @@ class MetaClassEnhancementSpec extends Specification {
 
 
     }
-    def "should attach collectWithMapValues to List with Maps"() {
 
-        given:
-        List list = [[id: 1, name: 'india'], [id: 2, name: 'pakistan']]
-
-        when:
-        metaClassEnhancement.listCollectWithMapValues()
-
-        then:
-        list.collectWithMapValues({ it }) == [[1, 'india'], [2, 'pakistan']]
-
-
-    }
 
 }
