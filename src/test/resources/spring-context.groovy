@@ -108,7 +108,8 @@ beans {
 
     agentFileUploadServiceProvider(AgentFileUploadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, serverBaseUrl = 'http://demo1278634.mockable.io/',
             fileStoreFactory = fileStoreFactory,
-            awakeFileManagerPath = 'app/AwakeFileManager')
+            awakeFileManagerPath = 'app/AwakeFileManager',
+            remoteFileRepo='hcDemo/repo/images/')
 
     agentMsgDistServiceProvider(AgentMsgDistServiceProvider, dbAccess = dbAccess, dbStore = dbStore)
 

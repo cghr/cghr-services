@@ -54,6 +54,6 @@ class DbAccess {
     }
 
     List getAllRows(String table) {
-        rows("select * from $table", [])
+        rows("select * from $table")
     }
 }

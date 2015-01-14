@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController
 class AppStatus {
 
     @RequestMapping("")
-    String appStatus() {
+    Map appStatus() {
 
-        [status:"App is running"].toJson()
+        [status:"App is running"]
 
     }
 

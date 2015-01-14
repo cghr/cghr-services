@@ -15,10 +15,11 @@ class AgentFileUploadServiceProvider {
     String serverBaseUrl
     Map fileStoreFactory
     String awakeFileManagerPath
+    String remoteFileRepo
 
     def provide() {
         AwakeFileSession awakeFileSession = buildAwakeFileSession()
-        new AgentFileUploadservice(dbAccess, dbStore, awakeFileSession, fileStoreFactory)
+        new AgentFileUploadservice(dbAccess, dbStore, awakeFileSession, fileStoreFactory,remoteFileRepo)
 
     }
 

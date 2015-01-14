@@ -16,6 +16,7 @@ class AgentFileUploadservice {
     DbStore dbStore
     AwakeFileSession awakeFileSession
     Map fileStoreFactory
+    String remoteFileRepo
 
 
     List getFileChangelogs() {
@@ -30,7 +31,7 @@ class AgentFileUploadservice {
 
         String path = fileStoreFactory."$fileInfo.filestore"."$fileInfo.category"
         String category = fileInfo.category
-        String remoteFile = "/hcDemo/repo/images/$category" + fileInfo.filename
+        String remoteFile = remoteFileRepo+"$category" + fileInfo.filename
 
         File file = new File(path + '/' + fileInfo.filename)
         awakeFileSession.upload(file, remoteFile)

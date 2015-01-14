@@ -10,20 +10,21 @@ class DbStore {
     Sql gSql
 
 
-    void saveOrUpdate(Map data, String datastore) {
+    void saveOrUpdate(Map entity, String entityName) {
 
-        String keyField = dataStoreFactory[datastore]
-        String keyFieldValue = data[keyField]
-        String keysAndValues = getKeysAndValues(data)
+        String keyField = dataStoreFactory[entityName]
+        String keyFieldValue = entity[keyField]
+        String keysAndValues = getKeysAndValues(entity)
 
-        List valueList = data.values() as List
+        List valueList = entity.values() as List
 
-        def sql = isNewData(datastore, keyField, keyFieldValue) ?
-                "insert into $datastore set $keysAndValues"
+        def sql = isNewData(entityName, keyField, keyFieldValue) ?
+                "insert into $entityName set $keysAndValues"
                 :
-                "update $datastore set $keysAndValues where $keyField=$keyFieldValue"
+                "update $entityName set $keysAndValues where $keyField=$keyFieldValue"
         gSql.execute(sql, valueList)
     }
+
 
     String getKeysAndValues(Map data) {
         data.collect { key, value -> "$key=?" }.join(",")
