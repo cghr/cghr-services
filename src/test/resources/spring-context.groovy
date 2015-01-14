@@ -17,8 +17,11 @@ import org.cghr.startupTasks.DbImport
 import org.cghr.startupTasks.DirCreator
 import org.cghr.startupTasks.MetaClassEnhancement
 import org.cghr.test.db.DbTester
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+import org.springframework.web.accept.ContentNegotiationManagerFactoryBean
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
+import org.springframework.web.servlet.view.ContentNegotiatingViewResolver
 
 beans {
     xmlns([context: 'http://www.springframework.org/schema/context'])
@@ -36,21 +39,31 @@ beans {
             bean('class': 'org.cghr.security.controller.AuthInterceptor')
         }
     }
-    multiPartResolver(CommonsMultipartResolver)
-//    contentNegotiationViewResolver(ContentNegotiatingViewResolver, {
-//        mediaTypes = [json: 'application/json']
-//    })
-    //Todo Add project specific Services
+    multipartResolver(CommonsMultipartResolver) {
+        maxInMemorySize = 10240
+        maxUploadSize = 1024000000
+        //uploadTempDir = "/tmp"
+    }
+    contentNegotiationViewResolver(ContentNegotiatingViewResolver,{
+        mediaTypes=[json:'application/json']
+    })
+    contentNegotiationManager(ContentNegotiationManagerFactoryBean,{
+        defaultContentType="application/json"
+    })
 
-    String userHome = System.getProperty('user.home') + '/'
+
+    //Todo Add project specific Services
+    String userHome = System.getProperty('userHome')
     String appPath = 'dummyPath/' //Todo System.getProperty('basePath')
-    String server = 'http://barshi.vm-host.net:8080/hcServer/'
+    String server = 'http://barshi.vm-host.net:8080/isha/'
     serverBaseUrl(String, server)
 
     //Todo Database Config
     dataSource(DataSource) {
         driverClassName = 'org.h2.Driver'
         url = 'jdbc:h2:mem:specs;database_to_upper=false;mode=mysql'
+        //Todo production config
+        //url = 'jdbc:h2:~/isha;database_to_upper=false;mode=mysql;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE'
         username = 'sa'
         password = ''
         initialSize = 5
@@ -61,6 +74,7 @@ beans {
 
     gSql(Sql, dataSource = dataSource)
     dbAccess(DbAccess, gSql = gSql)
+
     //Todo  Project Entities
     dataStoreFactory(HashMap, [country: 'id', inbox: 'id', outbox: 'id', memberImage: 'memberId', filechangelog: 'id'])
     dbStore(DbStore, gSql = gSql, dataStoreFactory = dataStoreFactory)
@@ -68,9 +82,9 @@ beans {
     //Todo File Store Config
     fileStoreFactory(HashMap,
             [memberImage: [
-                    memberConsent: appPath + "repo/images/consent",
-                    memberPhotoId: appPath + "repo/images/photoId",
-                    memberPhoto  : appPath + "repo/images/photo"
+                    memberConsent: userHome + "hc/repo/images/consent",
+                    memberPhotoId: userHome + "hc/repo/images/photoId",
+                    memberPhoto  : userHome + "hc/repo/images/photo"
             ]])
     fileSystemStore(FileSystemStore, fileStoreFactory = fileStoreFactory, dbStore = dbStore)
     dt(DbTester, dataSource = dataSource) //Todo Only For unit Testing
@@ -79,7 +93,11 @@ beans {
     //Todo Security
     serverAuthUrl(String, "http://localhost:8089/app/api/security/auth")
     httpClientParams()
-    restTemplate(RestTemplate)
+    httpRequestFactory(HttpComponentsClientHttpRequestFactory) {
+        readTimeout = 3000
+        connectTimeout = 3000
+    }
+    restTemplate(RestTemplate,httpRequestFactory)
     onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
     userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService)
     postAuth(PostAuth)
@@ -91,9 +109,9 @@ beans {
     metaClassEnhancement(MetaClassEnhancement)
     dbImport(DbImport, sqlDir = appPath + 'sqlImport', gSql = gSql)
     dirCreator(DirCreator, [
-            appPath + 'repo/images/consent',
-            appPath + 'repo/images/photo',
-            appPath + 'repo/images/photoId'
+            userHome + 'hc/repo/images/consent',
+            userHome + 'hc/repo/images/photo',
+            userHome + 'hc/repo/images/photoId'
     ])
 
     //Todo Data Synchronization
@@ -101,7 +119,7 @@ beans {
     syncUtil(SyncUtil, dbAccess = dbAccess, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/status/manager', appName = appName)
 
     agentDownloadServiceProvider(AgentDownloadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate,
-            serverBaseUrl = 'http://demo1278634.mockable.io/',
+            serverBaseUrl = 'http://demo1278634.mockable.io/',//todo
             downloadInfoPath = 'api/sync/downloadInfo',
             downloadDataBatchPath = 'api/data/dataAccessBatchService/',
             syncUtil = syncUtil)
@@ -109,12 +127,12 @@ beans {
     agentFileUploadServiceProvider(AgentFileUploadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, serverBaseUrl = 'http://demo1278634.mockable.io/',
             fileStoreFactory = fileStoreFactory,
             awakeFileManagerPath = 'app/AwakeFileManager',
-            remoteFileRepo='hcDemo/repo/images/')
+            remoteFileRepo='hc/repo/images/')
 
     agentMsgDistServiceProvider(AgentMsgDistServiceProvider, dbAccess = dbAccess, dbStore = dbStore)
 
     agentUploadServiceProvider(AgentUploadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
-            serverBaseUrl = 'http://demo1278634.mockable.io/',
+            serverBaseUrl = 'http://demo1278634.mockable.io/',//todo
             uploadPath = 'api/data/dataStoreBatchService',
             syncUtil = syncUtil)
 
@@ -132,10 +150,11 @@ beans {
 
     //Todo JsonSchema Path
     String prodPath = new File('./assets/jsonSchema').getCanonicalPath()
-    devJsonSchemaPath(String, "")
-    prodJsonSchemaPath(String, "")
+    devJsonSchemaPath(String, userHome + 'apps/<appName>/ui/src/assets/jsonSchema')
+    prodJsonSchemaPath(String, prodPath)
 
-    ipAddressPattern(String, "xyz.abc")
+    //Todo ipaddress pattern
+    ipAddressPattern(String, "192.168")
     gpsSocketPort(Integer, 4444)
 
 
