@@ -1,12 +1,10 @@
 package org.cghr.commons.web.controller
 
-import org.cghr.commons.db.DbAccess
-import org.cghr.commons.db.DbStore
+import org.cghr.commons.entity.Entity
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
-
 /**
  * Created by ravitej on 25/11/14.
  */
@@ -15,11 +13,7 @@ import javax.servlet.http.HttpServletRequest
 class EntityService {
 
     @Autowired
-    DbAccess dbAccess
-    @Autowired
-    DbStore dbStore
-    @Autowired
-    HashMap dataStoreFactory
+    Entity entity
     @Autowired
     String serverBaseUrl
 
@@ -29,7 +23,7 @@ class EntityService {
             @PathVariable String entityName,
             @PathVariable String entityId) {
 
-        findEntityById(entityName, entityId)
+        entity.findById(entityName,entityId)
 
     }
 
@@ -37,7 +31,7 @@ class EntityService {
     @RequestMapping("/{entityName}")
     Map[] getEntityList(@PathVariable String entityName) {
 
-        findEntityList(entityName)
+        entity.findAll(entityName)
 
     }
 
@@ -45,26 +39,27 @@ class EntityService {
     Map[] getEntityListWithCriteria(
             @PathVariable String entityName, @PathVariable String property, @PathVariable String propertyValue) {
 
-        dbAccess.rows(entityName,property,propertyValue)
+        entity.findByCriteria(entityName,property,propertyValue)
     }
 
 
     @RequestMapping(value = "/{entityName}", method = RequestMethod.POST, consumes = "application/json")
-    String saveOrUpdateEntity(@RequestBody Map entity, @PathVariable String entityName) {
+    String saveOrUpdateEntity(@RequestBody Map entityData, @PathVariable String entityName) {
 
-        dbStore.saveOrUpdate(entity, entityName)
-        dbStore.createDataChangeLogs(entity, entityName)
+        entity.saveOrUpdate(entityName,entityData)
+        entity.log(entityName,entityData)
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
-    String saveChangelogs(@RequestBody final Map[] data, HttpServletRequest request) {
+    String saveVariantEntities(@RequestBody final Map[] data, HttpServletRequest request) {
+
 
         List changelogs = data.toList()
-        dbStore.saveOrUpdateBatch(changelogs)
+        entity.saveVariantEntities(changelogs)
 
         String requestHost = request.serverName
         if (isNotSeverHost(requestHost))
-            generateChangelogs(changelogs)
+            entity.saveChangeLogs(changelogs)
 
     }
 
@@ -73,30 +68,7 @@ class EntityService {
     String deleteEntity(@PathVariable String entityName,
                         @PathVariable String entityId) {
 
-        String entityKey = getEntityKey(entityName)
-        dbAccess.removeData(entityName, entityKey, entityId)
-    }
-
-
-    Map[] findEntityList(String entityName) {
-        dbAccess.getAllRows(entityName)
-    }
-
-
-    Map findEntityById(String entityName, String entityId) {
-
-        String entityKey = getEntityKey(entityName)
-        entityKey ? dbAccess.firstRow(entityName, entityKey, entityId) : [:]
-    }
-
-
-    String getEntityKey(String entityName) {
-
-        dataStoreFactory?."$entityName"
-    }
-
-    void generateChangelogs(List changelogs) {
-        dbStore.saveDataChangelogs(changelogs)
+        entity.delete(entityName,entityId)
     }
 
     String getServerHost() {

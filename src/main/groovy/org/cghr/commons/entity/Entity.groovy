@@ -47,9 +47,9 @@ class Entity {
         dbStore.saveOrUpdateFromMapList(entityList, entityName)
     }
 
-    void saveVariantEntities(List changeLogs) {
+    void saveVariantEntities(List entities) {
 
-        dbStore.saveOrUpdateBatch(changeLogs)
+        dbStore.saveOrUpdateBatch(entities)
 
     }
 
@@ -61,6 +61,11 @@ class Entity {
 
     void log(String entityName, Map entity) {
         dbStore.createDataChangeLogs(entity, entityName)
+    }
+
+    void saveChangeLogs(List changeLogs) {
+
+        dbStore.saveDataChangelogs(changeLogs)
     }
 
 

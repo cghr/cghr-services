@@ -60,6 +60,15 @@ class EntityServiceSpec extends Specification {
                 .andExpect(content().string(dataSet[1].toJson()))
     }
 
+    def "should respond with empty  entity for invalid and unavailable entities"() {
+
+        expect:
+        mockMvc.perform(get('/entity/country/999'))
+                .andExpect(status().isOk())
+                .andExpect(content().string("{}"))
+
+    }
+
 
     def "should respond with entityList"() {
 
@@ -70,20 +79,17 @@ class EntityServiceSpec extends Specification {
 
     }
 
-    def "should respond with empty  entity for invalid and unavailable entities"() {
+    def "should respond with entityList with criteria"() {
 
         expect:
-        mockMvc.perform(get('/entity/dummyEntity/1'))
+        mockMvc.perform(get('/entity/country/continent/asia'))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{}"))
-
-        mockMvc.perform(get('/entity/country/999'))
-                .andExpect(status().isOk())
-                .andExpect(content().string("{}"))
+                .andExpect(content().string(dataSet.toJson()))
 
     }
 
-    def "should save a new entity"() {
+
+    def "should save a new entity and log the entity"() {
 
         given:
         dbTester.clean('country,datachangelog')
@@ -102,6 +108,31 @@ class EntityServiceSpec extends Specification {
         gSql.rows("select * from datachangelog").size() == 1
 
     }
+
+    def "should save variant entities"() {
+
+        given:
+        dbTester.clean('country,datachangelog')
+        List changelogs = [
+                [datastore:'country',data:dataSet[0]],
+                [datastore:'country',data:dataSet[1]],
+                [datastore:'country',data:dataSet[2]]
+        ]
+
+        when:
+        mockMvc.perform(post('/entity')
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(changelogs.toJson()))
+                .andExpect(status().isOk())
+                .andReturn();
+
+
+        then:
+        gSql.rows("select * from country") == dataSet
+        gSql.firstRow("select count(*) count from datachangelog").count == 3
+
+    }
+
 
     def "should delete a given entity"() {
         when:

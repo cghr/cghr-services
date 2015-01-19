@@ -33,7 +33,7 @@ class EntitySpec extends Specification {
 
     def setupSpec() {
         countries = new MockData().sampleData.get('country')
-        countryChangelogs=new MockData().sampleData.get('countryBatchData')
+        countryChangelogs = new MockData().sampleData.get('countryBatchData')
     }
 
     def setup() {
@@ -138,10 +138,9 @@ class EntitySpec extends Specification {
 
     }
 
-    def "should save list of variant entities to datachangelog"(){
+    def "should save list of variant entities"() {
         setup:
         dt.clean('country')
-        dt.clean('datachangelog')
 
         when:
         entity.saveVariantEntities(countryChangelogs)
@@ -149,6 +148,28 @@ class EntitySpec extends Specification {
         then:
         gSql.rows("select * from country") == countries
 
+    }
+
+    def "should save changeLogs"() {
+        setup:
+        dt.clean('datachangelog')
+        List changelogs = [
+                [datastore: 'country', data: countries[0]].toJson(),
+                [datastore: 'country', data: countries[1]].toJson(),
+                [datastore: 'country', data: countries[2]].toJson()
+        ]
+        List result=[]
+
+        when:
+        entity.saveChangeLogs(changelogs)
+
+        then:
+        gSql.rows("select * from datachangelog").size()==3
+
+        gSql.eachRow("select log from datachangelog"){
+            result << it.log.getAsciiStream().getText()
+        }
+        result[0]==[datastore: 'country', data: countries[0]].toJson()
     }
 
 
