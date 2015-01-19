@@ -12,17 +12,17 @@ class CghrAwakeFileConfigurator implements AwakeFileConfigurator {
 
     @Override
     File getServerRoot() {
-        return new File(System.getProperty('user.home'))
+         new File(System.getProperty('basePath'))
     }
 
     @Override
     boolean useOneRootPerUsername() {
-        return false
+         false
     }
 
     @Override
     boolean allowCallAfterAnalysis(String s, Connection connection, String s2, List<Object> objects) throws IOException, SQLException {
-        return false
+         false
     }
 
     @Override

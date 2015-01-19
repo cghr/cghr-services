@@ -1,7 +1,6 @@
 package org.cghr.survey.controller
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import org.springframework.test.web.servlet.MockMvc
@@ -22,6 +21,7 @@ class NetworkStatusSpec extends Specification {
     MockMvc mockMvc
 
 
+    @spock.lang.Ignore
     def "should get networkstatus as false for ipAddress pattern 192.168."() {
         given:
         mockMvc = MockMvcBuilders.standaloneSetup(networkStatus).build()

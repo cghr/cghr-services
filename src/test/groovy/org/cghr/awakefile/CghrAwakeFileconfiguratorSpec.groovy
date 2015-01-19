@@ -14,7 +14,7 @@ class CghrAwakeFileconfiguratorSpec extends Specification {
 
     def setup() {
 
-        System.setProperty("user.home", tmpDir)
+        System.setProperty("basePath", tmpDir)
         cghrAwakeFileConfigurator = new CghrAwakeFileConfigurator()
     }
 

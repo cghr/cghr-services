@@ -3,6 +3,7 @@ import org.apache.tomcat.jdbc.pool.DataSource
 import org.cghr.commons.db.CleanUp
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
+import org.cghr.commons.entity.Entity
 import org.cghr.commons.file.FileSystemStore
 import org.cghr.dataSync.commons.SyncRunner
 import org.cghr.dataSync.providers.*
@@ -44,13 +45,12 @@ beans {
         maxUploadSize = 1024000000
         //uploadTempDir = "/tmp"
     }
-    contentNegotiationViewResolver(ContentNegotiatingViewResolver,{
-        mediaTypes=[json:'application/json']
+    contentNegotiationViewResolver(ContentNegotiatingViewResolver, {
+        mediaTypes = [json: 'application/json']
     })
-    contentNegotiationManager(ContentNegotiationManagerFactoryBean,{
-        defaultContentType="application/json"
+    contentNegotiationManager(ContentNegotiationManagerFactoryBean, {
+        defaultContentType = "application/json"
     })
-
 
     //Todo Add project specific Services
     String userHome = System.getProperty('userHome')
@@ -89,7 +89,6 @@ beans {
     fileSystemStore(FileSystemStore, fileStoreFactory = fileStoreFactory, dbStore = dbStore)
     dt(DbTester, dataSource = dataSource) //Todo Only For unit Testing
 
-
     //Todo Security
     serverAuthUrl(String, "http://localhost:8089/app/api/security/auth")
     httpClientParams()
@@ -97,7 +96,7 @@ beans {
         readTimeout = 3000
         connectTimeout = 3000
     }
-    restTemplate(RestTemplate,httpRequestFactory)
+    restTemplate(RestTemplate, httpRequestFactory)
     onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
     userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService)
     postAuth(PostAuth)
@@ -127,7 +126,7 @@ beans {
     agentFileUploadServiceProvider(AgentFileUploadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, serverBaseUrl = 'http://demo1278634.mockable.io/',
             fileStoreFactory = fileStoreFactory,
             awakeFileManagerPath = 'app/AwakeFileManager',
-            remoteFileRepo='hc/repo/images/')
+            remoteFileRepo = 'hc/repo/images/')
 
     agentMsgDistServiceProvider(AgentMsgDistServiceProvider, dbAccess = dbAccess, dbStore = dbStore)
 
@@ -144,7 +143,6 @@ beans {
     agentProvider(AgentProvider, agentServiceProvider = agentServiceProvider)
     syncRunner(SyncRunner, agentProvider = agentProvider)
 
-
     //Todo Maintenance Tasks
     cleanup(CleanUp, dbAccess = dbAccess, excludedEntities = "user,area")
 
@@ -156,6 +154,11 @@ beans {
     //Todo ipaddress pattern
     ipAddressPattern(String, "192.168")
     gpsSocketPort(Integer, 4444)
+
+    entity(Entity, dbAccess = dbAccess,
+            dbStore = dbStore,
+            dataStoreFactory = dataStoreFactory
+    )
 
 
 }

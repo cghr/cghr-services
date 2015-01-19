@@ -19,7 +19,7 @@ class NetworkStatusService {
 
 
     @RequestMapping("")
-    String isConnectedToWifiNetwork() {
+    Map isConnectedToWifiNetwork() {
 
         Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces()
         List hostAddresses = []
@@ -31,7 +31,7 @@ class NetworkStatusService {
             }
 
         }
-        hostAddresses.findAll { it.contains(pattern) } ? [status: true].toJson() : [status: false].toJson()
+        hostAddresses.findAll { it.contains(pattern) } ? [status: true] : [status: false]
     }
 
 

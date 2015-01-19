@@ -42,7 +42,7 @@ class EntityService {
     }
 
     @RequestMapping("/{entityName}/{property}/{propertyValue}")
-    Map[] searchEntityList(
+    Map[] getEntityListWithCriteria(
             @PathVariable String entityName, @PathVariable String property, @PathVariable String propertyValue) {
 
         dbAccess.rows(entityName,property,propertyValue)
@@ -57,7 +57,7 @@ class EntityService {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
-    String saveData(@RequestBody final Map[] data, HttpServletRequest request) {
+    String saveChangelogs(@RequestBody final Map[] data, HttpServletRequest request) {
 
         List changelogs = data.toList()
         dbStore.saveOrUpdateBatch(changelogs)

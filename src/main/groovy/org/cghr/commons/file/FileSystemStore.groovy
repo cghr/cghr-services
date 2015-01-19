@@ -20,7 +20,7 @@ class FileSystemStore {
 
         def (fileName, category) = [formData.filename, formData.category]
 
-        String filePath = (fileStoreFactory."$fileStore")."$category"
+        String filePath = (fileStoreFactory[fileStore])[category]
         createFile(filePath, fileName, file)
 
 
