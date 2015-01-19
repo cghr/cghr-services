@@ -15,12 +15,13 @@ import spock.lang.Specification
  * Created by ravitej on 12/8/14.
  */
 @ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
-class FileStoreServiceSpec extends Specification {
+class FileEntityServiceSpec extends Specification {
 
     @Autowired
     Sql gSql
     @Autowired
-    FileStoreService fileStoreService
+    FileEntityService fileEntityService
+
     Map fileStoreFactory = [memberImage: [memberConsent: 'dummyPath/repo/images/consent/', memberPhoto: 'hcDemo/images/photo/']]
     MockMvc mockMvc
     @Autowired
@@ -35,22 +36,21 @@ class FileStoreServiceSpec extends Specification {
     def setup() {
 
         dbTester.clean('memberImage,datachangelog,filechangelog')
-        mockMvc = MockMvcBuilders.standaloneSetup(fileStoreService).build()
+        mockMvc = MockMvcBuilders.standaloneSetup(fileEntityService).build()
 
     }
 
 
     def "should save the data and write consent file to appropriate path"() {
         given:
-        Map formData = [memberId: '151001001', consent: '151001001_consent.png', filename: '151001001_consent.png', category: 'memberConsent', filestore: 'memberImage']
+        Map formData = [memberId: '151001001', consent: '151001001_consent.png', filename: '151001001_consent.png', category: 'memberConsent']
         String fileStore = 'memberImage'
         byte[] content = "dummy File contents".getBytes()
 
         when:
-        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/file/fileStoreService")
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/fileEntity/"+fileStore)
                 .file("file", content)
                 .param("data", new Gson().toJson(formData)))
-
 
         then:
         File dir = new File(fileStoreFactory.get(fileStore).get('memberConsent'))

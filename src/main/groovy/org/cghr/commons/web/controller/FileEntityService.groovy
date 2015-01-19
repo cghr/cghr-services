@@ -13,18 +13,17 @@ import org.springframework.web.multipart.MultipartFile
  * Created by ravitej on 13/1/15.
  */
 @RestController
-@RequestMapping("/fileEntity/{filestore}")
+@RequestMapping("/fileEntity")
 
 class FileEntityService {
 
     @Autowired
     FileSystemStore fileSystemStore
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "/{filestore}", method = RequestMethod.POST)
     String saveOrUpdate(@PathVariable String filestore,
-            @RequestParam("data") String jsonData,
+            @RequestParam("data") String  jsonData,
             @RequestParam("file") MultipartFile file) {
-
 
         Map data = jsonData.jsonToMap()
 
