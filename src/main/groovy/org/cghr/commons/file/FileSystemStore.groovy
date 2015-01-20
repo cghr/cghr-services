@@ -16,7 +16,7 @@ class FileSystemStore {
 
     void saveOrUpdate(Map formData, String fileStore, MultipartFile file) {
 
-        Map data = formData.subMap(formData.keySet().toList() - ['filename', 'category'])
+        Map data = excludeFilenameCategory(formData)
 
         def (fileName, category) = [formData.filename, formData.category]
 
@@ -44,10 +44,15 @@ class FileSystemStore {
 
     def getDataAndFileMetaData(Map fileData, String filestore) {
 
-        Map data = fileData.subMap(fileData.keySet() - ['filename', 'category'])
+        Map data = excludeFilenameCategory(fileData)
         Map fileMetadata = [filename: fileData.filename, filestore: filestore, category: fileData.category]
 
         return [data, fileMetadata]
+    }
+
+    Map excludeFilenameCategory(Map map){
+
+        map.subMap(map.keySet().toList() - ['filename','category'])
     }
 
 

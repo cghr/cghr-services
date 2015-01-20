@@ -18,10 +18,10 @@ public class LookupService {
     DbAccess dbAccess
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public String getLookupData(@RequestBody Map lookup) {
+    Map[] getLookupData(@RequestBody Map lookup) {
 
         String sql = constructSqlFromMetadata(lookup)
-        dbAccess.rows(sql, [lookup.refId]).toJson()
+        dbAccess.rows(sql, [lookup.refId])
 
     }
 

@@ -16,13 +16,7 @@ class FileUploadAgent implements Agent {
     void run() {
 
         List<Map> fileChangelogs = agentService.getFileChangelogs()
-        uploadFiles(fileChangelogs)
-    }
-
-    void uploadFiles(List<Map> fileChangelogs) {
-
         fileChangelogs.each { uploadAFile(it) }
-
     }
 
     void uploadAFile(Map fileInfo) {
@@ -34,8 +28,7 @@ class FileUploadAgent implements Agent {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
-            println 'error  uploading the file'
+            e.printStackTrace()
         }
 
 

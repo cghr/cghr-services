@@ -29,9 +29,9 @@ class AgentFileUploadservice {
 
     void uploadFile(Map fileInfo) {
 
-        String path = fileStoreFactory."$fileInfo.filestore"."$fileInfo.category"
+        String path = (fileStoreFactory[fileInfo.filestore])[fileInfo.category]
         String category = fileInfo.category
-        String remoteFile = remoteFileRepo+"$category" + fileInfo.filename
+        String remoteFile = remoteFileRepo + category + fileInfo.filename
 
         File file = new File(path + '/' + fileInfo.filename)
         awakeFileSession.upload(file, remoteFile)

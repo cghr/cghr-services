@@ -21,7 +21,7 @@ class NetworkStatusSpec extends Specification {
     MockMvc mockMvc
 
 
-    @spock.lang.Ignore
+    //@spock.lang.Ignore
     def "should get networkstatus as false for ipAddress pattern 192.168."() {
         given:
         mockMvc = MockMvcBuilders.standaloneSetup(networkStatus).build()

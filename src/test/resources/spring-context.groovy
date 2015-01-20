@@ -78,6 +78,10 @@ beans {
     //Todo  Project Entities
     dataStoreFactory(HashMap, [country: 'id', inbox: 'id', outbox: 'id', memberImage: 'memberId', filechangelog: 'id'])
     dbStore(DbStore, gSql = gSql, dataStoreFactory = dataStoreFactory)
+    entity(Entity, dbAccess = dbAccess,
+            dbStore = dbStore,
+            dataStoreFactory = dataStoreFactory
+    )
 
     //Todo File Store Config
     fileStoreFactory(HashMap,
@@ -155,10 +159,7 @@ beans {
     ipAddressPattern(String, "192.168")
     gpsSocketPort(Integer, 4444)
 
-    entity(Entity, dbAccess = dbAccess,
-            dbStore = dbStore,
-            dataStoreFactory = dataStoreFactory
-    )
+
 
 
 }
