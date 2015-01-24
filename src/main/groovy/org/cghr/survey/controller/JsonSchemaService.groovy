@@ -16,19 +16,19 @@ class JsonSchemaService {
     String prodJsonSchemaPath
 
     @RequestMapping("/dev/{app}")
-    String getAllSchemaNamesDev(@PathVariable("app") String app) {
+    List getAllSchemaNamesDev(@PathVariable("app") String app) {
 
         String path = devJsonSchemaPath.replaceAll("<appName>", app)
-        getJsonSchemaFileNames(path).toJson()
+        getJsonSchemaFileNames(path)
     }
 
     @RequestMapping("/prod")
-    String getAllSchemaNamesProduction() {
-        getJsonSchemaFileNames(prodJsonSchemaPath).toJson()
+    List getAllSchemaNamesProduction() {
+        getJsonSchemaFileNames(prodJsonSchemaPath)
     }
 
-
     List getJsonSchemaFileNames(String path) {
+
         List jsonSchemaDir = new File(path).listFiles()
 
         jsonSchemaDir

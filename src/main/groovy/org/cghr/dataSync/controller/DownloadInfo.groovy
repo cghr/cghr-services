@@ -19,13 +19,12 @@ class DownloadInfo {
 
 
     @RequestMapping("/{recipient}")
-    String downloadInfo(@PathVariable Integer recipient) {
+    Map[] downloadInfo(@PathVariable Integer recipient) {
 
         String sql = "select datastore,ref,refId,distList from outbox where recipient=? and dwnStatus is null"
         List list = dbAccess.rows(sql, [recipient])
         dbStore.execute("update outbox set dwnStatus=1 where recipient=?", [recipient])
-        list.toJson()
-
+        list
     }
 
 

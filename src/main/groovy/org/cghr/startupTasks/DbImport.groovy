@@ -53,9 +53,8 @@ class DbImport {
 
     void executeSqlBatch(String[] sqls) {
 
-        gSql.withBatch {
-            stmt ->
-                sqls.each { String sql -> stmt.addBatch(sql) }
+        gSql.withBatch { stmt ->
+            sqls.each { String sql -> stmt.addBatch(sql) }
         }
 
     }

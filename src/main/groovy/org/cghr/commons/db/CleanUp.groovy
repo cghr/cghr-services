@@ -1,6 +1,7 @@
 package org.cghr.commons.db
 
 import groovy.transform.TupleConstructor
+
 /**
  * Created by ravitej on 9/5/14.
  */
@@ -9,7 +10,6 @@ class CleanUp {
 
     String excludedEntities
     DbAccess dbAccess
-
 
     void cleanupTables() {
         dbAccess.removeData(getTableListForCleanup())

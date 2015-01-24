@@ -17,7 +17,7 @@ class GPSService {
     Integer gpsSocketPort
 
     @RequestMapping("")
-    String getGps(HttpServletResponse response) {
+    Map getGps(HttpServletResponse response) {
 
         try {
             def socket = new Socket("localhost", gpsSocketPort);
@@ -27,7 +27,7 @@ class GPSService {
                 def gps = input.newReader().readLine()
 
                 List points = gps.split(";")
-                return [latitude: points[0], longitude: points[1]].toJson()
+                 [latitude: points[0], longitude: points[1]]
 
             }
         }

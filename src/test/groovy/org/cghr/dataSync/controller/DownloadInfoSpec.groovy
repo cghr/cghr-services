@@ -3,7 +3,6 @@ import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import org.springframework.test.web.servlet.MockMvc
@@ -47,7 +46,7 @@ class DownloadInfoSpec extends Specification {
         expect:
         mockMvc.perform(get('/sync/downloadInfo/15'))
                 .andExpect(status().isOk())
-                .andExpect(content().string('[{"datastore":"country","ref":"id","refId":"1"}]'))
+                .andExpect(content().string('[{"datastore":"country","ref":"id","refId":"1","distList":null}]'))
 
         gSql.rows("select * from outbox where dwnStatus=1 and recipient=15").size()==1
 

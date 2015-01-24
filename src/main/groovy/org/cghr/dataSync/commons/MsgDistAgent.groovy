@@ -1,6 +1,5 @@
 package org.cghr.dataSync.commons
 
-import groovy.transform.Memoized
 import groovy.transform.TupleConstructor
 import org.cghr.dataSync.service.AgentService
 
@@ -25,8 +24,8 @@ class MsgDistAgent implements Agent {
     }
 
     void distributeOneMessage(Map message) {
-        getDistributionList(message).each { String recepient ->
-            agentService.distributeMessage(message, recepient)
+        getDistributionList(message).each { String recipient ->
+            agentService.distributeMessage(message, recipient)
         }
     }
 

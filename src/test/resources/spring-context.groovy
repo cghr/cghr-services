@@ -75,7 +75,7 @@ beans {
     gSql(Sql, dataSource = dataSource)
     dbAccess(DbAccess, gSql = gSql)
 
-    //Todo  Project Entities
+    //Todo  Project specific Entities
     dataStoreFactory(HashMap, [country: 'id', inbox: 'id', outbox: 'id', memberImage: 'memberId', filechangelog: 'id'])
     dbStore(DbStore, gSql = gSql, dataStoreFactory = dataStoreFactory)
     entity(Entity, dbAccess = dbAccess,
@@ -156,7 +156,7 @@ beans {
     prodJsonSchemaPath(String, prodPath)
 
     //Todo ipaddress pattern
-    ipAddressPattern(String, "192.168")
+    ipAddressPattern(String, "abc.xyz")
     gpsSocketPort(Integer, 4444)
 
 

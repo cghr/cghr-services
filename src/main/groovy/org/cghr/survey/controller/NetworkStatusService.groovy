@@ -22,16 +22,20 @@ class NetworkStatusService {
     Map isConnectedToWifiNetwork() {
 
         Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces()
-        List hostAddresses = []
 
-        networkInterfaces.each { NetworkInterface networkInterface ->
+        List hostAddresses = networkInterfaces
+                .collect { NetworkInterface networkInterface -> getHostAddresses(networkInterface) }
+                .flatten()
 
-            networkInterface.getInterfaceAddresses().each { InterfaceAddress interfaceAddress ->
-                hostAddresses << interfaceAddress.getAddress().getHostAddress()
-            }
+        hostAddresses.find { it.contains(pattern) } ? [status: true] : [status: false]
+    }
+
+    List getHostAddresses(NetworkInterface networkInterface) {
+
+        networkInterface.getInterfaceAddresses().collect { InterfaceAddress interfaceAddress ->
+            interfaceAddress.getAddress().getHostAddress()
 
         }
-        hostAddresses.findAll { it.contains(pattern) } ? [status: true] : [status: false]
     }
 
 
