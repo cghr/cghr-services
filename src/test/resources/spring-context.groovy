@@ -94,6 +94,7 @@ beans {
     dt(DbTester, dataSource = dataSource) //Todo Only For unit Testing
 
     //Todo Security
+    tokenCache(HashMap,[:])
     serverAuthUrl(String, "http://localhost:8089/app/api/security/auth")
     httpClientParams()
     httpRequestFactory(HttpComponentsClientHttpRequestFactory) {
@@ -102,11 +103,12 @@ beans {
     }
     restTemplate(RestTemplate, httpRequestFactory)
     onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
-    userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService)
+    userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService,tokenCache=tokenCache)
     postAuth(PostAuth)
     auth(Auth)
     requestParser(RequestParser)
     authInterceptor(AuthInterceptor)
+
 
     //Todo Startup Tasks  - Metaclass Enhancement
     metaClassEnhancement(MetaClassEnhancement)

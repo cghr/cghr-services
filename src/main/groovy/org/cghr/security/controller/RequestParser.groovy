@@ -9,4 +9,9 @@ class RequestParser {
         request.getCookies()
                 .find { "authtoken" == it.name }?.value
     }
+
+    String getUsernameFromCookies(HttpServletRequest request) {
+        request.getCookies()
+                .find { "username" == it.name }?.value
+    }
 }

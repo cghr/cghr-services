@@ -58,7 +58,7 @@ class LogoutSpec extends Specification {
 
 
         when:
-        logout.invalidateSession(authtoken, request, response)
+        logout.invalidateSession(authtoken,validUser.username,request, response)
 
         then:
         response.getCookie("authtoken")?.getValue() == ""

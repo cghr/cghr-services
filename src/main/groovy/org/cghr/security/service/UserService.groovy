@@ -13,6 +13,7 @@ class UserService {
     DbAccess dbAccess
     DbStore dbStore
     OnlineAuthService onlineAuthService
+    Map tokenCache
 
 
     boolean isValid(User user, String hostname) {
@@ -79,6 +80,7 @@ class UserService {
 
         def row = getUserAsMap(user)
         def dataToSave = [token: authtoken, username: user.username, role: row.role]
+        tokenCache.put(user.username, [token: authtoken, role: row.role])
 
         dbStore.saveOrUpdate(dataToSave, "authtoken")
     }
@@ -96,5 +98,9 @@ class UserService {
     boolean isValidToken(String token) {
 
         dbAccess.firstRow("select * from authtoken where token=?", [token]) ? true : false
+    }
+
+    boolean isUserAuthorised(String username) {
+        tokenCache.get(username)
     }
 }
