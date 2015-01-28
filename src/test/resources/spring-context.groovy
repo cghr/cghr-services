@@ -19,10 +19,8 @@ import org.cghr.startupTasks.DirCreator
 import org.cghr.startupTasks.MetaClassEnhancement
 import org.cghr.test.db.DbTester
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
-import org.springframework.web.accept.ContentNegotiationManagerFactoryBean
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
-import org.springframework.web.servlet.view.ContentNegotiatingViewResolver
 
 beans {
     xmlns([context: 'http://www.springframework.org/schema/context'])
@@ -43,14 +41,13 @@ beans {
     multipartResolver(CommonsMultipartResolver) {
         maxInMemorySize = 10240
         maxUploadSize = 1024000000
-        //uploadTempDir = "/tmp"
     }
-    contentNegotiationViewResolver(ContentNegotiatingViewResolver, {
-        mediaTypes = [json: 'application/json']
-    })
-    contentNegotiationManager(ContentNegotiationManagerFactoryBean, {
-        defaultContentType = "application/json"
-    })
+//    contentNegotiationViewResolver(ContentNegotiatingViewResolver, {
+//        mediaTypes = [json: 'application/json']
+//    })
+//    contentNegotiationManager(ContentNegotiationManagerFactoryBean, {
+//        defaultContentType = "application/json"
+//    })
 
     //Todo Add project specific Services
     String userHome = System.getProperty('userHome')
@@ -160,8 +157,5 @@ beans {
     //Todo ipaddress pattern
     ipAddressPattern(String, "abc.xyz")
     gpsSocketPort(Integer, 4444)
-
-
-
 
 }

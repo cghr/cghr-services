@@ -1,5 +1,5 @@
 package org.cghr.commons.db
-import com.google.gson.Gson
+
 import groovy.sql.Sql
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
@@ -116,7 +116,7 @@ class DbStoreSpec extends Specification {
         gSql.eachRow("select log from datachangelog") {
             expectedLog = it.log.getAsciiStream().getText();
         }
-        expectedLog == new Gson().toJson(log)
+        expectedLog == log.toJson()
     }
 
     def "should verify data to be new or not"() {

@@ -1,5 +1,5 @@
 package org.cghr.survey.controller
-import com.google.gson.Gson
+
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -38,7 +38,7 @@ class LookupSpec extends Specification {
     def "should get a value for a given lookup  data"() {
         given:
         Map lookup=[entity:'country',field:'name',ref:'continent',refId:'asia']
-        String json=new Gson().toJson(lookup)
+        String json=lookup.toJson()
         expect:
         mockMvc.perform(post('/survey/lookup').contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk())
@@ -49,7 +49,7 @@ class LookupSpec extends Specification {
     def "should get a value for a given lookup  data with a condition"() {
         given:
         Map lookup=[entity:'country',field:'name',ref:'continent',refId:'asia',condition:'id>1']
-        String json=new Gson().toJson(lookup)
+        String json=lookup.toJson()
         expect:
         mockMvc.perform(post('/survey/lookup').contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk())

@@ -1,5 +1,5 @@
 package org.cghr.commons.web.controller
-import com.google.gson.Gson
+
 import groovy.sql.Sql
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
@@ -50,7 +50,7 @@ class FileEntityServiceSpec extends Specification {
         when:
         mockMvc.perform(MockMvcRequestBuilders.fileUpload("/fileEntity/"+fileStore)
                 .file("file", content)
-                .param("data", new Gson().toJson(formData)))
+                .param("data", formData.toJson()))
 
         then:
         File dir = new File(fileStoreFactory.get(fileStore).get('memberConsent'))

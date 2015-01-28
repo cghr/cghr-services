@@ -1,6 +1,6 @@
 package org.cghr.security.model
 
-import com.google.gson.Gson
+import groovy.json.JsonOutput
 import groovy.transform.CompileStatic
 
 @CompileStatic
@@ -17,7 +17,6 @@ class User {
     }
 
     String toJson() {
-        Gson gson = new Gson()
-        gson.toJson(this)
+        JsonOutput.toJson(this)
     }
 }

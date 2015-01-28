@@ -1,5 +1,5 @@
 package org.cghr.security.service
-import com.google.gson.Gson
+
 import org.cghr.security.model.User
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -32,7 +32,7 @@ class OnlineAuthServiceSpec extends Specification {
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
 
-        HttpEntity<String> request = new HttpEntity<String>(new Gson().toJson(validUser), headers)
+        HttpEntity<String> request = new HttpEntity<String>(validUser.toJson(), headers)
 
         mockServerAuthUrl = "http://dummyServer:8080/app/api/security/auth"
         mockRestTemplate = Stub() {
@@ -62,7 +62,7 @@ class OnlineAuthServiceSpec extends Specification {
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
 
-        HttpEntity<String> request = new HttpEntity<String>(new Gson().toJson(invalidUser), headers)
+        HttpEntity<String> request = new HttpEntity<String>(invalidUser.toJson(), headers)
 
         RestTemplate fakeRestTemplate = Stub() {
             postForObject(mockServerAuthUrl, request, Map.class) >> {
@@ -87,7 +87,7 @@ class OnlineAuthServiceSpec extends Specification {
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
 
-        HttpEntity<String> request = new HttpEntity<String>(new Gson().toJson(validUser), headers)
+        HttpEntity<String> request = new HttpEntity<String>(validUser.toJson(),headers)
 
         RestTemplate fakeRestTemplate = Mock()
         fakeRestTemplate.postForObject(mockServerAuthUrl, request, Map.class) >> {

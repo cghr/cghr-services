@@ -1,5 +1,5 @@
 package org.cghr.dataSync.service
-import com.google.gson.Gson
+
 import org.awakefw.file.api.client.AwakeFileSession
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -35,8 +35,6 @@ class AgentServiceSpec extends Specification {
     List countryData
     @Shared
     List dataChangeLogs
-    @Shared
-    Gson gson = new Gson()
     AgentService agentService
     def downloadInfo
 

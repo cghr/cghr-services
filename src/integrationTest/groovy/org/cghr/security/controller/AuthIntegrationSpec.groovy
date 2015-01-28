@@ -1,6 +1,5 @@
 package org.cghr.security.controller
 import com.github.tomakehurst.wiremock.junit.WireMockRule
-import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.security.model.User
 import org.cghr.test.db.DbTester
@@ -36,8 +35,7 @@ class AuthIntegrationSpec extends Specification {
     User validUser = new User(username: 'user1', password: 'secret1')
     @Shared
     User invalidUser = new User(username: 'invaliduser', password: 'secret1')
-    @Shared
-    Gson gson = new Gson()
+
     @Shared
     String userJson = '{"id":1,"username":"user1","password":"secret1","role":{"title":"user","bitMask":2}}'
 
@@ -152,7 +150,7 @@ class AuthIntegrationSpec extends Specification {
 
         stubFor(post(urlEqualTo("/app/api/security/auth"))
                 .withHeader("Content-Type", equalTo("application/json"))
-                .withRequestBody(equalTo(gson.toJson(validUser)))
+                .withRequestBody(equalTo(validUser.toJson()))
                 .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
@@ -160,7 +158,7 @@ class AuthIntegrationSpec extends Specification {
 
         stubFor(post(urlEqualTo("/app/api/security/auth"))
                 .withHeader("Content-Type", equalTo("application/json"))
-                .withRequestBody(equalTo(gson.toJson(invalidUser)))
+                .withRequestBody(equalTo(invalidUser.toJson()))
                 .willReturn(aResponse()
                 .withStatus(403)
                 .withHeader("Content-Type", "application/json")

@@ -1,6 +1,5 @@
 package org.cghr.commons.db
 
-import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.commons.entity.Entity
 import org.cghr.test.db.DbTester
@@ -10,7 +9,6 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Shared
 import spock.lang.Specification
-
 /**
  * Created by ravitej on 19/1/15.
  */
@@ -147,7 +145,7 @@ class EntitySpec extends Specification {
         gSql.eachRow("select log from datachangelog") {
             expectedLog = it.log.getAsciiStream().getText();
         }
-        expectedLog == new Gson().toJson(log)
+        expectedLog == log.toJson()
 
     }
 

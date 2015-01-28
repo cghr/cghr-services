@@ -1,5 +1,5 @@
 package org.cghr.survey.controller
-import com.google.gson.Gson
+
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -38,7 +38,7 @@ class CrossCheckSpec extends Specification {
     def "should get a value for a given cross check data"() {
         given:
         Map crossCheck=[entity:'country',field:'name',ref:'id',refId:'1']
-        String json=new Gson().toJson(crossCheck)
+        String json=(crossCheck).toJson()
         expect:
         mockMvc.perform(post('/survey/crossCheck').contentType(MediaType.APPLICATION_JSON).content(json))
         .andExpect(status().isOk())

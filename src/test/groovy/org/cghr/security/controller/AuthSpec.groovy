@@ -1,6 +1,5 @@
 package org.cghr.security.controller
 
-import com.google.gson.Gson
 import groovy.sql.Sql
 import org.cghr.security.model.User
 import org.cghr.security.service.UserService
@@ -119,9 +118,9 @@ class AuthSpec extends Specification {
 
         where:
         user        | httpStatus                   | expectedJsonResp
-        validUser   | HttpStatus.OK.value()        | new Gson().toJson(dataSet[0])
+        validUser   | HttpStatus.OK.value()        | (dataSet[0]).toJson()
         invalidUser | HttpStatus.FORBIDDEN.value() | "{}"
-        manager     | HttpStatus.OK.value()        | new Gson().toJson(dataSet[3])
+        manager     | HttpStatus.OK.value()        | (dataSet[3]).toJson()
 
 
     }
