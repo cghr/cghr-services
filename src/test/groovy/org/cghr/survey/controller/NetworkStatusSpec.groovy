@@ -26,7 +26,7 @@ class NetworkStatusSpec extends Specification {
         given:
         mockMvc = MockMvcBuilders.standaloneSetup(networkStatus).build()
         expect:
-        mockMvc.perform(get("/NetworkStatus"))
+        mockMvc.perform(get("/sync/networkStatus"))
                 .andExpect(status().isOk())
                 .andExpect(content().string('{"status":false}'))
 
@@ -38,7 +38,7 @@ class NetworkStatusSpec extends Specification {
         mockMvc = MockMvcBuilders.standaloneSetup(networkStatus).build()
 
         expect:
-        mockMvc.perform(get("/NetworkStatus"))
+        mockMvc.perform(get("/sync/networkStatus"))
                 .andExpect(status().isOk())
                 .andExpect(content().string('{"status":true}'))
 

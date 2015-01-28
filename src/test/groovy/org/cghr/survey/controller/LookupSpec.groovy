@@ -40,7 +40,7 @@ class LookupSpec extends Specification {
         Map lookup=[entity:'country',field:'name',ref:'continent',refId:'asia']
         String json=new Gson().toJson(lookup)
         expect:
-        mockMvc.perform(post('/LookupService').contentType(MediaType.APPLICATION_JSON).content(json))
+        mockMvc.perform(post('/survey/lookup').contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('[{"text":"india","value":"india"},{"text":"pakistan","value":"pakistan"},{"text":"srilanka","value":"srilanka"}]'))
@@ -51,7 +51,7 @@ class LookupSpec extends Specification {
         Map lookup=[entity:'country',field:'name',ref:'continent',refId:'asia',condition:'id>1']
         String json=new Gson().toJson(lookup)
         expect:
-        mockMvc.perform(post('/LookupService').contentType(MediaType.APPLICATION_JSON).content(json))
+        mockMvc.perform(post('/survey/lookup').contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('[{"text":"pakistan","value":"pakistan"},{"text":"srilanka","value":"srilanka"}]'))

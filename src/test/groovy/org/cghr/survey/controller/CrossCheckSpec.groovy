@@ -40,7 +40,7 @@ class CrossCheckSpec extends Specification {
         Map crossCheck=[entity:'country',field:'name',ref:'id',refId:'1']
         String json=new Gson().toJson(crossCheck)
         expect:
-        mockMvc.perform(post('/CrossCheckService').contentType(MediaType.APPLICATION_JSON).content(json))
+        mockMvc.perform(post('/survey/crossCheck').contentType(MediaType.APPLICATION_JSON).content(json))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(content().string('{"value":"india"}'))

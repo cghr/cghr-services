@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
  * Created by ravitej on 7/4/14.
  */
 @RestController
-@RequestMapping("/LookupService")
+@RequestMapping("/survey/lookup")
 public class LookupService {
 
     @Autowired

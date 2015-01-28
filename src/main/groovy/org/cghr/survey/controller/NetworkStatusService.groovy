@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
  * Created by ravitej on 14/10/14.
  */
 @RestController
-@RequestMapping("/NetworkStatus")
+@RequestMapping("/sync/networkStatus")
 class NetworkStatusService {
 
 

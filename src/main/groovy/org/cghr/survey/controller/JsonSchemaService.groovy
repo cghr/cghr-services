@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController
  * Created by ravitej on 21/9/14.
  */
 @RestController
-@RequestMapping("/JsonSchemaService")
+@RequestMapping("/survey/jsonSchemaList")
 class JsonSchemaService {
 
     @Autowired

@@ -1,7 +1,5 @@
 package org.cghr.survey.controller
-
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import org.springframework.test.web.servlet.MockMvc
@@ -45,16 +43,15 @@ class JsonSchemaServiceSpec extends Specification {
 
     def "should get list of json files in development"() {
         expect:
-        mockMvc.perform(get("/JsonSchemaService/dev/hc"))
+        mockMvc.perform(get("/survey/jsonSchemaList/dev/hc"))
                 .andExpect(status().isOk())
                 .andExpect(content().string('["file2.json","file1.json"]'))
 
     }
 
-
     def "should get list of json files in production"() {
         expect:
-        mockMvc.perform(get("/JsonSchemaService/prod"))
+        mockMvc.perform(get("/survey/jsonSchemaList/prod"))
                 .andExpect(status().isOk())
                 .andExpect(content().string('["file1.json"]'))
 

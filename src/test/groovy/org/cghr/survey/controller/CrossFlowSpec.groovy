@@ -39,12 +39,12 @@ class CrossFlowSpec extends Specification {
         String crossFlows='[{"entity":"country","field":"name","ref":"id","refId":"1","condition":"name==\'india\'"}]'
         String failingCrossFlows='[{"entity":"country","field":"name","ref":"id","refId":"1","condition":"name==\'america\'"}]'
         expect:
-        mockMvc.perform(post('/CrossFlowService').contentType(MediaType.APPLICATION_JSON).content(crossFlows))
+        mockMvc.perform(post('/survey/crossFlow').contentType(MediaType.APPLICATION_JSON).content(crossFlows))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('{"check":true}'))
 
-        mockMvc.perform(post('/CrossFlowService').contentType(MediaType.APPLICATION_JSON).content(failingCrossFlows))
+        mockMvc.perform(post('/survey/crossFlow').contentType(MediaType.APPLICATION_JSON).content(failingCrossFlows))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string('{"check":false}'))

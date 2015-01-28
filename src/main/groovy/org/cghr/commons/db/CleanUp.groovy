@@ -22,8 +22,8 @@ class CleanUp {
 
     List getAllTables() {
 
-        dbAccess.rows('show tables', [])
-                .collect { it.values() as List }
+        dbAccess.rows('show tables')
+                .collect {Map row-> row.values().toList() }
                 .collect { List values -> values.first() }
 
     }
