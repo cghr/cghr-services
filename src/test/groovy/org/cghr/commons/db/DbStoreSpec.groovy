@@ -78,7 +78,20 @@ class DbStoreSpec extends Specification {
         gSql.firstRow("SELECT * FROM country WHERE id=?", [1]) == dataSetUpdate[0]
     }
 
+    def "verify fresh save of data from a map to database"() {
+        given:
+        Map updatedEntity=((Map)dataSetUpdate[0]).subMap(["id","name"])
+
+        when:
+        dbStore.saveOrUpdate(dataSet[0], dataStore)
+        dbStore.freshSave(updatedEntity, dataStore)
+
+        then:
+        gSql.firstRow("SELECT * FROM country WHERE id=?", [1]) == [id: 1, name: 'india-update', continent: null]
+    }
+
     def "verify data update from a map List to database"() {
+
         when:
         dbStore.saveOrUpdateFromMapList(dataSet, dataStore)
         dbStore.saveOrUpdateFromMapList(dataSetUpdate, dataStore)

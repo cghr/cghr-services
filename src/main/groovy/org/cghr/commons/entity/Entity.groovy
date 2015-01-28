@@ -42,6 +42,11 @@ class Entity {
         dbStore.saveOrUpdate(entityData, entityName)
     }
 
+    void freshSave(String entityName, Map entityData) {
+
+        dbStore.freshSave(entityData, entityName)
+    }
+
     void saveList(String entityName, List entityList) {
 
         dbStore.saveOrUpdateFromMapList(entityList, entityName)

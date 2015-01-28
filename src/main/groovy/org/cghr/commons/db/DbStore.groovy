@@ -24,6 +24,16 @@ class DbStore {
         gSql.execute(sql, valueList)
     }
 
+    void freshSave(Map entity, String entityName) {
+
+        String keyField = dataStoreFactory[entityName]
+        String keyFieldValue = entity[keyField]
+        String sql = "delete from $entityName where $keyField=?"
+
+        gSql.execute(sql, keyFieldValue)
+        saveOrUpdate(entity, entityName)
+
+    }
 
     String getKeysAndValues(Map data) {
         data.collect { key, value -> "$key=?" }.join(",")

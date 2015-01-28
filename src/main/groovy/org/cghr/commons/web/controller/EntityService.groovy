@@ -42,11 +42,10 @@ class EntityService {
         entity.findByCriteria(entityName,property,propertyValue)
     }
 
-
     @RequestMapping(value = "/{entityName}", method = RequestMethod.POST, consumes = "application/json")
-    String saveOrUpdateEntity(@RequestBody Map entityData, @PathVariable String entityName) {
+    String freshSave(@RequestBody Map entityData, @PathVariable String entityName) {
 
-        entity.saveOrUpdate(entityName,entityData)
+        entity.freshSave(entityName,entityData)
         entity.log(entityName,entityData)
     }
 

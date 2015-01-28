@@ -99,6 +99,19 @@ class EntitySpec extends Specification {
 
     }
 
+    def "should freshly create a new entity by cleaning up existing entity for a given entityId"() {
+
+        given:
+        Map updatedEntity = [id: 1, name: 'india updated']
+
+        when:
+        entity.freshSave('country', updatedEntity)
+
+        then:
+        gSql.firstRow("select * from country where id=1") == [id:1,name: 'india updated',continent: null]
+
+    }
+
     def "should save an entityList for a given entityName"() {
         setup:
         dt.clean('country')
