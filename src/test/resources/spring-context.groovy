@@ -31,6 +31,8 @@ beans {
     context.'component-scan'('base-package': 'org.cghr.dataSync.controller')
     context.'component-scan'('base-package': 'org.cghr.security.controller')
     context.'component-scan'('base-package': 'org.cghr.survey.controller')
+    //Todo project specific controller packages
+    //context.'component-scan'('base-package': 'org.cghr.<appName>.controller')
 
     mvc.'annotation-driven'()
     mvc.'interceptors'() {
@@ -149,7 +151,6 @@ beans {
     //Todo Maintenance Tasks
     cleanup(CleanUp, dbAccess = dbAccess, excludedEntities = "user,area")
 
-    //Todo JsonSchema Path
     String prodPath = new File('./assets/jsonSchema').getCanonicalPath()
     devJsonSchemaPath(String, userHome + 'apps/<appName>/ui/src/assets/jsonSchema')
     prodJsonSchemaPath(String, prodPath)
