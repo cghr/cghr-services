@@ -1,8 +1,10 @@
 package org.cghr.survey.controller
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+
 /**
  * Created by ravitej on 21/9/14.
  */

@@ -1,5 +1,4 @@
 package org.cghr.security.controller
-
 import groovy.sql.Sql
 import org.cghr.security.model.User
 import org.cghr.security.service.UserService
@@ -11,12 +10,19 @@ import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Shared
 import spock.lang.Specification
 
 @ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class AuthSpec extends Specification {
 
+
+
+    MockMvc mockMvc
+    @Autowired
+    Auth authService
 
     @Autowired
     Sql gSql
@@ -43,8 +49,13 @@ class AuthSpec extends Specification {
     }
 
     def setup() {
+
+
+
         def authtoken = "ABCDEDGH-12345"
-        //Mocking User Service
+
+        mockMvc=MockMvcBuilders.standaloneSetup(authService).build()
+
         UserService mockUserService = Stub() {
             isValid(validUser, hostname) >> true
             isValid(invalidUser, hostname) >> false
@@ -100,8 +111,8 @@ class AuthSpec extends Specification {
         dt.cleanInsert("user")
         dt.clean("authtoken")
         dt.clean("userlog")
-
     }
+
 
     def "should verify http responses for valid and invalid users"() {
 

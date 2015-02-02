@@ -12,7 +12,7 @@ class CleanUp {
     DbAccess dbAccess
 
     void cleanupTables() {
-        dbAccess.removeData(getTableListForCleanup())
+        dbAccess.removeData tableListForCleanup
     }
 
     List getTableListForCleanup() {

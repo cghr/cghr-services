@@ -19,6 +19,8 @@ import org.cghr.startupTasks.DirCreator
 import org.cghr.startupTasks.MetaClassEnhancement
 import org.cghr.test.db.DbTester
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
 
@@ -40,16 +42,16 @@ beans {
             bean('class': 'org.cghr.security.controller.AuthInterceptor')
         }
     }
+    // Http Message Converters. Json-Objects and Vice-versa
+    jacksonMapperFactoryBean(Jackson2ObjectMapperFactoryBean)
+    httpMsgConverters(MappingJackson2HttpMessageConverter){
+        objectMapper= jacksonMapperFactoryBean
+    }
+
     multipartResolver(CommonsMultipartResolver) {
         maxInMemorySize = 10240
         maxUploadSize = 1024000000
     }
-//    contentNegotiationViewResolver(ContentNegotiatingViewResolver, {
-//        mediaTypes = [json: 'application/json']
-//    })
-//    contentNegotiationManager(ContentNegotiationManagerFactoryBean, {
-//        defaultContentType = "application/json"
-//    })
 
     //Todo Add project specific Services
     String userHome = System.getProperty('userHome')
@@ -58,7 +60,8 @@ beans {
     serverBaseUrl(String, server)
 
     //Todo Database Config
-    dataSource(DataSource) {
+    dataSource(DataSource) {bean ->
+        bean.destroyMethod = 'close'
         driverClassName = 'org.h2.Driver'
         url = 'jdbc:h2:mem:specs;database_to_upper=false;mode=mysql'
         //Todo production config

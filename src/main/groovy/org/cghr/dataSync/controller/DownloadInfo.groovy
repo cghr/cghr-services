@@ -19,7 +19,7 @@ class DownloadInfo {
 
 
     @RequestMapping("/{recipient}")
-    Map[] downloadInfo(@PathVariable Integer recipient) {
+    List downloadInfo(@PathVariable Integer recipient) {
 
         String sql = "select datastore,ref,refId,distList from outbox where recipient=? and dwnStatus is null"
         List list = dbAccess.rows(sql, [recipient])

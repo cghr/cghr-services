@@ -24,11 +24,11 @@ class Auth {
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     String authenticate(@RequestBody User user, HttpServletResponse response, HttpServletRequest request) {
 
+
         String hostname = getHostName(request)
         isInvalidUser(user, hostname) ? authFailure(user, response) : authSuccessful(user, response)
 
     }
-
     String generateAuthToken() {
         UUID.randomUUID().toString()
     }

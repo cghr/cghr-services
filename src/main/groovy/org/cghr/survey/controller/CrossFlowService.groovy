@@ -17,7 +17,7 @@ public class CrossFlowService {
     DbAccess dbAccess
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public Map getCrossFlowCheck(@RequestBody Map[] crossFlowMetadata) {
+    Map getCrossFlowCheck(@RequestBody Map[] crossFlowMetadata) {
 
         isAnyConditionFailing(crossFlowMetadata as List) ? [check: false] : [check: true]
     }

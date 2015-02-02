@@ -29,14 +29,14 @@ class EntityService {
 
 
     @RequestMapping("/{entityName}")
-    Map[] getEntityList(@PathVariable String entityName) {
+    List getEntityList(@PathVariable String entityName) {
 
         entity.findAll(entityName)
 
     }
 
     @RequestMapping("/{entityName}/{property}/{propertyValue}")
-    Map[] getEntityListWithCriteria(
+    List getEntityListWithCriteria(
             @PathVariable String entityName, @PathVariable String property, @PathVariable String propertyValue) {
 
         entity.findByCriteria(entityName,property,propertyValue)
