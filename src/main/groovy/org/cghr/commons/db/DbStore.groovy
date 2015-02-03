@@ -30,9 +30,13 @@ class DbStore {
         String keyFieldValue = entity[keyField]
         String sql = "delete from $entityName where $keyField=?"
 
-        gSql.execute(sql, keyFieldValue)
-        saveOrUpdate(entity, entityName)
+        if (!isNewData(entityName, keyField, keyFieldValue))
+            gSql.execute(sql, keyFieldValue)
 
+        String keysAndValues=getKeysAndValues(entity)
+        List valueList=entity.values().toList()
+        def insertSql="insert into $entityName set $keysAndValues"
+        gSql.executeUpdate(insertSql,valueList)
     }
 
     String getKeysAndValues(Map data) {

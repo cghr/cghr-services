@@ -18,7 +18,7 @@ class DynamicDropdownService {
     DbAccess dbAccess
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    Map getLookupData(@RequestBody Map metadata) {
+    List getLookupData(@RequestBody Map metadata) {
 
         String sql = constructSqlFromMetadata(metadata)
         dbAccess.rows(sql, [metadata.refValue])

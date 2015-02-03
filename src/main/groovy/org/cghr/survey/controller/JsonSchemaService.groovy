@@ -32,7 +32,6 @@ class JsonSchemaService {
     List getJsonSchemaFileNames(String path) {
 
         List jsonSchemaDir = new File(path).listFiles()
-
         jsonSchemaDir
                 .findAll { File file -> !file.isDirectory() }
                 .collect { it.name }
