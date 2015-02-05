@@ -31,7 +31,10 @@ class SyncUtil {
     }
 
     String getLocalServerBaseUrl() {
-        int syncServerNode = (startNode..endNode).find { isValidSyncServer(it) }
+        Integer syncServerNode = (startNode..endNode).find { isValidSyncServer(it) }
+        if(!syncServerNode)
+            throw new Exception("Sync Server Node not found")
+
         return constructHttpUrl(baseIp + syncServerNode)
     }
 
@@ -50,8 +53,7 @@ class SyncUtil {
             return statusCheck.status
         }
         catch (Exception e) {
-            println 'exception while accessing url :' + url
-            e.printStackTrace()
+            println 'Error Accessing url :' + url
             return false
         }
     }

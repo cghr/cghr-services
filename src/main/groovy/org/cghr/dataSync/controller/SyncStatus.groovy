@@ -1,9 +1,11 @@
 package org.cghr.dataSync.controller
+
 import groovy.transform.CompileStatic
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+
 /**
  * Created by ravitej on 4/5/14.
  */
@@ -14,6 +16,7 @@ class SyncStatus {
 
     @Autowired
     DbAccess dbAccess
+
 
     @RequestMapping("/download")
     String downloadTotal() {
@@ -37,9 +40,9 @@ class SyncStatus {
         role == 'manager' ? [status: true] : [status: false]
     }
 
-    String getCount(String sql) {
+    Integer getCount(String sql) {
 
-        dbAccess.firstRow(sql, []).count
+        (Integer) dbAccess.firstRow(sql, []).count
     }
 
 

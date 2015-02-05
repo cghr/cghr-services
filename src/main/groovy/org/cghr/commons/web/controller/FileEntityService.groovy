@@ -21,7 +21,7 @@ class FileEntityService {
     FileSystemStore fileSystemStore
 
     @RequestMapping(value = "/{filestore}", method = RequestMethod.POST)
-    String saveOrUpdate(@PathVariable String filestore,
+    Map saveOrUpdate(@PathVariable String filestore,
             @RequestParam("data") String  jsonData,
             @RequestParam("file") MultipartFile file) {
 
@@ -30,7 +30,7 @@ class FileEntityService {
         fileSystemStore.saveOrUpdate(data, filestore, file)
         fileSystemStore.createFileChangelogs(data, filestore)
 
-        return 'uploaded successfully'
+        return [status:'uploaded successfully']
     }
 
 }

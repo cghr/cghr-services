@@ -1,5 +1,6 @@
 import groovy.sql.Sql
 import org.apache.tomcat.jdbc.pool.DataSource
+import org.cghr.chart.AngularChartModel
 import org.cghr.commons.db.CleanUp
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -123,7 +124,7 @@ beans {
 
     //Todo Data Synchronization
     String appName = 'hc'
-    syncUtil(SyncUtil, dbAccess = dbAccess, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/status/manager', appName = appName)
+    syncUtil(SyncUtil, dbAccess = dbAccess, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/sync/status/manager', appName = appName)
 
     agentDownloadServiceProvider(AgentDownloadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate,
             serverBaseUrl = 'http://demo1278634.mockable.io/',//todo
@@ -161,5 +162,7 @@ beans {
     //Todo ipaddress pattern
     ipAddressPattern(String, "abc.xyz")
     gpsSocketPort(Integer, 4444)
+
+    chartModel(AngularChartModel,dbAccess=dbAccess)
 
 }
