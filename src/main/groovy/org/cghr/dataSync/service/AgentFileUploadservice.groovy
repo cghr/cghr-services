@@ -9,7 +9,7 @@ import org.cghr.commons.db.DbStore
  * Created by ravitej on 4/7/14.
  */
 
-@TupleConstructor
+@TupleConstructor(excludes = [""])
 class AgentFileUploadservice {
 
     DbAccess dbAccess
@@ -31,11 +31,16 @@ class AgentFileUploadservice {
 
         String path = (fileStoreFactory[fileInfo.filestore])[fileInfo.category]
         String category = fileInfo.category
-        String remoteFile = remoteFileRepo + category + fileInfo.filename
+        String remoteFile = remoteFileRepo + getCategoryFolder(path) + fileInfo.filename
 
         File file = new File(path + '/' + fileInfo.filename)
         awakeFileSession.upload(file, remoteFile)
 
+    }
+
+    String getCategoryFolder(String path) {
+
+        path.split("/").last() + "/"
     }
 
 

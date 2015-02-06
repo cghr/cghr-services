@@ -45,8 +45,8 @@ beans {
     }
     // Http Message Converters. Json-Objects and Vice-versa
     jacksonMapperFactoryBean(Jackson2ObjectMapperFactoryBean)
-    httpMsgConverters(MappingJackson2HttpMessageConverter){
-        objectMapper= jacksonMapperFactoryBean
+    httpMsgConverters(MappingJackson2HttpMessageConverter) {
+        objectMapper = jacksonMapperFactoryBean
     }
 
     multipartResolver(CommonsMultipartResolver) {
@@ -61,7 +61,7 @@ beans {
     serverBaseUrl(String, server)
 
     //Todo Database Config
-    dataSource(DataSource) {bean ->
+    dataSource(DataSource) { bean ->
         bean.destroyMethod = 'close'
         driverClassName = 'org.h2.Driver'
         url = 'jdbc:h2:mem:specs;database_to_upper=false;mode=mysql'
@@ -97,7 +97,7 @@ beans {
     dt(DbTester, dataSource = dataSource) //Todo Only For unit Testing
 
     //Todo Security
-    tokenCache(HashMap,[:])
+    tokenCache(HashMap, [:])
     serverAuthUrl(String, "http://localhost:8089/app/api/security/auth")
     httpClientParams()
     httpRequestFactory(HttpComponentsClientHttpRequestFactory) {
@@ -106,12 +106,11 @@ beans {
     }
     restTemplate(RestTemplate, httpRequestFactory)
     onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
-    userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService,tokenCache=tokenCache)
+    userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService, tokenCache = tokenCache)
     postAuth(PostAuth)
     auth(Auth)
     requestParser(RequestParser)
     authInterceptor(AuthInterceptor)
-
 
     //Todo Startup Tasks  - Metaclass Enhancement
     metaClassEnhancement(MetaClassEnhancement)
@@ -134,12 +133,13 @@ beans {
 
     agentFileUploadServiceProvider(AgentFileUploadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, serverBaseUrl = 'http://demo1278634.mockable.io/',
             fileStoreFactory = fileStoreFactory,
-            awakeFileManagerPath = 'app/AwakeFileManager',
-            remoteFileRepo = 'hc/repo/images/')
+            awakeFileManagerPath = 'AwakeFileManager',
+            remoteFileRepo = 'hc/repo/images/',
+            syncUtil = syncUtil)
 
     agentMsgDistServiceProvider(AgentMsgDistServiceProvider, dbAccess = dbAccess, dbStore = dbStore)
 
-    agentUploadServiceProvider(AgentUploadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 20,
+    agentUploadServiceProvider(AgentUploadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate, changelogChunkSize = 1,
             serverBaseUrl = 'http://demo1278634.mockable.io/',//todo
             uploadPath = 'api/data/dataStoreBatchService',
             syncUtil = syncUtil)
@@ -163,6 +163,6 @@ beans {
     ipAddressPattern(String, "abc.xyz")
     gpsSocketPort(Integer, 4444)
 
-    chartModel(AngularChartModel,dbAccess=dbAccess)
+    chartModel(AngularChartModel, dbAccess = dbAccess)
 
 }

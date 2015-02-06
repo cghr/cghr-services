@@ -15,9 +15,9 @@ class SyncService {
     SyncRunner syncRunner
 
     @RequestMapping("")
-    String synchronize() {
+    Map synchronize() {
         syncRunner.run()
-        return "Synchronization successful"
+        [status: true]
     }
 
 }

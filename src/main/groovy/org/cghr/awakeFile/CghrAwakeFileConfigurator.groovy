@@ -12,7 +12,7 @@ class CghrAwakeFileConfigurator implements AwakeFileConfigurator {
 
     @Override
     File getServerRoot() {
-        new File(System.getProperty('basePath'))
+        new File(System.getProperty('userHome'))
     }
 
     @Override
