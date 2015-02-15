@@ -12,7 +12,6 @@ class ChangeLogCleanup {
 
     DbAccess dbAccess
 
-
     @PostConstruct
     void cleanupChangeLog() {
 
