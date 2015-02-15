@@ -72,7 +72,7 @@ class DbStore {
     void saveDataChangelogs(List changelogs) {
 
         gSql.withBatch("insert into datachangelog(log) values(?)") { ps ->
-            changelogs.each { ps.addBatch([it]) }
+            changelogs.each { ps.addBatch([it.toJson()]) }
         }
     }
 

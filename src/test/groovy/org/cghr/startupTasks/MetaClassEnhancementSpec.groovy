@@ -35,6 +35,7 @@ class MetaClassEnhancementSpec extends Specification {
         map.toJson() == '{"id":1,"name":"india"}'
     }
 
+
     def "should attach jsonToMap method to String Class"() {
 
         given:

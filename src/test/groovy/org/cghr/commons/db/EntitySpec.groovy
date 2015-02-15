@@ -165,9 +165,9 @@ class EntitySpec extends Specification {
         setup:
         dt.clean('datachangelog')
         List changelogs = [
-                [datastore: 'country', data: countries[0]].toJson(),
-                [datastore: 'country', data: countries[1]].toJson(),
-                [datastore: 'country', data: countries[2]].toJson()
+                [datastore: 'country', data: countries[0]],
+                [datastore: 'country', data: countries[1]],
+                [datastore: 'country', data: countries[2]]
         ]
         List result=[]
 

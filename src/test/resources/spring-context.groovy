@@ -19,7 +19,7 @@ import org.cghr.startupTasks.DbImport
 import org.cghr.startupTasks.DirCreator
 import org.cghr.startupTasks.MetaClassEnhancement
 import org.cghr.test.db.DbTester
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
@@ -99,12 +99,12 @@ beans {
     //Todo Security
     tokenCache(HashMap, [:])
     serverAuthUrl(String, "http://localhost:8089/app/api/security/auth")
-    httpClientParams()
-    httpRequestFactory(HttpComponentsClientHttpRequestFactory) {
-        readTimeout = 3000
-        connectTimeout = 3000
+    httpRequestFactory(SimpleClientHttpRequestFactory) {
+        readTimeout = 500
+        connectTimeout = 500
     }
-    restTemplate(RestTemplate, httpRequestFactory)
+    restTemplateWithTimeout(RestTemplate, httpRequestFactory)
+    restTemplate(RestTemplate)
     onlineAuthService(OnlineAuthService, serverAuthUrl = serverAuthUrl, restTemplate = restTemplate)
     userService(UserService, dbAccess = dbAccess, dbStore = dbStore, onlineAuthService = onlineAuthService, tokenCache = tokenCache)
     postAuth(PostAuth)
@@ -123,7 +123,11 @@ beans {
 
     //Todo Data Synchronization
     String appName = 'hc'
-    syncUtil(SyncUtil, dbAccess = dbAccess, restTemplate = restTemplate, baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/sync/status/manager', appName = appName)
+    syncUtil(SyncUtil, dbAccess = dbAccess, restTemplate = restTemplateWithTimeout,
+            baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/sync/status/manager',
+            appName = appName,
+            localSyncTimeout=1500,
+            onlineSyncTimeout=10*1000)
 
     agentDownloadServiceProvider(AgentDownloadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate,
             serverBaseUrl = 'http://demo1278634.mockable.io/',//todo
@@ -164,5 +168,8 @@ beans {
     gpsSocketPort(Integer, 4444)
 
     chartModel(AngularChartModel, dbAccess = dbAccess)
+
+    //Todo Enable for changelog cleanup
+    //changeLogCleanup(ChangeLogCleanup,dbAccess=dbAccess)
 
 }

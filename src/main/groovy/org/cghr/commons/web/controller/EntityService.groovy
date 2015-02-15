@@ -56,6 +56,7 @@ class EntityService {
         List changelogs = data.toList()
         entity.saveVariantEntities(changelogs)
 
+
         String requestHost = request.serverName
         if (isNotSeverHost(requestHost))
             entity.saveChangeLogs(changelogs)

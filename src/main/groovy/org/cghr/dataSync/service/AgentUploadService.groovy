@@ -26,7 +26,9 @@ class AgentUploadService {
 
         String sql = "select log from datachangelog where status is null limit $changelogChunkSize"
         List logs = []
-        dbStore.eachRow(sql, []) { logs << getLog(it) }
+        dbStore.eachRow(sql, []) {
+            logs << getLog(it)
+        }
         logs.toString()
     }
 
@@ -37,7 +39,7 @@ class AgentUploadService {
     void postBatch(String changelogBatch) {
 
         HttpEntity<String> request = constructJsonRequest(changelogBatch)
-        restTemplate.postForLocation(syncServerUploadUrl, request)
+            restTemplate.postForLocation(syncServerUploadUrl, request)
     }
 
     HttpEntity<String> constructJsonRequest(String data) {

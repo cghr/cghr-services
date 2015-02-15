@@ -70,19 +70,19 @@ class SyncIntegrationSpec extends Specification {
         setup:
         Map[] downloadInfo = [[datastore: 'country', ref: 'continent', refId: 'asia', distList: null]]
         RestTemplate restTemplate = Stub() {
-            getForObject('http://192.168.0.100:8080/app/status/manager', Map.class) >> [status: false]
-            getForObject('http://192.168.0.101:8080/app/status/manager', Map.class) >> [status: true]
-            getForObject('http://192.168.0.101:8080/app/api/sync/downloadInfo/15', List.class) >> downloadInfo
-            getForObject('http://192.168.0.101:8080/app/api/data/dataAccessBatchService/country/continent/asia', List.class) >> dataSet
-            postForLocation('http://192.168.0.101:8080/app/api/data/dataStoreBatchService', _) >> {}
+            getForObject('http://192.168.0.100:8080/hc/api/sync/status/manager', Map.class) >> [status: false]
+            getForObject('http://192.168.0.101:8080/hc/api/sync/status/manager', Map.class) >> [status: true]
+            getForObject('http://192.168.0.101:8080/hc/api/sync/downloadInfo/15', List.class) >> downloadInfo
+            getForObject('http://192.168.0.101:8080/hc/api/data/dataAccessBatchService/country/continent/asia', List.class) >> dataSet
+            postForLocation('http://192.168.0.101:8080/hc/api/data/dataStoreBatchService', _) >> {}
         }
         String baseIp = '192.168.0.'
         Integer startNode = 100
         Integer endNode = 120
         Integer port = 8080
 
-        String pathToCheck = 'status/manager'
-        String appName = 'app'
+        String pathToCheck = 'api/sync/status/manager'
+        String appName = 'hc'
         SyncUtil syncUtil = new SyncUtil(dbAccess, restTemplate, baseIp, startNode, endNode, port, pathToCheck, appName)
         syncService.syncRunner.agentProvider.agentServiceProvider.agentUploadServiceProvider.syncUtil = syncUtil
         syncService.syncRunner.agentProvider.agentServiceProvider.agentDownloadServiceProvider.syncUtil = syncUtil

@@ -18,7 +18,7 @@ cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml f
 
 sourceCompatibility = 1.7
 
-version = '0.1-rc7'
+version = '1.0'
 group = 'org.cghr'
 
 jar {

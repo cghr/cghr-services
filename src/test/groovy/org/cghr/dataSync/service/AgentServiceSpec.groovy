@@ -208,7 +208,6 @@ class AgentServiceSpec extends Specification {
 
         when:
         agentService.fileUploadSuccessful(1)
-        println gSql.rows('select * from filechangelog')
 
         then:
         gSql.firstRow('select status from filechangelog where id=?', ['1']).status == '1'

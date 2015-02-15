@@ -2,6 +2,7 @@ package org.cghr.dataSync.service
 
 import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
+import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.web.client.RestTemplate
 
 /**
@@ -20,8 +21,10 @@ class SyncUtil {
     Integer port
     String pathToCheck
     String appName
+    int localSyncTimeout
+    int onlineSyncTimeout
 
- 
+
     String syncServerBaseUrl(String mainServerBaseUrl) {
         userRole == 'manager' ? mainServerBaseUrl : getLocalServerBaseUrl()
     }
@@ -32,7 +35,8 @@ class SyncUtil {
 
     String getLocalServerBaseUrl() {
         Integer syncServerNode = (startNode..endNode).find { isValidSyncServer(it) }
-        if(!syncServerNode)
+        println "Found Sync Server at node $syncServerNode"
+        if (!syncServerNode)
             throw new Exception("Sync Server Node not found")
 
         return constructHttpUrl(baseIp + syncServerNode)
@@ -45,6 +49,7 @@ class SyncUtil {
 
     boolean isValidSyncServer(int node) {
 
+        setTimeout(localSyncTimeout, localSyncTimeout, restTemplate)
         String url = constructStatusCheckUrl(node)
 
         try {
@@ -56,6 +61,16 @@ class SyncUtil {
             println 'Error Accessing url :' + url
             return false
         }
+        finally {
+            setTimeout(onlineSyncTimeout, onlineSyncTimeout, restTemplate)
+        }
+    }
+
+    void setTimeout(int connectionTimeout, int readTimeout, RestTemplate restTmp) {
+
+        ((SimpleClientHttpRequestFactory) restTmp.requestFactory).connectTimeout = connectionTimeout
+        ((SimpleClientHttpRequestFactory) restTmp.requestFactory).readTimeout = readTimeout
+
     }
 
     String constructHttpUrl(String ip) {
