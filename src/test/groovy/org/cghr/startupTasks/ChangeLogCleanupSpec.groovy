@@ -34,15 +34,22 @@ class ChangeLogCleanupSpec extends Specification {
     def "should delete the changelogs with status 1"() {
 
         given:
-        String sql="select * from datachangelog where status=1"
+        String allChangeLogs="select * from datachangelog"
+        String completedChangeLogs="select * from datachangelog where status=1"
+        String pendingChangeLogs="select * from datachangelog where status is null"
+
         gSql.execute("update datachangelog set status=1")
-        assert gSql.rows(sql).size()==3
+        gSql.execute("insert into datachangelog(id,log) values(?,?)",[4,'{"log":"new log"}'])
+
+        assert gSql.rows(allChangeLogs).size()==4
+
 
         when:
         changeLogCleanup.cleanupChangeLog()
 
         then:
-        gSql.rows(sql).size()==0
+        gSql.rows(completedChangeLogs).size()==0
+        gSql.rows(pendingChangeLogs).size()==1
 
     }
 
