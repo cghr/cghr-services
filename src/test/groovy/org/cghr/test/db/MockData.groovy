@@ -13,10 +13,15 @@ class MockData {
             datachangelog: [id: 'int', log: 'text', status: 'varchar(20)'],
             filechangelog: [id: 'int', filename: 'varchar(100)', filestore: 'varchar(100)', category: 'varchar(100)', status: 'varchar(20)'],
             memberImage: [memberId: 'int', consent: 'varchar(100)', photoId: 'varchar(100)', photo: 'varchar(100)'],
-            sales:[name:'varchar(100)',total:'int',month:'int']
+            sales:[name:'varchar(100)',total:'int',month:'int'],
+            command:[id:'int',name: 'varchar(20)',status:'varchar(20)']
     ]
 
     def sampleData = [
+
+            command: [
+                    [id:1,name:'cleanup',status: null]
+            ],
             sales: [
                     [name:'india',total:  100,month:  20],
                     [name:  'pakistan',total:  80,month:  10],

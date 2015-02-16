@@ -1,7 +1,6 @@
 import groovy.sql.Sql
 import org.apache.tomcat.jdbc.pool.DataSource
 import org.cghr.chart.AngularChartModel
-import org.cghr.commons.cmd.CommandExecutor
 import org.cghr.commons.db.CleanUp
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -175,11 +174,11 @@ beans {
 
 
 
-    //Todo Add More commands
+    //Todo Enable Command Executor
     cleanupCommand(HashMap, [
             name: 'cleanup', refObj: cleanup, execFn: { it.cleanupTables() }
     ])
     commandConfig(ArrayList, [cleanupCommand])
-    commandExecutor(CommandExecutor, commandConfig = commandConfig)
+    //commandExecutor(CommandExecutor, commandConfig = commandConfig,dbAccess=dbAccess)
 
 }

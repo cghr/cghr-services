@@ -1,6 +1,8 @@
 package org.cghr.commons.cmd
 
 import groovy.sql.Sql
+import org.cghr.commons.db.DbAccess
+import org.cghr.startupTasks.CommandExecutor
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -20,11 +22,16 @@ class CommandExecutorSpec extends Specification {
     DbTester dbTester
 
     @Autowired
+    DbAccess dbAccess
+    @Autowired
+    ArrayList commandConfig
+
     CommandExecutor commandExecutor
 
 
     def setup() {
 
+        commandExecutor=new CommandExecutor(commandConfig,dbAccess)
         dbTester.cleanInsert("country,user,authtoken,userlog,inbox,outbox,datachangelog,filechangelog,sales")
     }
 
@@ -50,6 +57,33 @@ class CommandExecutorSpec extends Specification {
         "datachangelog" || 3
         "filechangelog" || 3
         "sales"         || 0
+
+    }
+    def "should execute all configured commands in database"(){
+
+        given:
+        dbTester.cleanInsert("command")
+        assert gSql.rows("select * from command").size()==1
+
+        when:
+        commandExecutor.execConfiguredCommands()
+
+        then:
+        numberOfRows(table) == result
+
+
+        where:
+        table           || result
+        "country"       || 0
+        "user"          || 5
+        "authtoken"     || 0
+        "inbox"         || 0
+        "outbox"        || 0
+        "datachangelog" || 3
+        "filechangelog" || 3
+        "sales"         || 0
+
+
 
     }
 
