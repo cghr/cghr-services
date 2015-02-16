@@ -2,6 +2,7 @@ package org.cghr.dataSync.service
 
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import org.springframework.web.client.RestClientException
@@ -38,6 +39,7 @@ class SyncUtilSpec extends Specification {
             }
 
             getForObject('http://192.168.0.110:8080/hc/api/status/manager', Map.class) >> [status: true]
+            getRequestFactory() >> new SimpleClientHttpRequestFactory()
 
         }
         String baseIp = '192.168.0.'
