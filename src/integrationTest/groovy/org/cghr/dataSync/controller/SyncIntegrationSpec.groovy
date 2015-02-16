@@ -5,6 +5,7 @@ import org.cghr.dataSync.service.SyncUtil
 import org.cghr.test.db.DbTester
 import org.cghr.test.db.MockData
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import org.springframework.test.web.servlet.MockMvc
@@ -75,6 +76,7 @@ class SyncIntegrationSpec extends Specification {
             getForObject('http://192.168.0.101:8080/hc/api/sync/downloadInfo/15', List.class) >> downloadInfo
             getForObject('http://192.168.0.101:8080/hc/api/data/dataAccessBatchService/country/continent/asia', List.class) >> dataSet
             postForLocation('http://192.168.0.101:8080/hc/api/data/dataStoreBatchService', _) >> {}
+            getRequestFactory() >> new SimpleClientHttpRequestFactory()
         }
         String baseIp = '192.168.0.'
         Integer startNode = 100
