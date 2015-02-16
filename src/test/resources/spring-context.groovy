@@ -158,7 +158,7 @@ beans {
     syncRunner(SyncRunner, agentProvider = agentProvider)
 
     //Todo Maintenance Tasks
-    cleanup(CleanUp, dbAccess = dbAccess, excludedEntities = "user,area,datachangelog,filechangelog")
+    cleanup(CleanUp, dbAccess = dbAccess, excludedEntities = "user,datachangelog,filechangelog")
 
     String prodPath = new File('./assets/jsonSchema').getCanonicalPath()
     devJsonSchemaPath(String, userHome + 'apps/<appName>/ui/src/assets/jsonSchema')
