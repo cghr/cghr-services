@@ -35,12 +35,12 @@ class AppStartupListenerSpec extends Specification {
 
     def "should set basePath in system property"() {
 
-        given:
-        File log4j=new File("./log4j.properties")
-        File webInf=new File(path+"/WEB-INF")
-        webInf.mkdirs()
-        File file=new File(path+"/WEB-INF/log4j.properties")
-        file.setText(log4j.text)
+//        given:
+//        File log4j=new File("./log4j.properties")
+//        File webInf=new File(path+"/WEB-INF")
+//        webInf.mkdirs()
+//        File file=new File(path+"/WEB-INF/log4j.properties")
+//        file.setText(log4j.text)
 
 
         when:
