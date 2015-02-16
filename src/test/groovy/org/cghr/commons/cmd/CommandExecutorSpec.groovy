@@ -43,13 +43,13 @@ class CommandExecutorSpec extends Specification {
         where:
         table           || result
         "country"       || 0
-//        "user"          || 5
-//        "authtoken"     || 0
-//        "inbox"         || 0
-//        "outbox"        || 0
-//        "datachangelog" || 3
-//        "filechangelog" || 3
-//        "sales"         || 0
+        "user"          || 5
+        "authtoken"     || 0
+        "inbox"         || 0
+        "outbox"        || 0
+        "datachangelog" || 3
+        "filechangelog" || 3
+        "sales"         || 0
 
     }
 
