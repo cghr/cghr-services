@@ -1,6 +1,7 @@
 import groovy.sql.Sql
 import org.apache.tomcat.jdbc.pool.DataSource
 import org.cghr.chart.AngularChartModel
+import org.cghr.commons.cmd.CommandExecutor
 import org.cghr.commons.db.CleanUp
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
@@ -126,8 +127,8 @@ beans {
     syncUtil(SyncUtil, dbAccess = dbAccess, restTemplate = restTemplateWithTimeout,
             baseIp = '192.168.0.', startNode = 100, endNode = 120, port = 8080, pathToCheck = 'api/sync/status/manager',
             appName = appName,
-            localSyncTimeout=1500,
-            onlineSyncTimeout=10*1000)
+            localSyncTimeout = 1500,
+            onlineSyncTimeout = 10 * 1000)
 
     agentDownloadServiceProvider(AgentDownloadServiceProvider, dbAccess = dbAccess, dbStore = dbStore, restTemplate = restTemplate,
             serverBaseUrl = 'http://demo1278634.mockable.io/',//todo
@@ -157,7 +158,7 @@ beans {
     syncRunner(SyncRunner, agentProvider = agentProvider)
 
     //Todo Maintenance Tasks
-    cleanup(CleanUp, dbAccess = dbAccess, excludedEntities = "user,area")
+    cleanup(CleanUp, dbAccess = dbAccess, excludedEntities = "user,area,datachangelog,filechangelog")
 
     String prodPath = new File('./assets/jsonSchema').getCanonicalPath()
     devJsonSchemaPath(String, userHome + 'apps/<appName>/ui/src/assets/jsonSchema')
@@ -171,5 +172,14 @@ beans {
 
     //Todo Enable for changelog cleanup
     //changeLogCleanup(ChangeLogCleanup,dbAccess=dbAccess)
+
+
+
+    //Todo Add More commands
+    cleanupCommand(HashMap, [
+            name: 'cleanup', refObj: cleanup, execFn: { it.cleanupTables() }
+    ])
+    commandConfig(ArrayList, [cleanupCommand])
+    commandExecutor(CommandExecutor, commandConfig = commandConfig)
 
 }
