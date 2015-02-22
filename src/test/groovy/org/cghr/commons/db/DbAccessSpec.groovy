@@ -126,6 +126,17 @@ class DbAccessSpec extends Specification {
 
     }
 
+    def "should get  column Labels for a given entity"() {
+
+        expect:
+        dbAccess.columns(entity).join(',') == result
+
+        where:
+        entity    || result
+        'country' || 'id,name,continent'
+
+    }
+
     def "should remove data for a given table with a given condition"() {
 
         when:

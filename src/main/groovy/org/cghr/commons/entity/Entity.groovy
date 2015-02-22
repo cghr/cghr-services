@@ -22,6 +22,14 @@ class Entity {
         dbAccess.firstRow(entityName, entityKey, entityId)
     }
 
+    Map findById(String entityName, Map entityData) {
+
+        String entityKey = getEntityKey(entityName)
+        String entityId = entityData.get(entityKey)
+        findById(entityName, entityId)
+
+    }
+
     String getEntityKey(String entityName) {
 
         dataStoreFactory.get(entityName)
@@ -71,6 +79,15 @@ class Entity {
     void saveChangeLogs(List changeLogs) {
 
         dbStore.saveDataChangelogs(changeLogs)
+    }
+
+    boolean hasTimeLog(String entityName) {
+
+        dbAccess.columns(entityName).contains('timelog')
+    }
+
+    boolean hasEndTime(String entityName) {
+        dbAccess.columns(entityName).contains('endtime')
     }
 
 

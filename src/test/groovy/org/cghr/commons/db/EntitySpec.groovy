@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Shared
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 19/1/15.
  */
@@ -48,6 +49,18 @@ class EntitySpec extends Specification {
         entityName | entityId || result
         'country'  | '1'      || countries[0]
         'country'  | '999'    || [:]
+
+    }
+
+    def "should find an entity by entityName,entityData"() {
+
+        expect:
+        entity.findById(entityName, entityData) == result
+
+        where:
+        entityName | entityData               || result
+        'country'  | [id: 1, name: 'india']   || countries[0]
+        'country'  | [id: 999, name: 'dummy'] || [:]
 
     }
 
@@ -106,7 +119,7 @@ class EntitySpec extends Specification {
         entity.freshSave('country', updatedEntity)
 
         then:
-        gSql.firstRow("select * from country where id=1") == [id:1,name: 'india updated',continent: null]
+        gSql.firstRow("select * from country where id=1") == [id: 1, name: 'india updated', continent: null]
 
     }
 
@@ -169,18 +182,18 @@ class EntitySpec extends Specification {
                 [datastore: 'country', data: countries[1]],
                 [datastore: 'country', data: countries[2]]
         ]
-        List result=[]
+        List result = []
 
         when:
         entity.saveChangeLogs(changelogs)
 
         then:
-        gSql.rows("select * from datachangelog").size()==3
+        gSql.rows("select * from datachangelog").size() == 3
 
-        gSql.eachRow("select log from datachangelog"){
+        gSql.eachRow("select log from datachangelog") {
             result << it.log.getAsciiStream().getText()
         }
-        result[0]==[datastore: 'country', data: countries[0]].toJson()
+        result[0] == [datastore: 'country', data: countries[0]].toJson()
     }
 
 

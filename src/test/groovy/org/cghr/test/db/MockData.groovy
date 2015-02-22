@@ -14,11 +14,15 @@ class MockData {
             filechangelog: [id: 'int', filename: 'varchar(100)', filestore: 'varchar(100)', category: 'varchar(100)', status: 'varchar(20)'],
             memberImage: [memberId: 'int', consent: 'varchar(100)', photoId: 'varchar(100)', photo: 'varchar(100)'],
             sales:[name:'varchar(100)',total:'int',month:'int'],
-            command:[id:'int',name: 'varchar(20)',status:'varchar(20)']
+            command:[id:'int',name: 'varchar(20)',status:'varchar(20)'],
+            survey1:[id:'int',timelog:'varchar(20)'],
+            survey2:[id:'int',endtime:'varchar(20)']
     ]
 
     def sampleData = [
 
+            survey1: [[id:1,timelog:'2000-01-01 00:00:00']],
+            survey2: [[id:2,endtime: '2000-01-01 00:00:00']],
             command: [
                     [id:1,name:'cleanup',status: null]
             ],

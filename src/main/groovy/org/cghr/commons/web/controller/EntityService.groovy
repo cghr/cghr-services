@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
+import java.text.SimpleDateFormat
+
 /**
  * Created by ravitej on 25/11/14.
  */
@@ -23,7 +25,7 @@ class EntityService {
             @PathVariable String entityName,
             @PathVariable String entityId) {
 
-        entity.findById(entityName,entityId)
+        entity.findById(entityName, entityId)
 
     }
 
@@ -39,14 +41,28 @@ class EntityService {
     List getEntityListWithCriteria(
             @PathVariable String entityName, @PathVariable String property, @PathVariable String propertyValue) {
 
-        entity.findByCriteria(entityName,property,propertyValue)
+        entity.findByCriteria(entityName, property, propertyValue)
     }
 
     @RequestMapping(value = "/{entityName}", method = RequestMethod.POST, consumes = "application/json")
     String freshSave(@RequestBody Map entityData, @PathVariable String entityName) {
 
-        entity.freshSave(entityName,entityData)
-        entity.log(entityName,entityData)
+        entity.freshSave(entityName, entityData)
+
+        Map logEntity = entityData.clone()
+        logEntity.putAll(getTimeLogIfExists(entityName))
+        entity.log(entityName, logEntity)
+    }
+
+    Map getTimeLogIfExists(String entityName) {
+
+        Map time = [:]
+        if (entity.hasTimeLog(entityName))
+            time.put('timelog', getNow())
+        else if (entity.hasEndTime(entityName))
+            time.put('endtime', getNow())
+
+        return time
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
@@ -68,7 +84,7 @@ class EntityService {
     String deleteEntity(@PathVariable String entityName,
                         @PathVariable String entityId) {
 
-        entity.delete(entityName,entityId)
+        entity.delete(entityName, entityId)
     }
 
     String getServerHost() {
@@ -77,6 +93,10 @@ class EntityService {
 
     boolean isNotSeverHost(String requestHost) {
         !(requestHost == serverHost && requestHost != 'localhost')
+    }
+
+    String getNow() {
+        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
     }
 
 }

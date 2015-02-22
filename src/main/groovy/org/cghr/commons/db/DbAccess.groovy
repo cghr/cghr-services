@@ -20,6 +20,7 @@ class DbAccess {
         String sql = "select * from $entity where $entityKey=?"
         firstRow(sql, [entityId])
     }
+
     List rows(String sql, List params = []) {
         gSql.rows(sql, params)
     }
@@ -37,6 +38,15 @@ class DbAccess {
             columnLabels = (1..metaData.columnCount).collect { metaData.getColumnLabel(it) }
         }
         return columnLabels
+    }
+
+    @Memoized
+    List columns(String entityName) {
+
+        String sql = "select * from $entityName"
+        columns(sql, [])
+
+
     }
 
 
