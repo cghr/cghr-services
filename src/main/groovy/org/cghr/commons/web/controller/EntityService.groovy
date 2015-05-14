@@ -1,6 +1,7 @@
 package org.cghr.commons.web.controller
 
 import org.cghr.commons.entity.Entity
+import org.cghr.survey.controller.SurveyRandomizer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -18,6 +19,8 @@ class EntityService {
     Entity entity
     @Autowired
     String serverBaseUrl
+    @Autowired
+    SurveyRandomizer randomizer
 
 
     @RequestMapping("/{entityName}/{entityId}")
@@ -46,6 +49,10 @@ class EntityService {
 
     @RequestMapping(value = "/{entityName}", method = RequestMethod.POST, consumes = "application/json")
     String freshSave(@RequestBody Map entityData, @PathVariable String entityName) {
+
+        if (entityName == 'death') {
+            entityData.put("surveytype", randomizer.getRandomSurveyType())
+        }
 
         entity.freshSave(entityName, entityData)
 

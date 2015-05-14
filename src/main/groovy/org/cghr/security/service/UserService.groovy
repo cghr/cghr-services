@@ -1,12 +1,14 @@
 package org.cghr.security.service
 
 import groovy.transform.TupleConstructor
+import groovy.util.logging.Log4j
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.security.model.User
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.ResourceAccessException
 
+@Log4j
 @TupleConstructor
 class UserService {
 
@@ -26,7 +28,7 @@ class UserService {
             cacheUserLocally(userResponse)
         }
         catch (ResourceAccessException ex) {
-            println 'Offline Mode:Authenticating Locally'
+            log.info 'Offline Mode:Authenticating Locally'
         }
         catch (HttpClientErrorException ex) {
             return false

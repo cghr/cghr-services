@@ -18,6 +18,7 @@ import org.cghr.security.service.UserService
 import org.cghr.startupTasks.DbImport
 import org.cghr.startupTasks.DirCreator
 import org.cghr.startupTasks.MetaClassEnhancement
+import org.cghr.survey.controller.SurveyRandomizer
 import org.cghr.test.db.DbTester
 import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean
@@ -180,5 +181,7 @@ beans {
     ])
     commandConfig(ArrayList, [cleanupCommand])
     //commandExecutor(CommandExecutor, commandConfig = commandConfig,dbAccess=dbAccess)
+
+    surveyRandomizer(SurveyRandomizer,dbAccess=dbAccess,surveys=['va','esl'],balanceDiff=2)
 
 }

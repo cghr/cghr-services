@@ -1,6 +1,7 @@
 package org.cghr.dataSync.service
 
 import groovy.transform.TupleConstructor
+import groovy.util.logging.Log4j
 import org.cghr.commons.db.DbAccess
 import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.web.client.RestTemplate
@@ -9,6 +10,7 @@ import org.springframework.web.client.RestTemplate
  * Created by ravitej on 5/5/14.
  */
 
+@Log4j
 @TupleConstructor
 class SyncUtil {
 
@@ -34,8 +36,11 @@ class SyncUtil {
     }
 
     String getLocalServerBaseUrl() {
+
         Integer syncServerNode = (startNode..endNode).find { isValidSyncServer(it) }
-        println "Found Sync Server at node $syncServerNode"
+
+        log.info "Found Sync Server at node $syncServerNode"
+
         if (!syncServerNode)
             throw new Exception("Sync Server Node not found")
 
@@ -53,12 +58,12 @@ class SyncUtil {
         String url = constructStatusCheckUrl(node)
 
         try {
-            println 'checking for valid sync server ' + url
+            log.info 'checking for valid sync server ' + url
             Map statusCheck = restTemplate.getForObject(url, Map.class)
             return statusCheck.status
         }
         catch (Exception e) {
-            println 'Error Accessing url :' + url
+            log.info 'Failed to  Access url :' + url
             return false
         }
         finally {

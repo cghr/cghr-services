@@ -39,6 +39,7 @@ class FileSystemStore {
         def (data, fileMetadata) = getDataAndFileMetaData(fileData, filestore)
 
         dbStore.saveOrUpdate(fileMetadata, 'filechangelog')
+        dbStore.createDataChangeLogs(fileMetadata, 'filechangelog')
         dbStore.createDataChangeLogs(data, filestore)
     }
 
@@ -50,9 +51,9 @@ class FileSystemStore {
         return [data, fileMetadata]
     }
 
-    Map excludeFilenameCategory(Map map){
+    Map excludeFilenameCategory(Map map) {
 
-        map.subMap(map.keySet().toList() - ['filename','category'])
+        map.subMap(map.keySet().toList() - ['filename', 'category'])
     }
 
 

@@ -28,11 +28,11 @@ class GPSService {
             Map gpsFix
 
             socket.withStreams { input, output ->
-                println "Request gps socket server"
+                log.info "Requesting gps socket server"
                 output << "requesting gps socket server ...\n"
                 def gps = input.newReader().readLine()
-                println "received response "
-                println gps
+                log.info "received response "
+                log.info gps
 
                 List points = gps.split(";")
                 gpsFix = [latitude: points[0], longitude: points[1]]

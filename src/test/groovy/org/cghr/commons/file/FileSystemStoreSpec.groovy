@@ -98,7 +98,7 @@ class FileSystemStoreSpec extends Specification {
 
         then:
         gSql.rows("select * from filechangelog").size() == 1
-        gSql.rows("select * from datachangelog").size()==1
+        gSql.rows("select * from datachangelog").size()==2
 
 
     }

@@ -55,6 +55,10 @@ class AgentDownloadService {
 
     void importData(List list, String datastore) {
 
+        list.each { Map data ->
+            if (data.timelog)
+                data.remove("timelog")
+        }
         list.each { dbStore.saveOrUpdate(it, datastore) }
     }
 

@@ -1,5 +1,6 @@
 package org.cghr.awakeFile
 
+import groovy.transform.CompileStatic
 import org.awakefw.file.api.server.AwakeFileConfigurator
 
 import java.sql.Connection
@@ -8,6 +9,7 @@ import java.sql.SQLException
 /**
  * Created by ravitej on 8/5/14.
  */
+@CompileStatic
 class CghrAwakeFileConfigurator implements AwakeFileConfigurator {
 
     @Override
