@@ -13,3 +13,10 @@ Includes
 * Chart Api 
 * DataViewModel for reports
 * Common services for survey apps
+
+
+Usage
+========
+
+* `gradle clean test`
+* `gradle install`
