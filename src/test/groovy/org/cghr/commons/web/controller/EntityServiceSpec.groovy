@@ -114,9 +114,9 @@ class EntityServiceSpec extends Specification {
         given:
         dbTester.clean('country,datachangelog')
         List changelogs = [
-                [datastore:'country',data:dataSet[0]],
-                [datastore:'country',data:dataSet[1]],
-                [datastore:'country',data:dataSet[2]]
+                [datastore: 'country', data: dataSet[0]],
+                [datastore: 'country', data: dataSet[1]],
+                [datastore: 'country', data: dataSet[2]]
         ]
 
         when:

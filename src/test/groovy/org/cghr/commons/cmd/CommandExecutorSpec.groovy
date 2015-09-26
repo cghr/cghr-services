@@ -31,7 +31,7 @@ class CommandExecutorSpec extends Specification {
 
     def setup() {
 
-        commandExecutor=new CommandExecutor(commandConfig,dbAccess)
+        commandExecutor = new CommandExecutor(commandConfig, dbAccess)
         dbTester.cleanInsert("country,user,authtoken,userlog,inbox,outbox,datachangelog,filechangelog,sales")
     }
 
@@ -59,11 +59,12 @@ class CommandExecutorSpec extends Specification {
         "sales"         || 0
 
     }
-    def "should execute all configured commands in database"(){
+
+    def "should execute all configured commands in database"() {
 
         given:
         dbTester.cleanInsert("command")
-        assert gSql.rows("select * from command").size()==1
+        assert gSql.rows("select * from command").size() == 1
 
         when:
         commandExecutor.execConfiguredCommands()
@@ -84,10 +85,9 @@ class CommandExecutorSpec extends Specification {
         "sales"         || 0
 
 
-
     }
 
     int numberOfRows(String table) {
-        gSql.firstRow("select count(*) count from "+table).count
+        gSql.firstRow("select count(*) count from " + table).count
     }
 }

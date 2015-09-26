@@ -1,4 +1,5 @@
 package org.cghr.security.controller
+
 import org.cghr.commons.db.DbAccess
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -23,17 +24,17 @@ class Logout {
     HashMap tokenCache
 
 
-
     @RequestMapping("")
     String invalidateSession(
-            @CookieValue("authtoken") String authtoken,@CookieValue("username")String username ,HttpServletRequest request, HttpServletResponse response) {
+            @CookieValue("authtoken") String authtoken,
+            @CookieValue("username") String username, HttpServletRequest request, HttpServletResponse response) {
 
-        deleteAuthToken(authtoken,username)
+        deleteAuthToken(authtoken, username)
         eraseCookies(request.getCookies(), response)
     }
 
 
-    void deleteAuthToken(String authtoken,String username) {
+    void deleteAuthToken(String authtoken, String username) {
 
         tokenCache.remove(username)
         dbAccess.removeData("authtoken", "token", authtoken)

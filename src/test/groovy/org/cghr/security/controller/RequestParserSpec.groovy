@@ -9,8 +9,10 @@ import javax.servlet.http.Cookie
 class RequestParserSpec extends Specification {
 
     RequestParser parser
-    @Shared def validRequest
-    @Shared def invalidRequest
+    @Shared
+    def validRequest
+    @Shared
+    def invalidRequest
 
     def setupSpec() {
         validRequest = new MockHttpServletRequest()
@@ -18,7 +20,7 @@ class RequestParserSpec extends Specification {
         Cookie authtokenCookie = new Cookie("authtoken", token)
         def cookies = [authtokenCookie] as Cookie[]
         validRequest.setCookies(cookies)
-        invalidRequest=new MockHttpServletRequest()
+        invalidRequest = new MockHttpServletRequest()
 
     }
 

@@ -39,7 +39,7 @@ class AgentUploadService {
     void postBatch(String changelogBatch) {
 
         HttpEntity<String> request = constructJsonRequest(changelogBatch)
-            restTemplate.postForLocation(syncServerUploadUrl, request)
+        restTemplate.postForLocation(syncServerUploadUrl, request)
     }
 
     HttpEntity<String> constructJsonRequest(String data) {

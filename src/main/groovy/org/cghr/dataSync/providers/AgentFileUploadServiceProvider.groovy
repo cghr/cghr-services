@@ -1,4 +1,5 @@
 package org.cghr.dataSync.providers
+
 import groovy.transform.TupleConstructor
 import groovy.util.logging.Log4j
 import org.awakefw.file.api.client.AwakeFileSession
@@ -24,7 +25,7 @@ class AgentFileUploadServiceProvider {
 
     def provide() {
         AwakeFileSession awakeFileSession = buildAwakeFileSession()
-        new AgentFileUploadservice(dbAccess, dbStore, awakeFileSession, fileStoreFactory,remoteFileRepo)
+        new AgentFileUploadservice(dbAccess, dbStore, awakeFileSession, fileStoreFactory, remoteFileRepo)
 
     }
 
@@ -33,7 +34,7 @@ class AgentFileUploadServiceProvider {
 
         String username = "demo";
         char[] password = ['d', 'e', 'm', 'o']
-        String syncServerBaseUrl=syncUtil.syncServerBaseUrl(serverBaseUrl)
+        String syncServerBaseUrl = syncUtil.syncServerBaseUrl(serverBaseUrl)
 
         // Create the Awake FILE Session to the remote server:
         try {

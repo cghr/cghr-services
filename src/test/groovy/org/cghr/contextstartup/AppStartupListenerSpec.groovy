@@ -40,7 +40,7 @@ class AppStartupListenerSpec extends Specification {
         appStartupListener.contextInitialized(servletContextEvent)
 
         then:
-        System.getProperty("basePath") == path+'/'
+        System.getProperty("basePath") == path + '/'
 
     }
 

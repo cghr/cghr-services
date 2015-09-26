@@ -1,9 +1,11 @@
 package org.cghr.startupTasks
+
 import groovy.sql.Sql
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 25/4/14.
  */
@@ -47,7 +49,7 @@ class DbImportSpec extends Specification {
 
         then:
         gSql.rows("select * from country").size() == 2;
-        new File(sqlDir).listFiles().size()==0
+        new File(sqlDir).listFiles().size() == 0
 
     }
 

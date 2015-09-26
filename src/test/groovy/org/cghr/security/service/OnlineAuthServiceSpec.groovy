@@ -87,11 +87,11 @@ class OnlineAuthServiceSpec extends Specification {
         HttpHeaders headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
 
-        HttpEntity<String> request = new HttpEntity<String>(validUser.toJson(),headers)
+        HttpEntity<String> request = new HttpEntity<String>(validUser.toJson(), headers)
 
         RestTemplate fakeRestTemplate = Mock()
         fakeRestTemplate.postForObject(mockServerAuthUrl, request, Map.class) >> {
-            throw  new ResourceAccessException("Failed to access Resource")
+            throw new ResourceAccessException("Failed to access Resource")
         }
         fakeRestTemplate.getMessageConverters() >> []
         OnlineAuthService fakeService = new OnlineAuthService(mockServerAuthUrl, fakeRestTemplate)

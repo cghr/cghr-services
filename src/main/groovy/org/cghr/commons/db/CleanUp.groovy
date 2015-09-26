@@ -5,6 +5,7 @@ import groovy.transform.TupleConstructor
 /**
  * Created by ravitej on 9/5/14.
  */
+
 @TupleConstructor
 class CleanUp {
 
@@ -23,7 +24,7 @@ class CleanUp {
     List getAllTables() {
 
         dbAccess.rows('show tables')
-                .collect {Map row-> row.values().toList() }
+                .collect { Map row -> row.values().toList() }
                 .collect { List values -> values.first() }
 
     }

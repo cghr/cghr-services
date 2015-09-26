@@ -12,6 +12,7 @@ import spock.lang.Specification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 /**
  * Created by ravitej on 7/5/14.
  */
@@ -32,13 +33,13 @@ class LookupSpec extends Specification {
     def setup() {
 
         dbTester.cleanInsert('country')
-        mockMvc=MockMvcBuilders.standaloneSetup(lookupService).build()
+        mockMvc = MockMvcBuilders.standaloneSetup(lookupService).build()
     }
 
     def "should get a value for a given lookup  data"() {
         given:
-        Map lookup=[entity:'country',field:'name',ref:'continent',refId:'asia']
-        String json=lookup.toJson()
+        Map lookup = [entity: 'country', field: 'name', ref: 'continent', refId: 'asia']
+        String json = lookup.toJson()
         expect:
         mockMvc.perform(post('/survey/lookup').contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk())
@@ -46,10 +47,11 @@ class LookupSpec extends Specification {
                 .andExpect(content().string('[{"text":"india","value":"india"},{"text":"pakistan","value":"pakistan"},{"text":"srilanka","value":"srilanka"}]'))
 
     }
+
     def "should get a value for a given lookup  data with a condition"() {
         given:
-        Map lookup=[entity:'country',field:'name',ref:'continent',refId:'asia',condition:'id>1']
-        String json=lookup.toJson()
+        Map lookup = [entity: 'country', field: 'name', ref: 'continent', refId: 'asia', condition: 'id>1']
+        String json = lookup.toJson()
         expect:
         mockMvc.perform(post('/survey/lookup').contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isOk())

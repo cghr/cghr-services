@@ -4,7 +4,6 @@ import groovy.transform.TupleConstructor
 import org.cghr.dataSync.commons.Agent
 import org.cghr.dataSync.service.AgentService
 
-
 @TupleConstructor
 class DownloadOrganizerAgent implements Agent {
 

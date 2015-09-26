@@ -18,7 +18,7 @@ class ResetChangelogs {
     @RequestMapping("")
     Map resetAllChangelogs() {
 
-        dbStore.execute("update datachangelog set status=null",[])
+        dbStore.execute("update datachangelog set status=null", [])
         [status: true]
     }
 

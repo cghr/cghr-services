@@ -19,7 +19,7 @@ class FileUploadAgent implements Agent {
         fileChangelogs.each { uploadAFile(it) }
     }
 
-    void uploadAFile(Map fileInfo) {
+    void uploadAFile(Map<String, Integer> fileInfo) {
 
         try {
             agentService.with {

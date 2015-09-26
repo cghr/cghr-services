@@ -11,6 +11,7 @@ import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 27/4/14.
  */

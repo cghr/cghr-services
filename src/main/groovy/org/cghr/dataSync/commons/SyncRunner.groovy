@@ -8,8 +8,11 @@ class SyncRunner {
 
     AgentProvider agentProvider
 
-    void run() {
+    void run(role) {
+
         List<Agent> agents = agentProvider.provideAllAgents()
-        agents.each { it.run() }
+        List<Agent> applicableAgents = (role == 'manager') ? agents.take((agents.size()) - 1) : agents
+
+        applicableAgents.each { it.run() }
     }
 }

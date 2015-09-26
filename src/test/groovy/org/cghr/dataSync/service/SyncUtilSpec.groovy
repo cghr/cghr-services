@@ -8,6 +8,7 @@ import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 7/5/14.
  */
@@ -51,7 +52,7 @@ class SyncUtilSpec extends Specification {
 
 
 
-        syncUtil = new SyncUtil(dbAccess,restTemplate, baseIp, startNode, endNode, port, pathToCheck, appName)
+        syncUtil = new SyncUtil(dbAccess, restTemplate, baseIp, startNode, endNode, port, pathToCheck, appName)
 
 
     }

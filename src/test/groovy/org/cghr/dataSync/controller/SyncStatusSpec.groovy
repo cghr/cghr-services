@@ -1,4 +1,5 @@
 package org.cghr.dataSync.controller
+
 import groovy.sql.Sql
 import org.cghr.test.db.DbTester
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,6 +12,7 @@ import spock.lang.Specification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 /**
  * Created by ravitej on 6/5/14.
  */
@@ -41,13 +43,13 @@ class SyncStatusSpec extends Specification {
     def "should get the current status of download and upload"() {
 
         setup:
-        gSql.execute("insert into authtoken(id,token,username,role) values(?,?,?,?)",[1,'faketoken','user2','manager'])
+        gSql.execute("insert into authtoken(id,token,username,role) values(?,?,?,?)", [1, 'faketoken', 'user2', 'manager'])
 
 
         expect:
         mockMvc.perform(get('/sync/status/download'))
-        .andExpect(status().isOk())
-        .andExpect(content().string('2'))
+                .andExpect(status().isOk())
+                .andExpect(content().string('2'))
 
         mockMvc.perform(get('/sync/status/upload'))
                 .andExpect(status().isOk())

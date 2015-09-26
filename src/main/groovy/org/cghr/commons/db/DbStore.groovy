@@ -33,10 +33,10 @@ class DbStore {
         if (!isNewData(entityName, keyField, keyFieldValue))
             gSql.execute(sql, keyFieldValue)
 
-        String keysAndValues=getKeysAndValues(entity)
-        List valueList=entity.values().toList()
-        def insertSql="insert into $entityName set $keysAndValues"
-        gSql.executeUpdate(insertSql,valueList)
+        String keysAndValues = getKeysAndValues(entity)
+        List valueList = entity.values().toList()
+        def insertSql = "insert into $entityName set $keysAndValues"
+        gSql.executeUpdate(insertSql, valueList)
     }
 
     String getKeysAndValues(Map data) {

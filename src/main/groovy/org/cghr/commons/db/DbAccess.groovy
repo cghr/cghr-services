@@ -6,7 +6,6 @@ import groovy.transform.TupleConstructor
 
 import java.sql.ResultSetMetaData
 
-
 @TupleConstructor
 class DbAccess {
 

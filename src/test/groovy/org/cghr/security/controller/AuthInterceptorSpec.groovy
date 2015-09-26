@@ -23,8 +23,8 @@ class AuthInterceptorSpec extends Specification {
 
     def setup() {
         RequestParser mockParser = Stub() {
-            getAuthTokenFromCookies(_) >>> [authtoken,null]
-            getUsernameFromCookies(_) >>> ["demo",null]
+            getAuthTokenFromCookies(_) >>> [authtoken, null]
+            getUsernameFromCookies(_) >>> ["demo", null]
         }
         UserService mockUserService = Stub() {
             isValidToken(authtoken) >> true

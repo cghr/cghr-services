@@ -32,7 +32,6 @@ class EntityService {
 
     }
 
-
     @RequestMapping("/{entityName}")
     List getEntityList(@PathVariable String entityName) {
 
@@ -56,7 +55,7 @@ class EntityService {
 
         entity.freshSave(entityName, entityData)
 
-        Map logEntity = entityData.clone()
+        Map logEntity = (Map) entityData.clone()
         logEntity.putAll(getTimeLogIfExists(entityName))
         entity.log(entityName, logEntity)
     }
@@ -75,6 +74,8 @@ class EntityService {
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json")
     String saveVariantEntities(@RequestBody final Map[] data, HttpServletRequest request) {
 
+        //println("changelog data")
+        //println(data)
 
         List changelogs = data.toList()
         entity.saveVariantEntities(changelogs)

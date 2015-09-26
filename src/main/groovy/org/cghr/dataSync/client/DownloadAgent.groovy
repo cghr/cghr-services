@@ -15,7 +15,7 @@ class DownloadAgent implements Agent {
     }
 
     void downloadAndImportMessages(List<Map> messages) {
-        
+
         messages.each {
             agentService.downloadAndImport(it)
             agentService.importSuccessful(it)

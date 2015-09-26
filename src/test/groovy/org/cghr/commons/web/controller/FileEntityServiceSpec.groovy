@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Shared
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 12/8/14.
  */
@@ -48,7 +49,7 @@ class FileEntityServiceSpec extends Specification {
         byte[] content = "dummy File contents".getBytes()
 
         when:
-        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/fileEntity/"+fileStore)
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/fileEntity/" + fileStore)
                 .file("file", content)
                 .param("data", formData.toJson()))
 

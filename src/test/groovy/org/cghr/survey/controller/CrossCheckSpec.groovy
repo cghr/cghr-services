@@ -12,6 +12,7 @@ import spock.lang.Specification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 /**
  * Created by ravitej on 7/5/14.
  */
@@ -32,18 +33,18 @@ class CrossCheckSpec extends Specification {
     def setup() {
 
         dbTester.cleanInsert('country')
-        mockMvc=MockMvcBuilders.standaloneSetup(crossCheckService).build()
+        mockMvc = MockMvcBuilders.standaloneSetup(crossCheckService).build()
     }
 
     def "should get a value for a given cross check data"() {
         given:
-        Map crossCheck=[entity:'country',field:'name',ref:'id',refId:'1']
-        String json=(crossCheck).toJson()
+        Map crossCheck = [entity: 'country', field: 'name', ref: 'id', refId: '1']
+        String json = (crossCheck).toJson()
         expect:
         mockMvc.perform(post('/survey/crossCheck').contentType(MediaType.APPLICATION_JSON).content(json))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(content().string('{"value":"india"}'))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string('{"value":"india"}'))
 
     }
 

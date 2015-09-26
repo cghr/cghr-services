@@ -29,6 +29,7 @@ class Auth {
         isInvalidUser(user, hostname) ? authFailure(user, response) : authSuccessful(user, response)
 
     }
+
     String generateAuthToken() {
         UUID.randomUUID().toString()
     }

@@ -25,11 +25,12 @@ class UserSpec extends Specification {
 
 
     }
+
     def "should verify User to be Not Empty"() {
 
         given:
-        user.username='user1'
-        user.password='secret1'
+        user.username = 'user1'
+        user.password = 'secret1'
 
         expect:
         user.isEmpty() == false

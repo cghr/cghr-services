@@ -80,7 +80,7 @@ class DbStoreSpec extends Specification {
 
     def "verify fresh save of data from a map to database"() {
         given:
-        Map updatedEntity=((Map)dataSetUpdate[0]).subMap(["id","name"])
+        Map updatedEntity = ((Map) dataSetUpdate[0]).subMap(["id", "name"])
 
         when:
         dbStore.saveOrUpdate(dataSet[0], dataStore)

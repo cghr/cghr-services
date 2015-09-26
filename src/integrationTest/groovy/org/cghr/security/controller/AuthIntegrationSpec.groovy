@@ -1,4 +1,5 @@
 package org.cghr.security.controller
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import groovy.sql.Sql
 import org.cghr.security.model.User
@@ -16,6 +17,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
+
 /**
  * Created by ravitej on 27/1/14.
  */

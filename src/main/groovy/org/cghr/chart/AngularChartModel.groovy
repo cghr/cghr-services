@@ -1,8 +1,8 @@
 package org.cghr.chart
 
-import groovy.transform.Immutable
 import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
+
 /**
  * Created by ravitej on 4/2/15.
  */
@@ -23,15 +23,14 @@ class AngularChartModel {
 
     }
 
-    List transformToChartModel(List rows) {
+    List transformToChartModel(List<Map<String, String>> rows) {
 
         rows.collect { Map row ->
 
             List values = row.values().toList()
-            [x: values.first(), y: values.drop(1)]
+            [x: values.head(), y: values.tail()]
         }
 
     }
-
 
 }

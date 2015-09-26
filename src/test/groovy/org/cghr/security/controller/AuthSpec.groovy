@@ -1,4 +1,5 @@
 package org.cghr.security.controller
+
 import groovy.sql.Sql
 import org.cghr.security.model.User
 import org.cghr.security.service.UserService
@@ -17,7 +18,6 @@ import spock.lang.Specification
 
 @ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
 class AuthSpec extends Specification {
-
 
 
     MockMvc mockMvc
@@ -51,10 +51,9 @@ class AuthSpec extends Specification {
     def setup() {
 
 
-
         def authtoken = "ABCDEDGH-12345"
 
-        mockMvc=MockMvcBuilders.standaloneSetup(authService).build()
+        mockMvc = MockMvcBuilders.standaloneSetup(authService).build()
 
         UserService mockUserService = Stub() {
             isValid(validUser, hostname) >> true

@@ -1,4 +1,5 @@
 package org.cghr.dataSync.providers
+
 import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore

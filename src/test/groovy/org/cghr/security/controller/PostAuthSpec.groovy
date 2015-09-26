@@ -7,6 +7,7 @@ import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Specification
 
 import javax.servlet.http.HttpServletResponse
+
 /**
  * Created by ravitej on 3/6/14.
  */

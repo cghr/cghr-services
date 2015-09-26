@@ -1,4 +1,5 @@
 package org.cghr.dataSync.controller
+
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.test.db.DbTester
@@ -12,6 +13,7 @@ import spock.lang.Specification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 /**
  * Created by ravitej on 5/5/14.
  */
@@ -48,7 +50,7 @@ class DownloadInfoSpec extends Specification {
                 .andExpect(status().isOk())
                 .andExpect(content().string('[{"datastore":"country","ref":"id","refId":"1","distList":null}]'))
 
-        gSql.rows("select * from outbox where dwnStatus=1 and recipient=15").size()==1
+        gSql.rows("select * from outbox where dwnStatus=1 and recipient=15").size() == 1
 
 
     }

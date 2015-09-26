@@ -116,11 +116,6 @@ beans {
     //Todo Startup Tasks  - Metaclass Enhancement
     metaClassEnhancement(MetaClassEnhancement)
     dbImport(DbImport, sqlDir = appPath + 'sqlImport', gSql = gSql)
-    dirCreator(DirCreator, [
-            userHome + 'hc/repo/images/consent',
-            userHome + 'hc/repo/images/photo',
-            userHome + 'hc/repo/images/photoId'
-    ])
 
     //Todo Data Synchronization
     String appName = 'hc'
@@ -173,8 +168,6 @@ beans {
     //Todo Enable for changelog cleanup
     //changeLogCleanup(ChangeLogCleanup,dbAccess=dbAccess)
 
-
-
     //Todo Enable Command Executor
     cleanupCommand(HashMap, [
             name: 'cleanup', refObj: cleanup, execFn: { it.cleanupTables() }
@@ -182,6 +175,13 @@ beans {
     commandConfig(ArrayList, [cleanupCommand])
     //commandExecutor(CommandExecutor, commandConfig = commandConfig,dbAccess=dbAccess)
 
-    surveyRandomizer(SurveyRandomizer,dbAccess=dbAccess,surveys=['va','esl'],balanceDiff=2)
+    surveyRandomizer(SurveyRandomizer, dbAccess = dbAccess, surveys = ['va', 'esl'], balanceDiff = 2)
+
+    //Todo Folder Creation
+    dirCreator(DirCreator, [
+            userHome + 'hc/repo/images/consent',
+            userHome + 'hc/repo/images/photo',
+            userHome + 'hc/repo/images/photoId'
+    ])
 
 }

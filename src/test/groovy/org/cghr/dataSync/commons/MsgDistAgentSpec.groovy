@@ -1,4 +1,5 @@
 package org.cghr.dataSync.commons
+
 import groovy.sql.Sql
 import org.cghr.dataSync.service.AgentService
 import org.cghr.test.db.DbTester
@@ -8,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Shared
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 27/1/14.
  */
@@ -23,9 +25,9 @@ class MsgDistAgentSpec extends Specification {
     def dataSet
     MsgDistAgent msgDistAgent
 
-    def setupSpec(){
+    def setupSpec() {
 
-        dataSet=new MockData().sampleData.get('inbox')
+        dataSet = new MockData().sampleData.get('inbox')
 
     }
 
@@ -35,7 +37,7 @@ class MsgDistAgentSpec extends Specification {
         dt.clean("outbox")
 
         gSql.execute("update inbox set impStatus=1")
-        dataSet=gSql.rows("select * from inbox order by id")
+        dataSet = gSql.rows("select * from inbox order by id")
 
         AgentService agentService = Stub() {
 
@@ -43,26 +45,26 @@ class MsgDistAgentSpec extends Specification {
                 gSql.rows('select * from inbox where distStatus is null and impStatus=1')
             }
 
-            distributeMessage(dataSet[0],'1') >> {
-                gSql.executeInsert('insert into outbox(datastore,ref,refId,recipient) values(?,?,?,?)', [dataSet[0].datastore,dataSet[0].ref,dataSet[0].refId, '1'])
+            distributeMessage(dataSet[0], '1') >> {
+                gSql.executeInsert('insert into outbox(datastore,ref,refId,recipient) values(?,?,?,?)', [dataSet[0].datastore, dataSet[0].ref, dataSet[0].refId, '1'])
             }
-            distributeMessage(dataSet[0],'2') >> {
-                gSql.executeInsert('insert into outbox(datastore,ref,refId,recipient) values(?,?,?,?)', [dataSet[0].datastore,dataSet[0].ref,dataSet[0].refId, '2'])
+            distributeMessage(dataSet[0], '2') >> {
+                gSql.executeInsert('insert into outbox(datastore,ref,refId,recipient) values(?,?,?,?)', [dataSet[0].datastore, dataSet[0].ref, dataSet[0].refId, '2'])
             }
-            distributeMessage(dataSet[1],'3') >> {
-                gSql.executeInsert('insert into outbox(datastore,ref,refId,recipient) values(?,?,?,?)', [dataSet[1].datastore,dataSet[1].ref,dataSet[1].refId, '3'])
+            distributeMessage(dataSet[1], '3') >> {
+                gSql.executeInsert('insert into outbox(datastore,ref,refId,recipient) values(?,?,?,?)', [dataSet[1].datastore, dataSet[1].ref, dataSet[1].refId, '3'])
             }
-            distributeMessage(dataSet[1],'4') >> {
-                gSql.executeInsert('insert into outbox(datastore,ref,refId,recipient) values(?,?,?,?)', [dataSet[1].datastore,dataSet[1].ref,dataSet[1].refId, '4'])
+            distributeMessage(dataSet[1], '4') >> {
+                gSql.executeInsert('insert into outbox(datastore,ref,refId,recipient) values(?,?,?,?)', [dataSet[1].datastore, dataSet[1].ref, dataSet[1].refId, '4'])
             }
-            distributeSuccessful(dataSet[0]) >>{
+            distributeSuccessful(dataSet[0]) >> {
 
-                gSql.execute('update inbox set distStatus=1 where id=?',[1])
+                gSql.execute('update inbox set distStatus=1 where id=?', [1])
 
             }
-            distributeSuccessful(dataSet[1]) >>{
+            distributeSuccessful(dataSet[1]) >> {
 
-                gSql.execute('update inbox set distStatus=1 where id=?',[2])
+                gSql.execute('update inbox set distStatus=1 where id=?', [2])
 
             }
 
@@ -80,7 +82,7 @@ class MsgDistAgentSpec extends Specification {
 
         then:
         gSql.rows("select * from outbox").size() == 4
-        gSql.rows("select * from inbox where distStatus is null").size()==0
+        gSql.rows("select * from inbox where distStatus is null").size() == 0
     }
 
 

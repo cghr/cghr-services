@@ -1,8 +1,10 @@
 package org.cghr.startupTasks
+
 import groovy.transform.TupleConstructor
 import org.cghr.commons.db.DbAccess
 
 import javax.annotation.PostConstruct
+
 /**
  * Created by ravitej on 15/2/15.
  */
@@ -15,7 +17,7 @@ class ChangeLogCleanup {
     @PostConstruct
     void cleanupChangeLog() {
 
-        dbAccess.removeData("datachangelog","status","1")
+        dbAccess.removeData("datachangelog", "status", "1")
     }
 
 

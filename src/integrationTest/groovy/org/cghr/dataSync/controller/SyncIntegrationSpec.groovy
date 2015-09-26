@@ -1,4 +1,5 @@
 package org.cghr.dataSync.controller
+
 import groovy.sql.Sql
 import org.cghr.commons.db.DbAccess
 import org.cghr.dataSync.service.SyncUtil
@@ -15,11 +16,12 @@ import spock.lang.Shared
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 /**
  * Created by ravitej on 5/5/14.
  */
 @ContextConfiguration(value = "classpath:spring-context.groovy", loader = GenericGroovyXmlContextLoader.class)
-class SyncIntegrationSpec   {
+class SyncIntegrationSpec {
 
     @Autowired
     DbAccess dbAccess

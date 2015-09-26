@@ -10,6 +10,7 @@ import spock.lang.Specification
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+
 /**
  * Created by ravitej on 7/5/14.
  */
@@ -19,7 +20,6 @@ class NetworkStatusSpec extends Specification {
     @Autowired
     NetworkStatusService networkStatus
     MockMvc mockMvc
-
 
     //@spock.lang.Ignore
     def "should get networkstatus as false for ipAddress pattern 192.168."() {
@@ -34,7 +34,7 @@ class NetworkStatusSpec extends Specification {
 
     def "should get networkstatus as true for ipAddress pattern 127.0."() {
         given:
-        networkStatus.pattern="127.0."
+        networkStatus.pattern = "127.0."
         mockMvc = MockMvcBuilders.standaloneSetup(networkStatus).build()
 
         expect:

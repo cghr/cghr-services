@@ -1,4 +1,5 @@
 package org.cghr.dataSync.client
+
 import groovy.sql.Sql
 import org.cghr.dataSync.service.AgentService
 import org.cghr.test.db.DbTester
@@ -8,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.GenericGroovyXmlContextLoader
 import spock.lang.Shared
 import spock.lang.Specification
+
 /**
  * Created by ravitej on 26/4/14.
  */
@@ -28,7 +30,7 @@ class DownloadAgentSpec extends Specification {
 
     def setupSpec() {
         dataSet = new MockData().sampleData.get("inbox")
-        countryData=new MockData().sampleData.get("country")
+        countryData = new MockData().sampleData.get("country")
     }
 
 
@@ -38,20 +40,20 @@ class DownloadAgentSpec extends Specification {
 
             downloadAndImport(dataSet[0]) >> {
 
-                gSql.execute("insert into country values(?,?,?)",[1,'india','asia'])
+                gSql.execute("insert into country values(?,?,?)", [1, 'india', 'asia'])
 
             }
             downloadAndImport(dataSet[1]) >> {
 
-                gSql.execute("insert into country values(?,?,?)",[2,'pakistan','asia'])
+                gSql.execute("insert into country values(?,?,?)", [2, 'pakistan', 'asia'])
 
             }
             importSuccessful(dataSet[0]) >> {
-                gSql.execute("update inbox set impStatus=1 where id=?",[1])
+                gSql.execute("update inbox set impStatus=1 where id=?", [1])
 
             }
             importSuccessful(dataSet[1]) >> {
-                gSql.execute("update inbox set impStatus=1 where id=?",[2])
+                gSql.execute("update inbox set impStatus=1 where id=?", [2])
 
             }
 
