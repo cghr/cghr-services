@@ -15,7 +15,7 @@ class PostAuth {
 
         Cookie cookie = new Cookie(cookieName, cookieValue)
         cookie.with {
-            setMaxAge(60 * 60 * 24)
+            setMaxAge(60 * 60 * 12)
             setPath(cookiePath);
             response.addCookie(delegate)
         }

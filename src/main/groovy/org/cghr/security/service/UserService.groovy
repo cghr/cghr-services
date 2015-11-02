@@ -5,8 +5,6 @@ import groovy.util.logging.Log4j
 import org.cghr.commons.db.DbAccess
 import org.cghr.commons.db.DbStore
 import org.cghr.security.model.User
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.ResourceAccessException
 
 @Log4j
 @TupleConstructor
@@ -19,23 +17,25 @@ class UserService {
 
 
     boolean isValid(User user, String hostname) {
+        
+        return isValidLocalUser(user)
 
-        if (isServerHost(hostname, onlineAuthService.serverAuthUrl))
-            return isValidLocalUser(user)
-
-        try {
-            Map userResponse = onlineAuthService.authenticate(user)
-            cacheUserLocally(userResponse)
-        }
-        catch (ResourceAccessException ex) {
-            log.info 'Offline Mode:Authenticating Locally'
-        }
-        catch (HttpClientErrorException ex) {
-            return false
-        }
-        finally {
-            return isValidLocalUser(user)
-        }
+//        if (isServerHost(hostname, onlineAuthService.serverAuthUrl))
+//            return isValidLocalUser(user)
+//
+//        try {
+//            Map userResponse = onlineAuthService.authenticate(user)
+//            cacheUserLocally(userResponse)
+//        }
+//        catch (ResourceAccessException ex) {
+//            log.info 'Offline Mode:Authenticating Locally'
+//        }
+//        catch (HttpClientErrorException ex) {
+//            return false
+//        }
+//        finally {
+//            return isValidLocalUser(user)
+//        }
 
     }
 

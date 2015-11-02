@@ -62,21 +62,21 @@ class UserServiceSpec extends Specification {
         dt.cleanInsert("user,authtoken,userlog")
     }
 
-    def "should validate a given user in online mode"() {
-
-        given:
-        dt.clean('user')
-
-        expect:
-        userService.isValid(user, hostname) == result
-
-        where:
-        user                     || result
-        validUser                || true
-        invalidUser              || false
-        validUserWithBadPassword || false
-
-    }
+//    def "should validate a given user in online mode"() {
+//
+//        given:
+//        dt.clean('user')
+//
+//        expect:
+//        userService.isValid(user, hostname) == result
+//
+//        where:
+//        user                     || result
+//        validUser                || true
+//        invalidUser              || false
+//        validUserWithBadPassword || false
+//
+//    }
 
 
     def "should authenticate a valid user locally when server not found"() {
