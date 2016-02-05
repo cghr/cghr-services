@@ -47,7 +47,7 @@ class JsonSchemaServiceSpec extends Specification {
         expect:
         mockMvc.perform(get("/survey/jsonSchemaList/dev/hc"))
                 .andExpect(status().isOk())
-                .andExpect(content().string('["file2.json","file1.json"]'))
+                .andExpect(content().string('["file1.json","file2.json"]'))
 
     }
 

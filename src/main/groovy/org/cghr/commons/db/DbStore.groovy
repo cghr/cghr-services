@@ -19,7 +19,7 @@ class DbStore {
         List valueList = entity.values() as List
 
         def sql = isNewData(entityName, keyField, keyFieldValue) ?
-                "insert into $entityName set $keysAndValues" : "update $entityName set $keysAndValues where $keyField=$keyFieldValue"
+                "insert into $entityName set $keysAndValues" : "update $entityName set $keysAndValues where $keyField='$keyFieldValue'"
 
         gSql.execute(sql, valueList)
     }
